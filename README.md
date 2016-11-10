@@ -8,7 +8,7 @@
 $ git clone --recursive https://github.com/csarven/ldn-tests tests
 $ cd tests/mayktso
 $ npm install
-$ cp config.json.default config.json (use a config like the following)
+$ nano config.json (use a config like the following)
 {
   "port": "8448",
   "rootPath": ".",
