@@ -23,3 +23,6 @@ $ node mayktso/app.js
 We are at the root of `tests` running mayktso from there. Requests are relative
 to this location (`rootPath` can be full path) e.g., http://localhost:8448/ ,
 http://localhost:8448/inbox/ , http://localhost:8448/inbox/foo
+
+Use `git submodule update --remote mayktso` from the tests root directory to
+update the submodule from time to time.
