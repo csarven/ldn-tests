@@ -1,0 +1,3 @@
+[submodule "mayktso"]
+	path = mayktso
+	url = https://github.com/csarven/mayktso
