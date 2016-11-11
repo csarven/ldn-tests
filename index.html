@@ -29,7 +29,7 @@
 
                 <dl id="document-status">
                     <dt>Status</dt>
-                    <dd>Working Draft at <a href="http://www.w3.org/Social/WG">W3C Social Web Working Group</a></dd>
+                    <dd>W3C Candidate Recommendation proposed by the <a href="http://www.w3.org/Social/WG">W3C Social Web Working Group</a></dd>
                 </dl>
 
                 <dl id="document-inbox">
@@ -42,6 +42,19 @@
                         <h2>Abstract</h2>
                         <div datatype="rdf:HTML" property="schema:abstract">
                           <p>Linked Data Notifications is a protocol that describes how servers (receivers) can have messages pushed to them by applications (senders), as well as how other applications (consumers) may retrieve those messages. Any resource can advertise a receiving endpoint (Inbox) for the messages. Messages are expressed in RDF, and can contain any data.</p>
+                        </div>
+                    </section>
+
+                    <section id="tests" inlist="" rel="schema:hasPart" resource="#tests">
+                        <h2 property="schema:name">Tests</h2>
+                        <div datatype="rdf:HTML" property="schema:description">
+                            <p><strong>Discovery</strong>:</p>
+                            <ul>
+                                <li><q>make an HTTP <code>HEAD</code> or <code>GET</code> request on the target URL, and use the <code>Link</code> header with a <code>rel</code> value of <code>http://www.w3.org/ns/ldp#inbox</code></q> [<a href="https://www.w3.org/TR/ldn/#discovery-http-headers">discovery-http-header</a>]</li>
+                                <li><q>make an HTTP <code>GET</code> request on the target URL to retrieve an RDF representation [<cite><a class="bibref" href="#bib-rdf11-concepts">RDF 1.1</a></cite>], whose encoded RDF graph contains a relation of type <code>http://www.w3.org/ns/ldp#inbox</code>. The subject of that relation is target and the object is the Inbox.</q> [<a href="https://www.w3.org/TR/ldn/#discovery-resource-description">discovery-resource-description</a>]</li>
+                            </ul>
+
+
                         </div>
                     </section>
                 </div>
