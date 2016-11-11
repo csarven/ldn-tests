@@ -4,6 +4,9 @@
 * Latest Published: https://www.w3.org/TR/ldn/
 * Editor's Draft: https://linkedresearch.org/ldn/
 
+Tests are on their way! Stay tuned..
+
+## Setup
 ```bash
 $ git clone --recursive https://github.com/csarven/ldn-tests tests
 $ cd tests/mayktso
@@ -14,8 +17,9 @@ $ node mayktso/app.js
 ```
 
 Make sure to run mayktso from the root of tests directory so that the built-in
-defaults work. Otherwise, `cp config.json.default config.json` and play around.
-See mayktso for more details on the config.
+defaults work. Otherwise, `cp config.json.default config.json` in the mayktso
+directory and play around. See [mayktso](https://github.com/csarven/mayktso) for
+more details on the config.
 
 Requests to http://localhost:3000/ , http://localhost:3000/inbox/ should work
 and http://localhost:3000/inbox/abcdef after a POST.
