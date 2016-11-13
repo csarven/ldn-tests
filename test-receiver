@@ -34,10 +34,10 @@
                                         <li>
                                             <label for="test-receiver-method">Method</label>
                                             <select name="test-receiver-method">
-                                                <option value="get">GET</option>
-                                                <option value="head">HEAD</option>
-                                                <option value="options">OPTIONS</option>
-                                                <option value="post">POST</option>
+                                                <option value="GET">GET</option>
+                                                <option value="HEAD">HEAD</option>
+                                                <option value="OPTIONS">OPTIONS</option>
+                                                <option value="POST">POST</option>
                                             </select>
                                         </li>
                                         <li>
