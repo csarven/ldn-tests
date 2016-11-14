@@ -45,6 +45,13 @@
                                             <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" />
                                         </li>
                                         <li>
+                                            <label for="test-receiver-url-type">Test</label>
+                                            <select name="test-receiver-url-type">
+                                                <option value="inbox">Inbox</option>
+                                                <option value="notification">Notification</option>
+                                            </select>
+                                        </li>
+                                        <li>
                                             <label for="test-receiver-accept">Accept</label>
                                             <select name="test-receiver-accept">
                                                 <option value="application/ld+json">application/ld+json</option>
