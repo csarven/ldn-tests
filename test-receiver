@@ -60,51 +60,6 @@
                                     <input type="submit" name="test-receiver-submit" value="Submit" id="test-receiver-submit" class="submit"/>
                                 </fieldset>
                             </form>
-                            <style>
-form {
-margin:1em 0;
-}
-form ul {
-margin:0;
-}
-form li {
-margin-bottom:0.5em;
-list-style-type:none;
-}
-form p {
-text-indent:0;
-}
-fieldset {
-padding:1em;
-}
-legend { font-weight:bold; }
-label {
-display:inline-block;
-font-weight:bold;
-width:10%;
-vertical-align:top;
-}
-input,
-textarea {
-padding:0.25em;
-display:inline-block;
-}
-input,
-textarea,
-select,
-button {
-font-family:inherit;
-font-size:inherit;
-}
-input,
-textarea {
-width:80%;
-}
-input[type=submit] {
-font-weight:bold;
-width:auto;
-}
-                            </style>
                         </div>
                     </section>
                 </div>
