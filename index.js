@@ -6,6 +6,7 @@ mayktso.init();
 
 mayktso.app.route('/test-receiver').all(testResource);
 //console.log(mayktso.app._router.stack);
+var getResource = mayktso.getResource;
 
 function testResource(req, res, next){
 console.log(req.requestedPath);
@@ -75,23 +76,28 @@ console.log(req.requestedPath);
               var headers = {};
               headers['Accept'] = ('test-receiver-accept' in keyValues) ? (decodeURIComponent(keyValues['test-receiver-accept'])) : 'application/ld+json';
 
-              console.log(headers);
+//console.log(headers);
               getResource(url, headers)
                 .then(function(response){
+// console.log(response);
                   //include test-receiver and embed data in 
                   var options = {};
-                  options['test-receiver-options'] = `<div id="test-receiver-response">
-<pre id="test-receiver-response-header">${response.getAllResponseHeaders()}</pre>
+                  options['test-receiver-response'] = `<div id="test-receiver-response">
+		<p>Response headers:</p>
+		<pre id="test-receiver-response-header">${response.xhr.getAllResponseHeaders()}</pre>
 
-<pre id="test-receiver-response-data">${response.responseText}</pre>
+		<p>Response body:</p>
+		<pre id="test-receiver-response-data">${response.xhr.responseText}</pre>
 
+		<p>Overview:</p>
     <div id="test-receiver-response-overview">
         <ul>
-            <li>Accepted requested: ${header['Accept']}, received: ${response.getResponseHeader['Content-Type']}</li>
-            <li>Response in ${response.getResponseHeader['Content-Type']} is (in)valid</li>
+            <li><code>Accept: ${headers['Accept']}</code>, <code>Content-Type: ${response.xhr.getResponseHeader('Content-Type')}</code></li>
+            <li>Response in ${response.xhr.getResponseHeader('Content-Type')} is (in)valid</li>
         </ul>
     </div>
 </div>
+<style>#test-receiver-response { overflow: auto; }</style>
 `;
 
 
@@ -216,7 +222,7 @@ function getTestReceiverHTML(options){
                                     <input type="submit" name="test-receiver-submit" value="Submit" id="test-receiver-submit" class="submit"/>
                                 </fieldset>
                             </form>
-${(options && 'test-receiver-response' in options) ? options.headers : ''}
+${(options && 'test-receiver-response' in options) ? options['test-receiver-response'] : ''}
                         </div>
                     </section>
                 </div>
