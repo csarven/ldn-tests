@@ -1,0 +1,34 @@
+{
+  "name": "ldn-tests",
+  "version": "0.0.1",
+  "description": "LDN tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify --standalone ldn-tests index.js > build.js",
+    "minify": "browserify --standalone ldn-tests index.js | uglifyjs -c > build.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/csarven/ldn-tests.git"
+  },
+  "keywords": [
+    "ldn",
+    "ldp",
+    "tests"
+  ],
+  "author": {
+    "name": "Sarven Capadisli",
+    "url": "http://csarven.ca/#i"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/csarven/ldn-tests/issues"
+  },
+  "homepage": "https://github.com/csarven/ldn-tests",
+  "dependencies": {
+    "etag": "^1.7.0",
+    "fs": "0.0.1-security",
+    "mayktso": "git://github.com/csarven/mayktso.git#master"
+  }
+}
