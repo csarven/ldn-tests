@@ -4,7 +4,7 @@ var mayktso = require('mayktso');
 
 mayktso.init();
 
-mayktso.app.route('/test-receiver').all(testResource);
+mayktso.app.route('/receiver').all(testResource);
 //console.log(mayktso.app._router.stack);
 var getResource = mayktso.getResource;
 
