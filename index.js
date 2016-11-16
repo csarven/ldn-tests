@@ -135,7 +135,7 @@ function resetPOST(){
 }
 
 
-function getTestReceiverResponseHTML(response, options){
+function getTestReceiverResponseHTML(response, headers){
     return `<div id="test-receiver-response">
     <p>Response headers:</p>
     <pre id="test-receiver-response-header">${response.xhr.getAllResponseHeaders()}</pre>
