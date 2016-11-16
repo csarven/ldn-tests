@@ -60,7 +60,7 @@ console.log(req.requestedPath);
       if(keyValues['test-receiver-method'] && keyValues['test-receiver-url']) {
         switch(keyValues['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
-            var url = keyValues['test-receiver-url']);
+            var url = keyValues['test-receiver-url'];
             if(url.toLowerCase().slice(0,7) == 'http://' || url.toLowerCase().slice(0,8) == 'https://') {
               console.log(url);
 
@@ -243,38 +243,3 @@ ${(options && 'test-receiver-response' in options) ? options['test-receiver-resp
 </html>
 `;
 }
-
-
-
-// mayktso.discoverInbox('http://linkedresearch.org/ldn/tests/');
-// mayktso.getResourceHead('http://linkedresearch.org/ldn/tests/');
-// mayktso.getResourceOptions('http://linkedresearch.org/ldn/tests/');
-
-// var headers = {
-//  'Accept': 'text/turtle'
-// };
-// mayktso.getResourceHandler('http://linkedresearch.org/ldn/tests/inbox/', headers).then(
-//  function(i){
-//    console.log(i.toString());
-//  }
-// );
-
-// var options = {
-//  'contentType': 'application/ld+json',
-//  'subjectURI': 'http://linkedresearch.org/ldn/tests/inbox/'
-// };
-// mayktso.getInboxNotifications('http://linkedresearch.org/ldn/tests/inbox/', options).then(
-//  function(i){
-//    console.log(i.toString());
-//  }
-// );
-
-
-// var headers = {
-//  'Accept': 'text/turtle'
-// };
-// mayktso.getResourceHandler('http://linkedresearch.org/ldn/tests/inbox/4517ba50-a803-11e6-ac41-9b664cfffcd3', headers).then(
-//  function(i){
-//    console.log(i.toString());
-//  }
-// );
