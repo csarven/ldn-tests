@@ -10,7 +10,7 @@ mayktso.app.route('/receiver').all(testResource);
 var getResource = mayktso.getResource;
 
 function testResource(req, res, next){
-console.log(req.requestedPath);
+// console.log(req.requestedPath);
   switch(req.method){
     case 'GET':
       if(!req.accepts(['text/html', '*/*'])) {
@@ -51,53 +51,42 @@ console.log(req.requestedPath);
       break;
 
     case 'POST':
-//      console.log(req);
-
+// console.log(req);
       var keyValues = req.body || {};
-
       console.log(keyValues);
 
-      if(keyValues['test-receiver-method'] && keyValues['test-receiver-url']) {
+      if(keyValues['test-receiver-method'] && keyValues['test-receiver-url'] && (keyValues['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || keyValues['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
+// console.log(keyValues['test-receiver-url']);
         switch(keyValues['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
-            var url = keyValues['test-receiver-url'];
-            if(url.toLowerCase().slice(0,7) == 'http://' || url.toLowerCase().slice(0,8) == 'https://') {
-              console.log(url);
-
-              var headers = {};
-              headers['Accept'] = ('test-receiver-accept' in keyValues) ? keyValues['test-receiver-accept'] : 'application/ld+json';
-
-//console.log(headers);
-              getResource(url, headers)
-                .then(function(response){
+            var headers = {};
+            headers['Accept'] = ('test-receiver-accept' in keyValues) ? keyValues['test-receiver-accept'] : 'application/ld+json';
+// console.log(headers);
+            getResource(keyValues['test-receiver-url'], headers)
+              .then(function(response){
 // console.log(response);
-                  //include test-receiver and embed data in 
-                  var options = {};
-                  options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
+                var options = {};
+                options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
 
-                  var sendHeaders = function(outputData, contentType) {
-                    res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-                    res.set('Content-Type', contentType +';charset=utf-8');
-                    res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-                    res.set('ETag', etag(outputData));
+                var sendHeaders = function(outputData, contentType) {
+                  res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+                  res.set('Content-Type', contentType +';charset=utf-8');
+                  res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
+                  res.set('ETag', etag(outputData));
 //                    res.set('Last-Modified', stats.mtime);
-                    res.set('Vary', 'Origin');
-                    res.set('Allow', 'GET, POST');
-                  }
-                  var data = getTestReceiverHTML(options);
-                  sendHeaders(data, 'text/html');
-                  res.status(200);
-                  res.send(data);
-                  return next();
-                })
-                .catch(function(reason){
-                  console.log('Error:');
-                  console.log(reason);
-                });
-            }
-            else {
-              resetPOST();
-            }
+                  res.set('Vary', 'Origin');
+                  res.set('Allow', 'GET, POST');
+                }
+                var data = getTestReceiverHTML(options);
+                sendHeaders(data, 'text/html');
+                res.status(200);
+                res.send(data);
+                return next();
+              })
+              .catch(function(reason){
+                console.log('Error:');
+                console.log(reason);
+              });
 
             break;
 
