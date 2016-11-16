@@ -112,7 +112,7 @@ console.log(req.requestedPath);
         </ul>
     </div>
 </div>
-<style>#test-receiver-response { overflow: auto; }</style>
+<style>#test-receiver-response pre { overflow: auto; }</style>
 `;
 
 
