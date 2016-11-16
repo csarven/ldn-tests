@@ -1,5 +1,6 @@
 var fs = require('fs');
 var etag = require('etag');
+//var bodyParser = require('body-parser');
 var mayktso = require('mayktso');
 
 mayktso.init();
@@ -52,29 +53,19 @@ console.log(req.requestedPath);
     case 'POST':
 //      console.log(req);
 
-      var data = req.rawBody;
-
-      //FIXME: I don't know the available functions right now.. train
-      var keyValues = {};
-      var paramValues = data.split('&');
-      paramValues.forEach(function(pV){
-        kV = pV.split('=');
-        if(kV.length == 2) {
-          keyValues[kV[0]] = kV[1];
-        }
-      })
+      var keyValues = req.body || {};
 
       console.log(keyValues);
 
       if(keyValues['test-receiver-method'] && keyValues['test-receiver-url']) {
         switch(keyValues['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
-            var url = decodeURIComponent(keyValues['test-receiver-url']);
+            var url = keyValues['test-receiver-url']);
             if(url.toLowerCase().slice(0,7) == 'http://' || url.toLowerCase().slice(0,8) == 'https://') {
               console.log(url);
 
               var headers = {};
-              headers['Accept'] = ('test-receiver-accept' in keyValues) ? (decodeURIComponent(keyValues['test-receiver-accept'])) : 'application/ld+json';
+              headers['Accept'] = ('test-receiver-accept' in keyValues) ? keyValues['test-receiver-accept'] : 'application/ld+json';
 
 //console.log(headers);
               getResource(url, headers)
@@ -260,30 +251,30 @@ ${(options && 'test-receiver-response' in options) ? options['test-receiver-resp
 // mayktso.getResourceOptions('http://linkedresearch.org/ldn/tests/');
 
 // var headers = {
-// 	'Accept': 'text/turtle'
+//  'Accept': 'text/turtle'
 // };
 // mayktso.getResourceHandler('http://linkedresearch.org/ldn/tests/inbox/', headers).then(
-// 	function(i){
-// 		console.log(i.toString());
-// 	}
+//  function(i){
+//    console.log(i.toString());
+//  }
 // );
 
 // var options = {
-// 	'contentType': 'application/ld+json',
-// 	'subjectURI': 'http://linkedresearch.org/ldn/tests/inbox/'
+//  'contentType': 'application/ld+json',
+//  'subjectURI': 'http://linkedresearch.org/ldn/tests/inbox/'
 // };
 // mayktso.getInboxNotifications('http://linkedresearch.org/ldn/tests/inbox/', options).then(
-// 	function(i){
-// 		console.log(i.toString());
-// 	}
+//  function(i){
+//    console.log(i.toString());
+//  }
 // );
 
 
 // var headers = {
-// 	'Accept': 'text/turtle'
+//  'Accept': 'text/turtle'
 // };
 // mayktso.getResourceHandler('http://linkedresearch.org/ldn/tests/inbox/4517ba50-a803-11e6-ac41-9b664cfffcd3', headers).then(
-// 	function(i){
-// 		console.log(i.toString());
-// 	}
+//  function(i){
+//    console.log(i.toString());
+//  }
 // );
