@@ -80,7 +80,7 @@ console.log(values);
             request
               .then(function(response){
 // console.log(response);
-                var options = {};
+                var options = values;
                 options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
 
                 data = getTestReceiverHTML(options);
@@ -111,7 +111,7 @@ console.log(values);
               .then(function(response){
 // console.log(response.xhr);
 
-                var options = {};
+                var options = values;
                 options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
 
 
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                         </li>
                                         <li>
                                             <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" />
+                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" value="${(options && 'test-receiver-url' in options) ? options['test-receiver-url'] : ''}" />
                                         </li>
                                         <li>
                                             <label for="test-receiver-mimetype"><span>Accept</span><span class="dn"> / </span><span>Content-Type</span></label>
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                         </li>
                                         <li>
                                             <label for="test-receiver-data">Data</label>
-                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data"></textarea>
+                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">${(options && 'test-receiver-data' in options) ? options['test-receiver-data'] : ''}</textarea>
                                         </li>
                                     </ul>
 
