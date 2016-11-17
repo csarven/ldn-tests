@@ -186,7 +186,18 @@ function getTestReceiverResponseHTML(response, headers){
 
 
 function getTestReceiverHTML(options){
-    return `<!DOCTYPE html>
+  var receiverMethodOptions = ['GET', 'HEAD', 'OPTIONS', 'POST'];
+  var receiverMethodOptionsHTML = '';
+  receiverMethodOptions.forEach(function(o){
+    var selected = '';
+    if(o == (options && options['test-receiver-method'])) {
+      selected = ' selected="selected"';
+    }
+    receiverMethodOptionsHTML += '<option value="' + o + '"' + selected +'>' + o + '</option>\n\
+';
+  });
+
+  return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
@@ -270,10 +281,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                         <li>
                                             <label for="test-receiver-method">Method</label>
                                             <select name="test-receiver-method">
-                                                <option value="GET">GET</option>
-                                                <option value="HEAD">HEAD</option>
-                                                <option value="OPTIONS">OPTIONS</option>
-                                                <option value="POST">POST</option>
+${receiverMethodOptionsHTML}
                                             </select>
                                         </li>
                                         <li>
