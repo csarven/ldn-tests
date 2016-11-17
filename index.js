@@ -122,7 +122,7 @@ console.log(values);
         }
       }
       else {
-        resetPOST();
+
       }
 
       break;
@@ -134,13 +134,6 @@ console.log(values);
       break;
   }
 }
-
-function resetPOST(){
-  //TODO Reset POST
-  res.end();
-  return next();
-}
-
 
 function getTestReceiverResponseHTML(response, headers){
     return `<div id="test-receiver-response">
