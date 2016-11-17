@@ -9,6 +9,7 @@ mayktso.app.route('/receiver').all(testResource);
 //console.log(mayktso.app._router.stack);
 var getResource = mayktso.getResource;
 var postResource = mayktso.postResource;
+var htmlEntities = mayktso.htmlEntities;
 
 function testResource(req, res, next){
 // console.log(req.requestedPath);
@@ -151,10 +152,10 @@ function resetPOST(){
 function getTestReceiverResponseHTML(response, headers){
     return `<div id="test-receiver-response">
     <p>Response headers:</p>
-    <pre id="test-receiver-response-header">${response.xhr.getAllResponseHeaders()}</pre>
+    <pre id="test-receiver-response-header">${htmlEntities(response.xhr.getAllResponseHeaders())}</pre>
 
     <p>Response body:</p>
-    <pre id="test-receiver-response-data">${response.xhr.responseText}</pre>
+    <pre id="test-receiver-response-data">${htmlEntities(response.xhr.responseText)}</pre>
 
     <p>Report (TODO: Add ✔ or ✗ for each applicable test. Hide N/A tests):</p>
     <div id="test-receiver-response-report">
