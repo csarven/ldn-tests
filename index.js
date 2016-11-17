@@ -35,16 +35,13 @@ function testResource(req, res, next){
           res.end();
         }
 
-        var sendHeaders = function(outputData, contentType) {
-          res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-          res.set('Content-Type', contentType +';charset=utf-8');
-          res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-          res.set('ETag', etag(outputData));
+        res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+        res.set('Content-Type', 'text/html;charset=utf-8');
+        res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+        res.set('ETag', etag(data));
 //          res.set('Last-Modified', stats.mtime);
-          res.set('Vary', 'Origin');
-          res.set('Allow', 'GET, POST');
-        }
-        sendHeaders(data, 'text/html');
+        res.set('Vary', 'Origin');
+        res.set('Allow', 'GET, POST');
         res.status(200);
         res.send(data);
         return next();
@@ -71,17 +68,15 @@ function testResource(req, res, next){
                 var options = {};
                 options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
 
-                var sendHeaders = function(outputData, contentType) {
-                  res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-                  res.set('Content-Type', contentType +';charset=utf-8');
-                  res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-                  res.set('ETag', etag(outputData));
-//                    res.set('Last-Modified', stats.mtime);
-                  res.set('Vary', 'Origin');
-                  res.set('Allow', 'GET, POST');
-                }
+
                 data = getTestReceiverHTML(options);
-                sendHeaders(data, 'text/html');
+                res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+                res.set('Content-Type', 'text/html;charset=utf-8');
+                res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+                res.set('ETag', etag(data));
+//                    res.set('Last-Modified', stats.mtime);
+                res.set('Vary', 'Origin');
+                res.set('Allow', 'GET, POST');
                 res.status(200);
                 res.send(data);
                 return next();
@@ -105,16 +100,15 @@ function testResource(req, res, next){
                 var options = {};
                 options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
 
-                var sendHeaders = function(outputData, contentType) {
-                  res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-                  res.set('Content-Type', contentType +';charset=utf-8');
-                  res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-                  res.set('ETag', etag(outputData));
-//                    res.set('Last-Modified', stats.mtime);
-                  res.set('Vary', 'Origin');
-                  res.set('Allow', 'GET, POST');
-                }
+
                 data = getTestReceiverHTML(options);
+                res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+                res.set('Content-Type', contentType +';charset=utf-8');
+                res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+                res.set('ETag', etag(data));
+//                    res.set('Last-Modified', stats.mtime);
+                res.set('Vary', 'Origin');
+                res.set('Allow', 'GET, POST');
                 sendHeaders(data, 'text/html');
                 res.status(200);
                 res.send(data);
