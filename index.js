@@ -8,6 +8,7 @@ mayktso.init();
 mayktso.app.route('/receiver').all(testResource);
 //console.log(mayktso.app._router.stack);
 var getResource = mayktso.getResource;
+var postResource = mayktso.postResource;
 
 function testResource(req, res, next){
 // console.log(req.requestedPath);
@@ -57,9 +58,10 @@ function testResource(req, res, next){
 
       if(keyValues['test-receiver-method'] && keyValues['test-receiver-url'] && (keyValues['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || keyValues['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
 // console.log(keyValues['test-receiver-url']);
+        var headers = {};
+        var data;
         switch(keyValues['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
-            var headers = {};
             headers['Accept'] = ('test-receiver-mimetype' in keyValues) ? keyValues['test-receiver-mimetype'] : 'application/ld+json';
 // console.log(headers);
             getResource(keyValues['test-receiver-url'], headers)
@@ -77,7 +79,7 @@ function testResource(req, res, next){
                   res.set('Vary', 'Origin');
                   res.set('Allow', 'GET, POST');
                 }
-                var data = getTestReceiverHTML(options);
+                data = getTestReceiverHTML(options);
                 sendHeaders(data, 'text/html');
                 res.status(200);
                 res.send(data);
@@ -91,6 +93,37 @@ function testResource(req, res, next){
             break;
 
           case 'POST':
+            headers['Content-Type'] = ('test-receiver-mimetype' in keyValues) ? keyValues['test-receiver-mimetype'] : 'application/ld+json';
+
+            data = ('test-receiver-data' in keyValues && keyValues['test-receiver-data'].length > 0) ? keyValues['test-receiver-data'] : '';
+
+            postResource(keyValues['test-receiver-url'], '', data, headers['Content-Type'])
+              .then(function(response){
+// console.log(response.xhr);
+
+                var options = {};
+                options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
+
+                var sendHeaders = function(outputData, contentType) {
+                  res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+                  res.set('Content-Type', contentType +';charset=utf-8');
+                  res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
+                  res.set('ETag', etag(outputData));
+//                    res.set('Last-Modified', stats.mtime);
+                  res.set('Vary', 'Origin');
+                  res.set('Allow', 'GET, POST');
+                }
+                data = getTestReceiverHTML(options);
+                sendHeaders(data, 'text/html');
+                res.status(200);
+                res.send(data);
+                return next();
+              })
+              .catch(function(reason){
+                console.log('Not Found:');
+                console.dir(reason);
+              });
+
             break;
         }
       }
@@ -138,7 +171,6 @@ function getTestReceiverResponseHTML(response, headers){
             <li>[ ] The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources, but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).</li>
             <li>[ ] Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).</li>
 
-            <li>[ ] <code>Accept: ${headers['Accept']}</code>, <code>Content-Type: ${response.xhr.getResponseHeader('Content-Type')}</code></li>
             <li>[ ] Response in ${response.xhr.getResponseHeader('Content-Type')} is (in)valid</li>
             <li>[ ] Inbox is an <code>ldp:Container</code></li>
             <li>[ ] Found <code>ldp:contains</code></li>
@@ -147,6 +179,7 @@ function getTestReceiverResponseHTML(response, headers){
     </div>
 </div>
 `;
+//            <li>[ ] <code>Accept: ${headers['Accept']}</code>, <code>Content-Type: ${response.xhr.getResponseHeader('Content-Type')}</code></li>
 }
 
 
