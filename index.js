@@ -8,6 +8,8 @@ mayktso.init();
 mayktso.app.route('/receiver').all(testResource);
 //console.log(mayktso.app._router.stack);
 var getResource = mayktso.getResource;
+var getResourceHead = mayktso.getResourceHead;
+var getResourceOptions = mayktso.getResourceOptions;
 var postResource = mayktso.postResource;
 var htmlEntities = mayktso.htmlEntities;
 
@@ -62,7 +64,20 @@ console.log(values);
           case 'GET': case 'HEAD': case 'OPTIONS': default:
             headers['Accept'] = ('test-receiver-mimetype' in values) ? values['test-receiver-mimetype'] : 'application/ld+json';
 // console.log(headers);
-            getResource(values['test-receiver-url'], headers)
+            var request;
+            switch(values['test-receiver-method']){
+              case 'GET':
+                request = getResource(values['test-receiver-url'], headers);
+                break;
+              case 'HEAD':
+                request = getResourceHead(values['test-receiver-url'], headers);
+                break;
+              case 'OPTIONS':
+                request = getResourceOptions(values['test-receiver-url'], headers);
+                break;
+            }
+
+            request
               .then(function(response){
 // console.log(response);
                 var options = {};
