@@ -117,13 +117,12 @@ console.log(values);
 
                 data = getTestReceiverHTML(options);
                 res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-                res.set('Content-Type', contentType +';charset=utf-8');
+                res.set('Content-Type', 'text/html;charset=utf-8');
                 res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
                 res.set('ETag', etag(data));
 //                    res.set('Last-Modified', stats.mtime);
                 res.set('Vary', 'Origin');
                 res.set('Allow', 'GET, POST');
-                sendHeaders(data, 'text/html');
                 res.status(200);
                 res.send(data);
                 return next();
