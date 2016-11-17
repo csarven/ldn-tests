@@ -4,10 +4,9 @@
 * Latest Published: https://www.w3.org/TR/ldn/
 * Editor's Draft: https://linkedresearch.org/ldn/
 
-Tests are on their way and will be available on the site! Stay tuned..
+The test suite is in progress at: https://linkedresearch.org/ldn/tests/
 
-Or if you are the hardcore Web person, do the following (improvements are
-welcome):
+Stay tuned.. or if you are a legendary Web developer, dive into:
 
 ## Setup
 ```bash
