@@ -123,7 +123,7 @@ function testResource(req, res, next){
         }
       }
       else {
-        restPOST();
+        resetPOST();
       }
 
       break;
