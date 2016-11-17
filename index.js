@@ -60,7 +60,7 @@ function testResource(req, res, next){
         switch(keyValues['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
             var headers = {};
-            headers['Accept'] = ('test-receiver-accept' in keyValues) ? keyValues['test-receiver-accept'] : 'application/ld+json';
+            headers['Accept'] = ('test-receiver-mimetype' in keyValues) ? keyValues['test-receiver-mimetype'] : 'application/ld+json';
 // console.log(headers);
             getResource(keyValues['test-receiver-url'], headers)
               .then(function(response){
@@ -176,7 +176,40 @@ text-align: right;
 padding: 0.25em;
 }
 #test-receiver-response pre { overflow: auto; }
+.dn { display:none }
 </style>
+<script>
+
+function updateForm(node, options){
+  var data = document.querySelector('textarea[name="test-receiver-data"]');
+  var mimetypeLabel = document.querySelectorAll('label[for="test-receiver-mimetype"] span');
+
+  switch(node.value){
+    case 'GET': case 'HEAD': case 'OPTIONS': default:
+      data.parentNode.classList.add('dn');
+      data.setAttribute('disabled', 'disabled');
+      mimetypeLabel[0].classList.remove('dn');
+      mimetypeLabel[2].classList.add('dn');
+      break;
+    case 'POST':
+      data.parentNode.classList.remove('dn');
+      data.removeAttribute('disabled');
+      mimetypeLabel[0].classList.add('dn');
+      mimetypeLabel[2].classList.remove('dn');
+      break;
+  }
+}
+
+function init() {
+  var selectReceiverMethod = document.querySelector('select[name="test-receiver-method"]');
+  updateForm(selectReceiverMethod);
+
+  selectReceiverMethod.addEventListener('change', function(e) {
+    updateForm(e.target);
+  });
+}
+document.addEventListener('DOMContentLoaded', function(){ init(); });
+</script>
     </head>
 
     <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
@@ -214,8 +247,8 @@ padding: 0.25em;
                                             <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" />
                                         </li>
                                         <li>
-                                            <label for="test-receiver-accept">Accept</label>
-                                            <select name="test-receiver-accept">
+                                            <label for="test-receiver-mimetype"><span>Accept</span><span class="dn"> / </span><span>Content-Type</span></label>
+                                            <select name="test-receiver-mimetype">
                                                 <option value="application/ld+json">application/ld+json</option>
                                                 <option value="text/turtle">text/turtle</option>
                                             </select>
