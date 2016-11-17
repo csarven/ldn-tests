@@ -184,18 +184,26 @@ function getTestReceiverResponseHTML(response, headers){
 }
 
 
-
-function getTestReceiverHTML(options){
-  var receiverMethodOptions = ['GET', 'HEAD', 'OPTIONS', 'POST'];
-  var receiverMethodOptionsHTML = '';
-  receiverMethodOptions.forEach(function(o){
+function getSelectOptionsHTML(options, selectedOption) {
+  console.log(options);
+  console.log(selectedOption);
+  var s = '';
+  options.forEach(function(o){
     var selected = '';
-    if(o == (options && options['test-receiver-method'])) {
+    if(o == selectedOption) {
       selected = ' selected="selected"';
     }
-    receiverMethodOptionsHTML += '<option value="' + o + '"' + selected +'>' + o + '</option>\n\
+    s += '<option value="' + o + '"' + selected +'>' + o + '</option>\n\
 ';
   });
+  return s;
+}
+
+function getTestReceiverHTML(options){
+  var selectedOption = (options && options['test-receiver-method']) ? options['test-receiver-method'] : '';
+  var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
+  selectedOption = (options && options['test-receiver-mimetype']) ? options['test-receiver-method'] : '';
+  var receiverMimetypeOptionsHTML = getSelectOptionsHTML(['application/ld+json', 'text/turtle'], selectedOption);
 
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -291,8 +299,7 @@ ${receiverMethodOptionsHTML}
                                         <li>
                                             <label for="test-receiver-mimetype"><span>Accept</span><span class="dn"> / </span><span>Content-Type</span></label>
                                             <select name="test-receiver-mimetype">
-                                                <option value="application/ld+json">application/ld+json</option>
-                                                <option value="text/turtle">text/turtle</option>
+${receiverMimetypeOptionsHTML}
                                             </select>
                                         </li>
                                         <li>
