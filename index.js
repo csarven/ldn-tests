@@ -156,7 +156,7 @@ function getTestReceiverResponseHTML(response, headers){
     <p>Response body:</p>
     <pre id="test-receiver-response-data">${response.xhr.responseText}</pre>
 
-    <p>Report:</p>
+    <p>Report (TODO: Add ✔ or ✗ for each applicable test. Hide N/A tests):</p>
     <div id="test-receiver-response-report">
         <ul>
             <li>[ ] <em class="rfc2119">MUST</em> support <code>GET</code> and <code>POST</code> requests on the Inbox URL.</li>
