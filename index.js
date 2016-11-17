@@ -51,23 +51,22 @@ function testResource(req, res, next){
 
     case 'POST':
 // console.log(req);
-      var keyValues = req.body || {};
-      console.log(keyValues);
+      var values = req.body || {};
+console.log(values);
 
-      if(keyValues['test-receiver-method'] && keyValues['test-receiver-url'] && (keyValues['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || keyValues['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
-// console.log(keyValues['test-receiver-url']);
+      if(values['test-receiver-method'] && values['test-receiver-url'] && (values['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || values['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
+// console.log(values['test-receiver-url']);
         var headers = {};
         var data;
-        switch(keyValues['test-receiver-method']){
+        switch(values['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
-            headers['Accept'] = ('test-receiver-mimetype' in keyValues) ? keyValues['test-receiver-mimetype'] : 'application/ld+json';
+            headers['Accept'] = ('test-receiver-mimetype' in values) ? values['test-receiver-mimetype'] : 'application/ld+json';
 // console.log(headers);
-            getResource(keyValues['test-receiver-url'], headers)
+            getResource(values['test-receiver-url'], headers)
               .then(function(response){
 // console.log(response);
                 var options = {};
                 options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
-
 
                 data = getTestReceiverHTML(options);
                 res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
@@ -89,11 +88,11 @@ function testResource(req, res, next){
             break;
 
           case 'POST':
-            headers['Content-Type'] = ('test-receiver-mimetype' in keyValues) ? keyValues['test-receiver-mimetype'] : 'application/ld+json';
+            headers['Content-Type'] = ('test-receiver-mimetype' in values) ? values['test-receiver-mimetype'] : 'application/ld+json';
 
-            data = ('test-receiver-data' in keyValues && keyValues['test-receiver-data'].length > 0) ? keyValues['test-receiver-data'] : '';
+            data = ('test-receiver-data' in values && values['test-receiver-data'].length > 0) ? values['test-receiver-data'] : '';
 
-            postResource(keyValues['test-receiver-url'], '', data, headers['Content-Type'])
+            postResource(values['test-receiver-url'], '', data, headers['Content-Type'])
               .then(function(response){
 // console.log(response.xhr);
 
