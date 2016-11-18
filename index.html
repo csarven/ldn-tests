@@ -48,15 +48,31 @@
                     <section id="tests" inlist="" rel="schema:hasPart" resource="#tests">
                         <h2 property="schema:name">Tests</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p id="discovery"><strong>Discovery</strong>:</p>
+                            <p>This is the test suite for Linked Data Notifications. It is a work in progress. Once your implementation has passed the relevant tests, you can submit an <a href="https://github.com/w3c/ldn/implementations">implementation report</a> to help enable this specification progress to recommendation. Running the tests will generate a checklist, filled in where possible, to indicate which tests are passed, and thus which features you have implemented according to the spec.</p>
+
+                            <p id="sender"><strong>Senders</strong>:</p>
+                            <p>If you have implemented a sender, use these tests to make sure it conforms to the spec.</p>
+                            <ul>
+                                <li>(discovery tests)</li>
+                                <li>(sending tests)</li>
+                            </ul>
+
+                            <p id="consumer"><strong>Consumers</strong>:</p>
+                            <p>If you have implemented a consumer, use these tests to make sure it conforms to the spec.</p>
+                            <ul>
+                                <li>(discovery tests)</li>
+                                <li>(consuming tests)</li>
+                            </ul>
+                            <!-- <p id="discovery"><strong>Discovery</strong>:</p>
                             <ul>
                                 <li><q>make an HTTP <code>HEAD</code> or <code>GET</code> request on the target URL, and use the <code>Link</code> header with a <code>rel</code> value of <code>http://www.w3.org/ns/ldp#inbox</code></q> [<a href="https://www.w3.org/TR/ldn/#discovery-http-headers">discovery-http-header</a>]</li>
                                 <li><q>make an HTTP <code>GET</code> request on the target URL to retrieve an RDF representation [<cite><a class="bibref" href="#bib-rdf11-concepts">RDF 1.1</a></cite>], whose encoded RDF graph contains a relation of type <code>http://www.w3.org/ns/ldp#inbox</code>. The subject of that relation is target and the object is the Inbox.</q> [<a href="https://www.w3.org/TR/ldn/#discovery-resource-description">discovery-resource-description</a>]</li>
-                            </ul>
+                            </ul> -->
 
                             <p id="receiver"><strong>Receiver</strong>:</p>
+                            <p>If you have implemented a receiver, use these tests to make sure it conforms to the spec.</p>
                             <ul>
-                                <li>There is test form for <a href="https://linkedresearch.org/ldn/tests/receiver">receivers</a>.</li>
+                                <li><a href="https://linkedresearch.org/ldn/tests/receiver">Submit requests to your receiver</a>.</li>
                             </ul>
                         </div>
                     </section>
