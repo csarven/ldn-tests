@@ -222,16 +222,6 @@ function getTestReceiverHTML(options){
         <title>Linked Data Notifications (LDN) Tests - Receiver</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
-        <link href="https://dokie.li/media/css/lncs.css" media="all" rel="stylesheet alternate" title="LNCS" />
-        <link href="https://dokie.li/media/css/acm.css" media="all" rel="stylesheet alternate" title="ACM" />
-        <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" media="all" rel="stylesheet alternate" title="W3C-ED" />
-        <link href="https://dokie.li/media/css/do.css" media="all" rel="stylesheet" />
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" media="all" rel="stylesheet" />
-        <link href="https://dokie.li/media/css/editor.css" media="all" rel="stylesheet" />
-        <script src="https://dokie.li/scripts/simplerdf.js"></script>
-        <script src="https://dokie.li/scripts/medium-editor.min.js"></script>
-        <script src="https://dokie.li/scripts/medium-editor-tables.min.js"></script>
-        <script src="https://dokie.li/scripts/do.js"></script>
 <style>
 #test-receiver label {
 width: 15%;
