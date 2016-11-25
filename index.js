@@ -54,7 +54,7 @@ function testResource(req, res, next){
     case 'POST':
 // console.log(req);
       var values = req.body || {};
-console.log(values);
+// console.log(values);
 
       if(values['test-receiver-method'] && values['test-receiver-url'] && (values['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || values['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
 // console.log(values['test-receiver-url']);
@@ -111,6 +111,9 @@ console.log(values);
               .then(function(response){
 // console.log(response.xhr);
 
+                //RUN TESTS HERE
+                var testResults = getTestResults(response, headers);
+
                 var options = values;
                 options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
 
@@ -148,6 +151,13 @@ console.log(values);
       break;
   }
 }
+
+function getTestResults(response, headers) {
+  var testResults = {};
+
+  return testResults;
+}
+
 
 function getTestReceiverResponseHTML(response, headers){
     return `<div id="test-receiver-response">
