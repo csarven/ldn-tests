@@ -284,13 +284,6 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
 
                                     <ul>
                                         <li>
-                                            <label for="test-receiver-url-type">Test</label>
-                                            <select name="test-receiver-url-type">
-                                                <option value="inbox">Inbox</option>
-                                                <option value="notification">Notification</option>
-                                            </select>
-                                        </li>
-                                        <li>
                                             <label for="test-receiver-method">Method</label>
                                             <select name="test-receiver-method">
 ${receiverMethodOptionsHTML}
@@ -312,6 +305,7 @@ ${receiverMimetypeOptionsHTML}
                                         </li>
                                     </ul>
 
+                                    <inbox type="hidden" name="test-type" value="receiver" />
                                     <input type="submit" name="test-receiver-submit" value="Submit" id="test-receiver-submit" class="submit"/>
                                 </fieldset>
                             </form>
