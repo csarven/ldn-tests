@@ -53,37 +53,38 @@ function testResource(req, res, next){
 
     case 'POST':
 // console.log(req);
-      var values = req.body || {};
-// console.log(values);
+      var reqBody = req.body || {};
+// console.log(reqBody);
 
-      if(values['test-receiver-method'] && values['test-receiver-url'] && (values['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || values['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
-// console.log(values['test-receiver-url']);
-        var headers = {};
-        var data;
-        switch(values['test-receiver-method']){
+      if(reqBody['test-receiver-method'] && reqBody['test-receiver-url'] && (reqBody['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || reqBody['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
+// console.log(reqBody['test-receiver-url']);
+        var headers = {}, data, request, results;
+
+        switch(reqBody['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
-            headers['Accept'] = ('test-receiver-mimetype' in values) ? values['test-receiver-mimetype'] : 'application/ld+json';
+            headers['Accept'] = ('test-receiver-mimetype' in reqBody) ? reqBody['test-receiver-mimetype'] : 'application/ld+json';
 // console.log(headers);
-            var request;
-            switch(values['test-receiver-method']){
+
+            switch(reqBody['test-receiver-method']){
               case 'GET':
-                request = getResource(values['test-receiver-url'], headers);
+                request = getResource(reqBody['test-receiver-url'], headers);
                 break;
               case 'HEAD':
-                request = getResourceHead(values['test-receiver-url'], headers);
+                request = getResourceHead(reqBody['test-receiver-url'], headers);
                 break;
               case 'OPTIONS':
-                request = getResourceOptions(values['test-receiver-url'], headers);
+                request = getResourceOptions(reqBody['test-receiver-url'], headers);
                 break;
             }
 
             request
               .then(function(response){
 // console.log(response);
-                var options = values;
-                options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
+                results = getTestResults(reqBody, response);
+                results['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, results);
+console.log(results);
+                data = getTestReceiverHTML(reqBody, response, results);
 
-                data = getTestReceiverHTML(options);
                 res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
                 res.set('Content-Type', 'text/html;charset=utf-8');
                 res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
@@ -103,22 +104,18 @@ function testResource(req, res, next){
             break;
 
           case 'POST':
-            headers['Content-Type'] = ('test-receiver-mimetype' in values) ? values['test-receiver-mimetype'] : 'application/ld+json';
+            headers['Content-Type'] = ('test-receiver-mimetype' in reqBody) ? reqBody['test-receiver-mimetype'] : 'application/ld+json';
+            data = ('test-receiver-data' in reqBody && reqBody['test-receiver-data'].length > 0) ? reqBody['test-receiver-data'] : '';
 
-            data = ('test-receiver-data' in values && values['test-receiver-data'].length > 0) ? values['test-receiver-data'] : '';
-
-            postResource(values['test-receiver-url'], '', data, headers['Content-Type'])
+            postResource(reqBody['test-receiver-url'], '', data, headers['Content-Type'])
               .then(function(response){
 // console.log(response.xhr);
 
-                //RUN TESTS HERE
-                var testResults = getTestResults(response, headers);
+                results = getTestResults(reqBody, response);
+                results['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, results);
+console.log(results);
+                data = getTestReceiverHTML(reqBody, response, results);
 
-                var options = values;
-                options['test-receiver-response'] = getTestReceiverResponseHTML(response, headers);
-
-
-                data = getTestReceiverHTML(options);
                 res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
                 res.set('Content-Type', 'text/html;charset=utf-8');
                 res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
@@ -152,14 +149,14 @@ function testResource(req, res, next){
   }
 }
 
-function getTestResults(response, headers) {
-  var testResults = {};
+function getTestResults(request, response) {
+  var r = {};
 
-  return testResults;
+  return r;
 }
 
 
-function getTestReceiverResponseHTML(response, headers){
+function getTestReceiverResponseHTML(request, response, results){
     return `<div id="test-receiver-response">
     <p>Response headers:</p>
     <pre id="test-receiver-response-header">${htmlEntities(response.xhr.getAllResponseHeaders())}</pre>
@@ -209,10 +206,10 @@ function getSelectOptionsHTML(options, selectedOption) {
   return s;
 }
 
-function getTestReceiverHTML(options){
-  var selectedOption = (options && options['test-receiver-method']) ? options['test-receiver-method'] : '';
+function getTestReceiverHTML(request, response, results){
+  var selectedOption = (request && request['test-receiver-method']) ? request['test-receiver-method'] : '';
   var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
-  selectedOption = (options && options['test-receiver-mimetype']) ? options['test-receiver-method'] : '';
+  selectedOption = (request && request['test-receiver-mimetype']) ? request['test-receiver-mimetype'] : '';
   var receiverMimetypeOptionsHTML = getSelectOptionsHTML(['application/ld+json', 'text/turtle'], selectedOption);
 
   return `<!DOCTYPE html>
@@ -274,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                     <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
                         <h2 property="schema:name">Receiver</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <form action="#test-receiver" id="test-receiver" method="post">
+                            <form action="" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
 
@@ -294,7 +291,7 @@ ${receiverMethodOptionsHTML}
                                         </li>
                                         <li>
                                             <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" value="${(options && 'test-receiver-url' in options) ? options['test-receiver-url'] : ''}" />
+                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" value="${(request && 'test-receiver-url' in request) ? request['test-receiver-url'] : ''}" />
                                         </li>
                                         <li>
                                             <label for="test-receiver-mimetype"><span>Accept</span><span class="dn"> / </span><span>Content-Type</span></label>
@@ -304,14 +301,14 @@ ${receiverMimetypeOptionsHTML}
                                         </li>
                                         <li>
                                             <label for="test-receiver-data">Data</label>
-                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">${(options && 'test-receiver-data' in options) ? options['test-receiver-data'] : ''}</textarea>
+                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">${(request && 'test-receiver-data' in request) ? request['test-receiver-data'] : ''}</textarea>
                                         </li>
                                     </ul>
 
                                     <input type="submit" name="test-receiver-submit" value="Submit" id="test-receiver-submit" class="submit"/>
                                 </fieldset>
                             </form>
-${(options && 'test-receiver-response' in options) ? options['test-receiver-response'] : ''}
+${(results && 'test-receiver-response' in results) ? results['test-receiver-response'] : ''}
                         </div>
                     </section>
                 </div>
