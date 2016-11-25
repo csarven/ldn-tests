@@ -80,7 +80,7 @@ function testResource(req, res, next){
 
       if(reqBody['test-receiver-method'] && reqBody['test-receiver-url'] && (reqBody['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || reqBody['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
 // console.log(reqBody['test-receiver-url']);
-        var headers = {}, data, request, results = {};
+        var headers = {}, data, request, report = {};
 
         switch(reqBody['test-receiver-method']){
           case 'GET': case 'HEAD': case 'OPTIONS': default:
@@ -102,10 +102,10 @@ function testResource(req, res, next){
             request
               .then(function(response){
 // console.log(response);
-                results['test-receiver-response-report'] = getTestResults(reqBody, response);
-                results['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, results);
-console.log(results);
-                data = getTestReceiverHTML(reqBody, response, results);
+                report['test-receiver-response-report'] = getTestReport(reqBody, response);
+                report['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, report);
+console.log(report);
+                data = getTestReceiverHTML(reqBody, response, report);
 
                 res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
                 res.set('Content-Type', 'text/html;charset=utf-8');
@@ -133,10 +133,10 @@ console.log(results);
               .then(function(response){
 // console.log(response.xhr);
 
-                results = getTestResults(reqBody, response);
-                results['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, results);
-console.log(results);
-                data = getTestReceiverHTML(reqBody, response, results);
+                report['test-receiver-response-report'] = getTestReport(reqBody, response);
+                report['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, report);
+console.log(report);
+                data = getTestReceiverHTML(reqBody, response, report);
 
                 res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
                 res.set('Content-Type', 'text/html;charset=utf-8');
@@ -171,14 +171,14 @@ console.log(results);
   }
 }
 
-function getTestResults(request, response) {
+function getTestReport(request, response) {
   var r = {};
 
   return r;
 }
 
 
-function getTestReceiverResponseHTML(request, response, results){
+function getTestReceiverResponseHTML(request, response, report){
     return `<div id="test-receiver-response">
     <p>Response headers:</p>
     <pre id="test-receiver-response-header">${htmlEntities(response.xhr.getAllResponseHeaders())}</pre>
@@ -188,7 +188,7 @@ function getTestReceiverResponseHTML(request, response, results){
 
     <p>Report (TODO: Add ✔ or ✗ for each applicable test. Hide N/A tests):</p>
     <ul id="test-receiver-response-report">
-${results['test-receiver-response-report']}
+${report['test-receiver-response-report']}
     </ul>
 </div>
 `;
@@ -211,7 +211,7 @@ function getSelectOptionsHTML(options, selectedOption) {
   return s;
 }
 
-function getTestReceiverHTML(request, response, results){
+function getTestReceiverHTML(request, response, report){
   var selectedOption = (request && request['test-receiver-method']) ? request['test-receiver-method'] : '';
   var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
   selectedOption = (request && request['test-receiver-mimetype']) ? request['test-receiver-mimetype'] : '';
@@ -313,7 +313,7 @@ ${receiverMimetypeOptionsHTML}
                                     <input type="submit" name="test-receiver-submit" value="Submit" id="test-receiver-submit" class="submit"/>
                                 </fieldset>
                             </form>
-${(results && 'test-receiver-response' in results) ? results['test-receiver-response'] : ''}
+${(report && 'test-receiver-response' in report) ? report['test-receiver-response'] : ''}
                         </div>
                     </section>
                 </div>
