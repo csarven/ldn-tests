@@ -177,8 +177,8 @@ console.log(report);
 function getTestReport(request, response) {
   var r = ldnTests;
 
-  if('test-type' in request) {
-    switch(request['test-type']) {
+  if('test-implementation' in request) {
+    switch(request['test-implementation']) {
       case 'sender':
         break;
       case 'consumer':
@@ -343,29 +343,18 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                     <legend>Test Receiver</legend>
 
                                     <ul>
-                                        <li>
-                                            <label for="test-receiver-method">Method</label>
-                                            <select name="test-receiver-method">
-${receiverMethodOptionsHTML}
-                                            </select>
-                                        </li>
-                                        <li>
+                                         <li>
                                             <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" value="${(request && 'test-receiver-url' in request) ? request['test-receiver-url'] : ''}" />
+                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" value="http://linkedresearch.org/ldn/tests/inbox/" />
                                         </li>
-                                        <li>
-                                            <label for="test-receiver-mimetype"><span>Accept</span><span class="dn"> / </span><span>Content-Type</span></label>
-                                            <select name="test-receiver-mimetype">
-${receiverMimetypeOptionsHTML}
-                                            </select>
-                                        </li>
+
                                         <li>
                                             <label for="test-receiver-data">Data</label>
-                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">${(request && 'test-receiver-data' in request) ? request['test-receiver-data'] : ''}</textarea>
+                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
                                         </li>
                                     </ul>
 
-                                    <input type="hidden" name="test-type" value="receiver" />
+                                    <input type="hidden" name="test-implementation" value="receiver" />
                                     <input type="submit" value="Submit" />
                                 </fieldset>
                             </form>
@@ -379,6 +368,9 @@ ${(report && 'test-receiver-response' in report) ? report['test-receiver-respons
 </html>
 `;
 }
+
+//${(request && 'test-receiver-url' in request) ? request['test-receiver-url'] : ''}
+//${(request && 'test-receiver-data' in request) ? request['test-receiver-data'] : ''}
 
 
 module.exports = {
