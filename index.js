@@ -289,8 +289,9 @@ function checkPostResponseLocation(req, response){
 }
 
 function checkHead(req, response){
-console.log('checkHead');
-  return true;
+  var c = (response.xhr.status != 405);
+console.log('checkHead: ' + c);
+  return c;
 }
 
 function checkOptions(req, response){
