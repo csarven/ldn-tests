@@ -251,6 +251,22 @@ ${report['test-receiver-response-report']}
 //            <li>[ ] <code>Accept: ${headers['Accept']}</code>, <code>Content-Type: ${response.xhr.getResponseHeader('Content-Type')}</code></li>
 }
 
+function getTestReportHTML(report){
+  var s = '', testResult = '';
+  var pass = '✔';
+  var fail = '✗';
+  var na = 'NA';
+
+  Object.keys(report).forEach(function(implementation){
+    Object.keys(report[implementation]).forEach(function(test){
+      testResult = (report[implementation][test]['result']) ? pass : fail;
+
+      s += '<tr id="test-' + test + '"><td class="test-id">' + test + '</td><td class="test-result">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][test]['description'] + '</td></tr>';
+    });
+  });
+
+  return s;
+}
 
 function getSelectOptionsHTML(options, selectedOption) {
   console.log(options);
