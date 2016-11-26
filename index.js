@@ -32,7 +32,8 @@ var ldnTests = {
     '14': { 'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources' , 'function': ''  },
     '15': { 'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).', 'function': ''  },
     '16': { 'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).', 'function': ''  },
-    '17': { 'description': 'Inbox is an <code>ldp:Container</code>', 'function': ''  }
+    '17': { 'description': 'Inbox is an <code>ldp:Container</code>', 'function': ''  },
+    '18': { 'description': 'Inbox accepts <code>HEAD</code> requests', 'function': '' }
   },
   'consumer': {}
 }
