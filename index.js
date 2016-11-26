@@ -259,8 +259,10 @@ console.log('checkPost');
 }
 
 function checkPostResponseCreated(req, response){
-console.log('checkPostResponseCreated');
-  return true;
+  var c = (response.xhr.status == 201);
+console.log('checkPostResponseCreated: ' + c);
+
+  return c;
 }
 
 function checkPostResponseLocation(req, response){
