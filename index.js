@@ -38,8 +38,12 @@ var ldnTests = {
   'consumer': {}
 }
 
+var receiverMethods = ['OPTIONS', 'HEAD', 'GET', 'POST'];
+
 function testResource(req, res, next){
 // console.log(req.requestedPath);
+// console.log(req);
+
   switch(req.method){
     case 'GET':
       if(!req.accepts(['text/html', '*/*'])) {
@@ -47,33 +51,23 @@ function testResource(req, res, next){
         res.end();
         return next();
       }
-//      fs.stat(req.requestedPath, function(error, stats) {
-        // if (error) {
-        //   res.status(404);
-        //   return next();
-        // }
 
-        // if (error) { console.log(error); }
+      var data = getTestReceiverHTML();
 
-        var data = getTestReceiverHTML();
+      if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+        res.status(304);
+        res.end();
+      }
 
-        if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
-          res.status(304);
-          res.end();
-        }
-
-        res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-        res.set('Content-Type', 'text/html;charset=utf-8');
-        res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
-        res.set('ETag', etag(data));
-//          res.set('Last-Modified', stats.mtime);
-        res.set('Vary', 'Origin');
-        res.set('Allow', 'GET, POST');
-        res.status(200);
-        res.send(data);
-        return next();
-//      });
-
+      res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+      res.set('Content-Type', 'text/html;charset=utf-8');
+      res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+      res.set('ETag', etag(data));
+      res.set('Vary', 'Origin');
+      res.set('Allow', 'GET, POST');
+      res.status(200);
+      res.send(data);
+      return next();
       break;
 
     case 'POST':
@@ -273,11 +267,11 @@ function getSelectOptionsHTML(options, selectedOption) {
   return s;
 }
 
-function getTestReceiverHTML(request, response, report){
-  var selectedOption = (request && request['test-receiver-method']) ? request['test-receiver-method'] : '';
-  var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
-  selectedOption = (request && request['test-receiver-mimetype']) ? request['test-receiver-mimetype'] : '';
-  var receiverMimetypeOptionsHTML = getSelectOptionsHTML(['application/ld+json', 'text/turtle'], selectedOption);
+function getTestReceiverHTML(request, results){
+  // var selectedOption = (request && request['test-receiver-method']) ? request['test-receiver-method'] : '';
+  // var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
+  // selectedOption = (request && request['test-receiver-mimetype']) ? request['test-receiver-mimetype'] : '';
+  // var receiverMimetypeOptionsHTML = getSelectOptionsHTML(['application/ld+json', 'text/turtle'], selectedOption);
 
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -318,12 +312,12 @@ function updateForm(node, options){
 }
 
 function init() {
-  var selectReceiverMethod = document.querySelector('select[name="test-receiver-method"]');
-  updateForm(selectReceiverMethod);
+  // var selectReceiverMethod = document.querySelector('select[name="test-receiver-method"]');
+  // updateForm(selectReceiverMethod);
 
-  selectReceiverMethod.addEventListener('change', function(e) {
-    updateForm(e.target);
-  });
+  // selectReceiverMethod.addEventListener('change', function(e) {
+  //   updateForm(e.target);
+  // });
 }
 document.addEventListener('DOMContentLoaded', function(){ init(); });
 </script>
@@ -358,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                     <input type="submit" value="Submit" />
                                 </fieldset>
                             </form>
-${(report && 'test-receiver-response' in report) ? report['test-receiver-response'] : ''}
+${(results && 'test-receiver-response-html' in results) ? results['test-receiver-response-html'] : ''}
                         </div>
                     </section>
                 </div>
