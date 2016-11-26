@@ -16,23 +16,23 @@ var htmlEntities = mayktso.htmlEntities;
 var ldnTests = {
   'sender': {},
   'receiver': {
-    '1': { 'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.', 'url': '' },
-    '2': { 'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.', 'url': '' },
-    '3': { 'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>', 'url': '' },
-    '4': { 'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.', 'url': ''},
-    '5': { 'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.', 'url': '' },
-    '6': { 'description': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.', 'url': '' },
-    '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'url': '' },
-    '8': { 'description': '<li>...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI', 'url': '' },
-    '9': { 'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.', 'url': '' },
-    '10': { 'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).', 'url': '' },
-    '11': { 'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.', 'url': '' },
-    '12': { 'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.', 'url': '' },
-    '13': { 'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.', 'url': '' },
-    '14': { 'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources' , 'url': '' },
-    '15': { 'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).', 'url': '' },
-    '16': { 'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).', 'url': '' },
-    '17': { 'description': 'Inbox is an <code>ldp:Container</code>', 'url': '' }
+    '1': { 'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.', 'function': ''  },
+    '2': { 'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.', 'function': checkIfPost },
+    '3': { 'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>', 'function': checkIfPostResponseCreated  },
+    '4': { 'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.', 'function': checkIfPostResponseLocation },
+    '5': { 'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.', 'function': ''  },
+    '6': { 'description': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.', 'function': ''  },
+    '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'function': ''  },
+    '8': { 'description': '<li>...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI', 'function': ''  },
+    '9': { 'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.', 'function': ''  },
+    '10': { 'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).', 'function': ''  },
+    '11': { 'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.', 'function': ''  },
+    '12': { 'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.', 'function': ''  },
+    '13': { 'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.', 'function': ''  },
+    '14': { 'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources' , 'function': ''  },
+    '15': { 'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).', 'function': ''  },
+    '16': { 'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).', 'function': ''  },
+    '17': { 'description': 'Inbox is an <code>ldp:Container</code>', 'function': ''  }
   },
   'consumer': {}
 }
@@ -76,9 +76,9 @@ function testResource(req, res, next){
       break;
 
     case 'POST':
-// console.log(req);
+console.log(req);
       var reqBody = req.body || {};
-// console.log(reqBody);
+console.log(reqBody);
 
       if(reqBody['test-receiver-method'] && reqBody['test-receiver-url'] && (reqBody['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || reqBody['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
 // console.log(reqBody['test-receiver-url']);
@@ -133,7 +133,7 @@ console.log(report);
 
             postResource(reqBody['test-receiver-url'], '', data, headers['Content-Type'])
               .then(function(response){
-// console.log(response.xhr);
+console.log(response.xhr);
 
                 report['test-receiver-response-report'] = getTestReport(reqBody, response);
                 report['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, report);
@@ -174,10 +174,43 @@ console.log(report);
 }
 
 function getTestReport(request, response) {
-  var r = {};
+  var r = ldnTests;
+
+  if('test-type' in request) {
+    switch(request['test-type']) {
+      case 'sender':
+        break;
+      case 'consumer':
+        break;
+      case 'receiver': default:
+        var checkTests = ['2', '3', '4'];
+        Object.keys(ldnTests['receiver']).forEach(function(key) {
+          if(request['test-receiver-method'] == 'POST' && checkTests.includes(key)){
+console.log('Testing: ' + key);
+//console.log(ldnTests['receiver'][key]);
+            ldnTests['receiver'][key]['result'] = ldnTests['receiver'][key]['function'](request, response);
+          }
+        });
+
+        break;
+    }
+  }
 
   return r;
 }
+
+function checkIfPost(request, response){
+console.log('checkIfPost');
+}
+
+function checkIfPostResponseCreated(request, response){
+console.log('checkIfPostResponseCreated');
+}
+
+function checkIfPostResponseLocation(request, response){
+console.log('checkIfPostResponseLocation');
+}
+
 
 
 function getTestReceiverResponseHTML(request, response, report){
@@ -305,8 +338,8 @@ ${receiverMimetypeOptionsHTML}
                                         </li>
                                     </ul>
 
-                                    <inbox type="hidden" name="test-type" value="receiver" />
-                                    <input type="submit" name="test-receiver-submit" value="Submit" id="test-receiver-submit" class="submit"/>
+                                    <input type="hidden" name="test-type" value="receiver" />
+                                    <input type="submit" value="Submit" />
                                 </fieldset>
                             </form>
 ${(report && 'test-receiver-response' in report) ? report['test-receiver-response'] : ''}
