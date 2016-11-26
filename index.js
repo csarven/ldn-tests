@@ -295,8 +295,9 @@ console.log('checkHead: ' + c);
 }
 
 function checkOptions(req, response){
-console.log('checkOptions');
-  return true;
+  var c = (response.xhr.status != 405);
+console.log('checkOptions: ' + c);
+  return c;
 }
 
 
