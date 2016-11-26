@@ -247,11 +247,12 @@ function getTestReport(req, response) {
 }
 
 function checkGet(url, headers){
+  var headers = headers || {};
   headers['Accept'] = (headers && 'Accept' in headers) ? headers['Accept'] : 'application/ld+json';
 
   return getResource(url, headers).then(
-    function(i){ return true; },
-    function(j){ return false; });
+    function(i){ console.log('checkPost: true'); return true; },
+    function(j){ console.log('checkPost: false'); return false; });
 }
 
 function checkPost(req, response){
