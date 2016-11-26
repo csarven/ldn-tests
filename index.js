@@ -71,94 +71,59 @@ function testResource(req, res, next){
       break;
 
     case 'POST':
-console.log(req);
-      var reqBody = req.body || {};
-console.log(reqBody);
+      var testReceiverPromises = [];
 
-      if(reqBody['test-receiver-method'] && reqBody['test-receiver-url'] && (reqBody['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || reqBody['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
-// console.log(reqBody['test-receiver-url']);
-        var headers = {}, data, request, report = {};
+      receiverMethods.forEach(function(testMethod) {
+        if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
 
-        switch(reqBody['test-receiver-method']){
-          case 'GET': case 'HEAD': case 'OPTIONS': default:
-            headers['Accept'] = ('test-receiver-mimetype' in reqBody) ? reqBody['test-receiver-mimetype'] : 'application/ld+json';
-// console.log(headers);
-
-            switch(reqBody['test-receiver-method']){
-              case 'GET':
-                request = getResource(reqBody['test-receiver-url'], headers);
-                break;
-              case 'HEAD':
-                request = getResourceHead(reqBody['test-receiver-url'], headers);
-                break;
-              case 'OPTIONS':
-                request = getResourceOptions(reqBody['test-receiver-url'], headers);
-                break;
-            }
-
-            request
-              .then(function(response){
-// console.log(response);
-                report['test-receiver-response-report'] = getTestReport(reqBody, response);
-                report['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, report);
-console.log(report);
-                data = getTestReceiverHTML(reqBody, response, report);
-
-                res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-                res.set('Content-Type', 'text/html;charset=utf-8');
-                res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
-                res.set('ETag', etag(data));
-//                    res.set('Last-Modified', stats.mtime);
-                res.set('Vary', 'Origin');
-                res.set('Allow', 'GET, POST');
-                res.status(200);
-                res.send(data);
-                return next();
-              })
-              .catch(function(reason){
-                console.log('Error:');
-                console.log(reason);
-              });
-
-            break;
-
-          case 'POST':
-            headers['Content-Type'] = ('test-receiver-mimetype' in reqBody) ? reqBody['test-receiver-mimetype'] : 'application/ld+json';
-            data = ('test-receiver-data' in reqBody && reqBody['test-receiver-data'].length > 0) ? reqBody['test-receiver-data'] : '';
-
-            postResource(reqBody['test-receiver-url'], '', data, headers['Content-Type'])
-              .then(function(response){
-console.log(response.xhr);
-
-                report['test-receiver-response-report'] = getTestReport(reqBody, response);
-                report['test-receiver-response'] = getTestReceiverResponseHTML(reqBody, response, report);
-console.log(report);
-                data = getTestReceiverHTML(reqBody, response, report);
-
-                res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
-                res.set('Content-Type', 'text/html;charset=utf-8');
-                res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
-                res.set('ETag', etag(data));
-//                    res.set('Last-Modified', stats.mtime);
-                res.set('Vary', 'Origin');
-                res.set('Allow', 'GET, POST');
-                res.status(200);
-                res.send(data);
-                return next();
-              })
-              .catch(function(reason){
-                console.log('Not Found:');
-                console.dir(reason);
-              });
-
-            break;
+          testReceiverPromises.push(testReceiverMethod(testMethod, req));
         }
-      }
-      else {
+      });
 
-      }
+      Promise.all(testReceiverPromises)
+        .then((results) => {
+console.dir(results);
 
+          var reportHTML = [];
+          results.forEach(function(tr){
+            reportHTML.push(tr['test-receiver-report-html']);
+          })
+
+          results['test-receiver-response-html'] = `
+<div id="test-receiver-response">
+  <table id="test-receiver-report">
+    <caption>Test results</caption>
+    <thead><tr><th>Id</th><th>Result</th><th>Description</th></tr></thead>
+    <tfoot><tr><td colspan="3">
+      <dl>
+        <dt><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
+        <dt><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
+        <dt><abbr title="Not applicable">NA</abbr></dt><dd>Not applicable</dd>
+      </dl>
+    </td></tr></tfoot>
+    <tbody>
+${reportHTML.join("\n")}
+    </tbody>
+  </table>
+</div>`;
+// console.log(results['test-receiver-response-html']);
+
+          var data = getTestReceiverHTML(req.body, results);
+// console.log(data);
+
+          res.set('Content-Type', 'text/html;charset=utf-8');
+          res.set('Allow', 'GET, POST');
+          res.status(200);
+          res.send(data);
+
+         return next();
+        })
+        .catch((e) => {
+          console.log('--- catch ---');
+          console.log(e);
+        });
       break;
+
     default:
       res.status(405);
       res.set('Allow', 'GET, POST');
@@ -168,28 +133,115 @@ console.log(report);
   }
 }
 
-function getTestReport(request, response) {
-  var r = ldnTests;
+function testReceiverMethod(method, req) {
+// console.log('------ testReceiverMethod: ' + method);
+// console.log(req.body);
 
-  if('test-implementation' in request) {
-    switch(request['test-implementation']) {
-      case 'sender':
+  return new Promise(function(resolve, reject) {
+    var headers = {}, data, request, results = {};
+
+    switch(method){
+      case 'GET': case 'HEAD': case 'OPTIONS': default:
+        headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+// console.log(headers);
+
+        switch(method){
+          case 'GET': default:
+            request = getResource(req.body['test-receiver-url'], headers);
+            break;
+          case 'HEAD':
+            request = getResourceHead(req.body['test-receiver-url'], headers);
+            break;
+          case 'OPTIONS':
+            request = getResourceOptions(req.body['test-receiver-url'], headers);
+            break;
+        }
+
+        request
+          .then(function(response){
+//console.log(response);
+            results['test-receiver-response'] = response;
+            results['test-receiver-report'] = getTestReport(req, response);
+            results['test-receiver-report-html']  = getTestReportHTML(results['test-receiver-report']);
+// console.log(results);
+
+            return resolve(results);
+          })
+          .catch(function(reason){
+            console.log('Error:');
+            console.log(reason);
+          });
+
         break;
-      case 'consumer':
-        break;
-      case 'receiver': default:
-        var checkTests = ['2', '3', '4'];
-        Object.keys(ldnTests['receiver']).forEach(function(key) {
-          if(request['test-receiver-method'] == 'POST' && checkTests.includes(key)){
-console.log('Testing: ' + key);
-//console.log(ldnTests['receiver'][key]);
-            ldnTests['receiver'][key]['result'] = ldnTests['receiver'][key]['function'](request, response);
-          }
-        });
+
+      case 'POST':
+        headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+        data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
+
+        postResource(req.body['test-receiver-url'], '', data, headers['Content-Type'])
+          .then(function(response){
+//console.log(response.xhr);
+
+            results['test-receiver-response'] = response;
+            results['test-receiver-report'] = getTestReport(req, response);
+            results['test-receiver-report-html']  = getTestReportHTML(results['test-receiver-report']);
+// console.log(results);
+
+            return resolve(results);
+          })
+          .catch(function(reason){
+            console.log('--- catch POST ' + test-receiver-url);
+            console.dir(reason);
+          });
 
         break;
     }
+
+  });
+}
+
+function getTestReport(req, response) {
+  var r = {};
+  var checkTests = [];
+  var implementations = ['sender', 'receiver', 'consumer'];
+  var implementation = ('test-implementation' in req.body && implementations.indexOf(req.body['test-implementation']) > -1) ? req.body['test-implementation'] : undefined;
+
+  if (!implementation) { console.log('--- getTestReport: Invalid test implementation'); return; }
+
+  r[implementation.toLowerCase()] = {};
+
+  switch(implementation.toLowerCase()) {
+    case 'sender':
+      break;
+    case 'consumer':
+      break;
+    case 'receiver': default:
+// console.dir(response);
+      switch(response.xhr._method.toUpperCase()) {
+        case 'OPTIONS':
+          checkTests = ['10'];
+          break;
+
+        case 'HEAD':
+          checkTests = ['18'];
+          break;
+
+        case 'GET':
+          checkTests = ['1'];
+          break;
+
+        case 'POST':
+          checkTests = ['2', '3', '4'];
+          break;
+      }
+
+      break;
   }
+
+  checkTests.forEach(function(test){
+    r[implementation][test] = {};
+    r[implementation][test]['result'] = ldnTests[implementation][test]['function'](req, response);
+  })
 
   return r;
 }
@@ -234,22 +286,6 @@ console.log('checkOptions');
   return true;
 }
 
-function getTestReceiverResponseHTML(request, response, report){
-    return `<div id="test-receiver-response">
-    <p>Response headers:</p>
-    <pre id="test-receiver-response-header">${htmlEntities(response.xhr.getAllResponseHeaders())}</pre>
-
-    <p>Response body:</p>
-    <pre id="test-receiver-response-data">${htmlEntities(response.xhr.responseText)}</pre>
-
-    <p>Report (TODO: Add ✔ or ✗ for each applicable test. Hide N/A tests):</p>
-    <ul id="test-receiver-response-report">
-${report['test-receiver-response-report']}
-    </ul>
-</div>
-`;
-//            <li>[ ] <code>Accept: ${headers['Accept']}</code>, <code>Content-Type: ${response.xhr.getResponseHeader('Content-Type')}</code></li>
-}
 
 function getTestReportHTML(report){
   var s = '', testResult = '';
