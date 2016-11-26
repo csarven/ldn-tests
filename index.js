@@ -254,8 +254,9 @@ function checkGet(url, headers){
 }
 
 function checkPost(req, response){
-console.log('checkPost');
-  return true;
+  var c = (response.xhr.status != 405);
+console.log('checkPost: ' + c);
+  return c;
 }
 
 function checkPostResponseCreated(req, response){
