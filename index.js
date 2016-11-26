@@ -248,6 +248,7 @@ function getTestReport(req, response) {
 
 function checkGet(url, headers){
   headers['Accept'] = (headers && 'Accept' in headers) ? headers['Accept'] : 'application/ld+json';
+
   return getResource(url, headers).then(
     function(i){ return true; },
     function(j){ return false; });
@@ -267,14 +268,21 @@ console.log('checkPostResponseCreated: ' + c);
 }
 
 function checkPostResponseLocation(req, response){
-console.log('checkPostResponseLocation');
-  if(response.xhr.getResponseHeader('Location')){
-    //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
-    // return checkGet(response.xhr.getResponseHeader('Location'));
+  var location = response.xhr.getResponseHeader('Location');
 
-    return true;
+  if(location){
+    var url = location;
+    if(location.toLowerCase().slice(0,7) != 'http://' || location.toLowerCase().slice(0,8) != 'https://') {
+      //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
+      url = location;
+    }
+
+    var c = checkGet(url);
+    console.log('checkPostResponseLocation: ' + c);
+    return c;
   }
   else {
+    console.log('checkPostResponseLocation: false');
     return false;
   }
 }
