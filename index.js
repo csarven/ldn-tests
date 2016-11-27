@@ -246,28 +246,32 @@ function getTestReport(req, response) {
   return r;
 }
 
+//1
 function checkGet(url, headers){
   var headers = headers || {};
   headers['Accept'] = (headers && 'Accept' in headers) ? headers['Accept'] : 'application/ld+json';
 
   return getResource(url, headers).then(
-    function(i){ console.log('checkGet: PASS'); return 'PASS'; },
-    function(j){ console.log('checkGet: FAIL'); return 'FAIL'; });
+    function(i){ console.log('1 checkGet: PASS'); return 'PASS'; },
+    function(j){ console.log('1 checkGet: FAIL'); return 'FAIL'; });
 }
 
+//2
 function checkPost(req, response){
   var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
-console.log('checkPost: ' + c);
+console.log('2 checkPost: ' + c);
   return c;
 }
 
+//3
 function checkPostResponseCreated(req, response){
   var c = (response.xhr.status == 201) ? 'PASS' : 'FAIL';
-console.log('checkPostResponseCreated: ' + c);
+console.log('3 checkPostResponseCreated: ' + c);
 
   return c;
 }
 
+//4
 function checkPostResponseLocation(req, response){
   var location = response.xhr.getResponseHeader('Location');
 
@@ -282,31 +286,34 @@ function checkPostResponseLocation(req, response){
     headers['Accept'] = 'application/ld+json';
 
     return getResource(url, headers).then(
-      function(i){ console.log('checkPostResponseLocation: PASS'); return 'PASS'; },
-      function(j){ console.log('checkPostResponseLocation: FAIL'); return 'FAIL'; });
+      function(i){ console.log('4 checkPostResponseLocation: PASS'); return 'PASS'; },
+      function(j){ console.log('4 checkPostResponseLocation: FAIL'); return 'FAIL'; });
   }
   else {
-    console.log('checkPostResponseLocation: FAIL');
+    console.log('4 checkPostResponseLocation: FAIL');
     return 'FAIL';
   }
 }
 
+//5
 function checkPostResponseAccepted(req, response){
   var c = (response.xhr.status == 202) ? 'PASS' : ((response.xhr.status == 201) ? 'NA' : 'FAIL') ;
-console.log('checkPostResponseAccepted: ' + c);
+console.log('5 checkPostResponseAccepted: ' + c);
 
   return c;
 }
 
+//18
 function checkHead(req, response){
   var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
-console.log('checkHead: ' + c);
+console.log('18 checkHead: ' + c);
   return c;
 }
 
+//10
 function checkOptions(req, response){
   var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
-console.log('checkOptions: ' + c);
+console.log('10 checkOptions: ' + c);
   return c;
 }
 
