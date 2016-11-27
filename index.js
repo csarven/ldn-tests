@@ -289,7 +289,7 @@ function checkPostResponseLocation(req, response){
 }
 
 function checkPostResponseAccepted(req, response){
-  var c = (response.xhr.status == 202);
+  var c = (response.xhr.status == 202) ? true : ((response.xhr.status == 201) ? 'NA' : false) ;
 console.log('checkPostResponseAccepted: ' + c);
 
   return c;
