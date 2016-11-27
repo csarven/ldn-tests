@@ -22,7 +22,7 @@ var ldnTests = {
     '4': { 'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.', 'function': checkPostResponseLocation },
     '5': { 'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.', 'function': checkPostResponseAccepted  },
     '6': { 'description': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.', 'function': ''  },
-    '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'function': ''  },
+    '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'function': '' },
     '8': { 'description': '<li>...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI', 'function': ''  },
     '9': { 'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.', 'function': ''  },
     '10': { 'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).', 'function': checkOptions  },
@@ -308,6 +308,7 @@ console.log('checkOptions: ' + c);
 }
 
 
+
 function getTestReportHTML(report){
   var s = '', testResult = '';
   var pass = '✔';
@@ -412,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                     <ul>
                                          <li>
                                             <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/tests/inbox/" value="https://linkedresearch.org/ldn/tests/inbox/" />
+                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/tests/inbox/" value="" />
                                         </li>
 
                                         <li>
