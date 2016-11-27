@@ -278,9 +278,9 @@ function checkPostResponseLocation(req, response){
       url = location;
     }
 
-    var c = checkGet(url);
-    console.log('checkPostResponseLocation: ' + c);
-    return c;
+    return checkGet(url).then(
+      function(i){ console.log('checkPostResponseLocation: true'); return true; },
+      function(j){ console.log('checkPostResponseLocation: false'); return false; });
   }
   else {
     console.log('checkPostResponseLocation: false');
