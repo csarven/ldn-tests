@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                     <ul>
                                          <li>
                                             <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/inbox/" value="http://linkedresearch.org/ldn/tests/inbox/" />
+                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/tests/inbox/" value="https://linkedresearch.org/ldn/tests/inbox/" />
                                         </li>
 
                                         <li>
