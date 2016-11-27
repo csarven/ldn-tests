@@ -231,7 +231,7 @@ function getTestReport(req, response) {
           break;
 
         case 'POST':
-          checkTests = ['2', '3', '4'];
+          checkTests = ['2', '3', '4', '5'];
           break;
       }
 
