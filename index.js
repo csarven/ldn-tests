@@ -310,16 +310,11 @@ console.log('checkOptions: ' + c);
 
 
 function getTestReportHTML(report){
-  var s = '', testResult = '';
-  var pass = '✔';
-  var fail = '✗';
-  var na = 'NA';
+  var s = '';
 
   Object.keys(report).forEach(function(implementation){
     Object.keys(report[implementation]).forEach(function(test){
-      testResult = (report[implementation][test]['result']) ? pass : fail;
-
-      s += '<tr id="test-' + test + '"><td class="test-id">' + test + '</td><td class="test-result">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][test]['description'] + '</td></tr>';
+      s += '<tr id="test-' + test + '"><td class="test-id">' + test + '</td><td class="test-result">' + report[implementation][test]['result'] + '</td><td class="test-description">' + ldnTests[implementation][test]['description'] + '</td></tr>';
     });
   });
 
