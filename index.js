@@ -20,7 +20,7 @@ var ldnTests = {
     '2': { 'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.', 'function': checkPost },
     '3': { 'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>', 'function': checkPostResponseCreated  },
     '4': { 'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.', 'function': checkPostResponseLocation },
-    '5': { 'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.', 'function': ''  },
+    '5': { 'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.', 'function': checkPostResponseAccepted  },
     '6': { 'description': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.', 'function': ''  },
     '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'function': ''  },
     '8': { 'description': '<li>...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI', 'function': ''  },
@@ -286,6 +286,13 @@ function checkPostResponseLocation(req, response){
     console.log('checkPostResponseLocation: false');
     return false;
   }
+}
+
+function checkPostResponseAccepted(req, response){
+  var c = (response.xhr.status == 202);
+console.log('checkPostResponseAccepted: ' + c);
+
+  return c;
 }
 
 function checkHead(req, response){
