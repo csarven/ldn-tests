@@ -96,9 +96,9 @@ console.dir(results);
     <thead><tr><th>Id</th><th>Result</th><th>Description</th></tr></thead>
     <tfoot><tr><td colspan="3">
       <dl>
-        <dt><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
-        <dt><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
-        <dt><abbr title="Not applicable">NA</abbr></dt><dd>Not applicable</dd>
+        <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
+        <dt class="test-FAIL"><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
+        <dt class="test-NA"><abbr title="Not applicable">-</abbr></dt><dd>Not applicable</dd>
       </dl>
     </td></tr></tfoot>
     <tbody>
@@ -329,10 +329,10 @@ function getTestReportHTML(report){
         default: testResult = report[implementation][test]['result']; break;
         case 'PASS': testResult = '✔'; break;
         case 'FAIL': testResult = '✗'; break;
-        case 'NA': testResult = 'NA'; break;
+        case 'NA': testResult = '-'; break;
       }
 
-      s += '<tr id="test-' + test + '"><td class="test-id">' + test + '</td><td class="test-result">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][test]['description'] + '</td></tr>';
+      s += '<tr id="test-' + test + '"><td class="test-id">' + test + '</td><td class="test-result test-' + report[implementation][test]['result'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][test]['description'] + '</td></tr>';
     });
   });
 
@@ -375,6 +375,14 @@ padding: 0.25em;
 }
 #test-receiver-response pre { overflow: auto; }
 .dn { display:none }
+
+.test-id,
+.test-result { text-align: center; }
+.test-PASS { background-color: #0f0; }
+.test-FAIL { background-color: #f00; }
+.test-NA { background-color: #eee; }
+tfoot dd:after { content: "\\A"; white-space:pre; }
+tfoot dt, tfoot dd { display:inline; }
 </style>
 <script>
 
