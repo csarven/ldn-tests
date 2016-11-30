@@ -25,7 +25,7 @@ var ldnTests = {
     '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'function': '' },
     '8': { 'description': '<li>...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI', 'function': ''  },
     '9': { 'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.', 'function': checkOptions  },
-    '10': { 'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).', 'function': ''  },
+    '10': { 'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).', 'function': '' },
     '11': { 'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.', 'function': ''  },
     '12': { 'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.', 'function': ''  },
     '13': { 'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.', 'function': ''  },
@@ -247,13 +247,11 @@ function getTestReport(req, response) {
 }
 
 //1
-function checkGet(url, headers){
-  var headers = headers || {};
-  headers['Accept'] = (headers && 'Accept' in headers) ? headers['Accept'] : 'application/ld+json';
+function checkGet(req, response){
+  var c = (response.xhr.status == 200) ? 'PASS' : 'FAIL';
+console.log('1 checkGet: ' + c);
 
-  return getResource(url, headers).then(
-    function(i){ console.log('1 checkGet: PASS'); return 'PASS'; },
-    function(j){ console.log('1 checkGet: FAIL'); return 'FAIL'; });
+  return c;
 }
 
 //2
@@ -310,14 +308,12 @@ console.log('18 checkHead: ' + c);
   return c;
 }
 
-//10
+//9
 function checkOptions(req, response){
   var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
 console.log('10 checkOptions: ' + c);
   return c;
 }
-
-
 
 function getTestReportHTML(report){
   var s = '';
