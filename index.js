@@ -251,7 +251,7 @@ function checkGet(req){
     },
     function(reason){
       var code = 'FAIL';
-      if(reason.xhr.status.indexOf('4') == 0) { //HTTP 4xx
+      if(typeof reason.xhr.status !== 'undefined' && reason.xhr.status.indexOf('4') == 0) { //HTTP 4xx
         code = 'PASS';
       }
 
