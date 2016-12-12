@@ -117,8 +117,8 @@ console.dir(ldnTests);
     <div id="test-receiver-response">
       <table id="test-receiver-report">
         <caption>Test results</caption>
-        <thead><tr><th>Id</th><th>Result</th><th>Description</th></tr></thead>
-        <tfoot><tr><td colspan="3">
+        <thead><tr><th>Id</th><th>Description</th><th>Result</th><th>Message</th></tr></thead>
+        <tfoot><tr><td colspan="4">
           <dl>
             <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
             <dt class="test-FAIL"><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
@@ -336,7 +336,12 @@ function getTestReportHTML(test){
         case 'NA': testResult = '-'; break;
       }
 
-      s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td><td class="test-description">' + test[id]['description'] + '</td></tr>');
+      var testResultMessage = '';
+      if('message' in test[id]['result']) {
+        testResultMessage = test[id]['result']['message'];
+      }
+
+      s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-description">' + test[id]['description'] + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td>' + testResultMessage + '</tr>');
     }
 
     if('test' in test[id]) {
