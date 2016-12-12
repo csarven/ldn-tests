@@ -254,15 +254,22 @@ function checkGet(req){
               types._array.forEach(function(type){
                 resourceTypes.push(type);
               });
+              var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
+// console.log(linkHeaders);
               if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found.' };
+              }
+              else if('type' in linkHeaders && linkHeaders['type'].length > 0){
+                var rdftypes = [];
+                linkHeaders['type'].forEach(function(url){
+                  rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                });
+
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found: ' + rdftypes.join(', ') };
               }
               else {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
               }
-
-              var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
-// console.log(linkHeaders);
 
               if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
                 var constrainedBys = [];
