@@ -15,6 +15,7 @@ var htmlEntities = mayktso.htmlEntities;
 var vocab = mayktso.vocab;
 var getGraphFromData = mayktso.getGraphFromData;
 var SimpleRDF = mayktso.SimpleRDF;
+var parseLinkHeader = mayktso.parseLinkHeader;
 
 var ldnTests = {
   'sender': {},
@@ -40,6 +41,9 @@ var ldnTests = {
             'extraCheckGetResponseLDPContainer': {
               'description': 'Inbox is an <code>ldp:Container</code>'
             },
+            'extraCheckGetResponseLDPConstrainedBy': {
+              'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).'
+            }
           }
         },
       }
@@ -244,17 +248,32 @@ function checkGet(req){
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>.' };
               }
 
+              //These checks are extra, not required by the specification
               var types = s.rdftype;
               var resourceTypes = [];
               types._array.forEach(function(type){
                 resourceTypes.push(type);
               });
-
               if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found' };
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found.' };
               }
               else {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found' };
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
+              }
+
+              var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
+// console.log(linkHeaders);
+
+              if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
+                var constrainedBys = [];
+                linkHeaders[vocab['ldpconstrainedBy']['@id']].forEach(function(url){
+                  constrainedBys.push('<a href="' + url + '">' + url + '</a>');
+                });
+
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Found: ' + constrainedBys.join(', ') };
+              }
+              else {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Not found.' };
               }
 
               return Promise.resolve(ldnTests['receiver']['checkGet']);
@@ -303,22 +322,22 @@ function checkPost(req){
 
           var headers = {};
           headers['Accept'] = 'application/ld+json';
-console.log('=======');
-console.log(url);
-console.log('=======');
+// console.log('=======');
+// console.log(url);
+// console.log('=======');
           //checkPostResponseLocation
           return getResource(url, headers).then(
             //Maybe use checkPostResponseLocationRetrieveable
             function(i){
-console.log(i);
+// console.log(i);
               ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
-console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
+// console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             },
             function(j){
-console.log(j);
+// console.log(j);
               ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code>' };
-console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
+// console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             });
         }
