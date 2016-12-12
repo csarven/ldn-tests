@@ -12,33 +12,59 @@ var getResourceHead = mayktso.getResourceHead;
 var getResourceOptions = mayktso.getResourceOptions;
 var postResource = mayktso.postResource;
 var htmlEntities = mayktso.htmlEntities;
+var vocab = mayktso.vocab;
+var getGraphFromData = mayktso.getGraphFromData;
+var SimpleRDF = mayktso.SimpleRDF;
 
 var ldnTests = {
   'sender': {},
   'receiver': {
-    '1': { 'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.', 'function': checkGet  },
-    '2': { 'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.', 'function': checkPost },
-    '3': { 'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>', 'function': checkPostResponseCreated  },
-    '4': { 'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.', 'function': checkPostResponseLocation },
-    '5': { 'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.', 'function': checkPostResponseAccepted  },
-    '6': { 'description': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.', 'function': ''  },
-    '7': { 'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>', 'function': '' },
-    '8': { 'description': '<li>...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI', 'function': ''  },
-    '9': { 'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.', 'function': checkOptions  },
-    '10': { 'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).', 'function': '' },
-    '11': { 'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.', 'function': ''  },
-    '12': { 'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.', 'function': ''  },
-    '13': { 'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.', 'function': ''  },
-    '14': { 'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources' , 'function': ''  },
-    '15': { 'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).', 'function': ''  },
-    '16': { 'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).', 'function': ''  },
-    '17': { 'description': 'Inbox is an <code>ldp:Container</code>', 'function': ''  },
-    '18': { 'description': 'Inbox accepts <code>HEAD</code> requests', 'function': checkHead }
+    'checkOptions': {
+      'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.'
+    },
+    'checkHead': {
+      'description': 'Inbox accepts <code>HEAD</code> requests'
+    },
+    'checkGet': {
+      'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.',
+      'test': {
+        'checkGetResponseSuccessful': {
+          'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).',
+          'test': {
+            'checkGetResponseNotificationsLimited': {
+              'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.'
+            },
+            'checkGetResponseLDPContains': {
+              'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.'
+            },
+          }
+        },
+      }
+    },
+    'checkPost': {
+      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.',
+      'test': {
+        'checkPostResponseCreated': {
+          'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>',
+          'test': {
+            'checkPostResponseLocation': {
+              'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
+            }
+          }
+        },
+        'checkPostResponseAccepted': {
+          'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.',
+          'test': {
+            'checkPostResponseBody': {
+              'description': 'TODO: Read the body'
+            }
+          }
+        }
+      }
+    }
   },
   'consumer': {}
 }
-
-var receiverMethods = ['OPTIONS', 'HEAD', 'GET', 'POST'];
 
 function testResource(req, res, next){
 // console.log(req.requestedPath);
@@ -72,56 +98,54 @@ function testResource(req, res, next){
 
     case 'POST':
       var testReceiverPromises = [];
+      var initTest = { '1': checkOptions, '2': checkHead, '3': checkGet, '4': checkPost };
 
-      receiverMethods.forEach(function(testMethod) {
         if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
+          Object.keys(initTest).forEach(function(id) {
+console.log(id);
+            testReceiverPromises.push(initTest[id](req));
+          });
 
-          testReceiverPromises.push(testReceiverMethod(testMethod, req));
-        }
-      });
+          Promise.all(testReceiverPromises)
+            .then((results) => {
+//console.dir(results);
+console.dir(ldnTests);
 
-      Promise.all(testReceiverPromises)
-        .then((results) => {
-console.dir(results);
+              var reportHTML = getTestReportHTML(ldnTests['receiver']);
 
-          var reportHTML = [];
-          results.forEach(function(tr){
-            reportHTML.push(tr['test-receiver-report-html']);
-          })
+              results['test-receiver-response-html'] = `
+    <div id="test-receiver-response">
+      <table id="test-receiver-report">
+        <caption>Test results</caption>
+        <thead><tr><th>Id</th><th>Result</th><th>Description</th></tr></thead>
+        <tfoot><tr><td colspan="3">
+          <dl>
+            <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
+            <dt class="test-FAIL"><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
+            <dt class="test-NA"><abbr title="Not applicable">-</abbr></dt><dd>Not applicable</dd>
+          </dl>
+        </td></tr></tfoot>
+        <tbody>
+${reportHTML}
+        </tbody>
+      </table>
+    </div>`;
 
-          results['test-receiver-response-html'] = `
-<div id="test-receiver-response">
-  <table id="test-receiver-report">
-    <caption>Test results</caption>
-    <thead><tr><th>Id</th><th>Result</th><th>Description</th></tr></thead>
-    <tfoot><tr><td colspan="3">
-      <dl>
-        <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
-        <dt class="test-FAIL"><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
-        <dt class="test-NA"><abbr title="Not applicable">-</abbr></dt><dd>Not applicable</dd>
-      </dl>
-    </td></tr></tfoot>
-    <tbody>
-${reportHTML.join("\n")}
-    </tbody>
-  </table>
-</div>`;
-// console.log(results['test-receiver-response-html']);
-
-          var data = getTestReceiverHTML(req.body, results);
+              var data = getTestReceiverHTML(req.body, results);
 // console.log(data);
 
-          res.set('Content-Type', 'text/html;charset=utf-8');
-          res.set('Allow', 'GET, POST');
-          res.status(200);
-          res.send(data);
+              res.set('Content-Type', 'text/html;charset=utf-8');
+              res.set('Allow', 'GET, POST');
+              res.status(200);
+              res.send(data);
 
-         return next();
-        })
-        .catch((e) => {
-          console.log('--- catch ---');
-          console.log(e);
-        });
+             return next();
+            })
+            .catch((e) => {
+              console.log('--- catch ---');
+              console.log(e);
+            });
+        }
       break;
 
     default:
@@ -133,206 +157,194 @@ ${reportHTML.join("\n")}
   }
 }
 
-function testReceiverMethod(method, req) {
-// console.log('------ testReceiverMethod: ' + method);
-// console.log(req.body);
 
-  return new Promise(function(resolve, reject) {
-    var headers = {}, data, request, results = {};
+function checkOptions(req){
+  var headers = {};
+  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+  var url = req.body['test-receiver-url'];
 
-    switch(method){
-      case 'GET': case 'HEAD': case 'OPTIONS': default:
-        headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
-// console.log(headers);
-
-        switch(method){
-          case 'GET': default:
-            request = getResource(req.body['test-receiver-url'], headers);
-            break;
-          case 'HEAD':
-            request = getResourceHead(req.body['test-receiver-url'], headers);
-            break;
-          case 'OPTIONS':
-            request = getResourceOptions(req.body['test-receiver-url'], headers);
-            break;
-        }
-
-        request
-          .then(function(response){
-//console.log(response);
-            results['test-receiver-response'] = response;
-            results['test-receiver-report'] = getTestReport(req, response);
-            results['test-receiver-report-html']  = getTestReportHTML(results['test-receiver-report']);
-// console.log(results);
-
-            return resolve(results);
-          })
-          .catch(function(reason){
-            console.log('Error:');
-            console.log(reason);
-          });
-
-        break;
-
-      case 'POST':
-        headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
-        data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
-
-        postResource(req.body['test-receiver-url'], '', data, headers['Content-Type'])
-          .then(function(response){
-//console.log(response.xhr);
-
-            results['test-receiver-response'] = response;
-            results['test-receiver-report'] = getTestReport(req, response);
-            results['test-receiver-report-html']  = getTestReportHTML(results['test-receiver-report']);
-// console.log(results);
-
-            return resolve(results);
-          })
-          .catch(function(reason){
-            console.log('--- catch POST ' + test-receiver-url);
-            console.dir(reason);
-          });
-
-        break;
-    }
-
-  });
+  return getResourceOptions(url, headers).then(
+    function(response){
+      ldnTests['receiver']['checkOptions']['result'] = { 'code': 'PASS', 'message': '' };
+      return Promise.resolve(ldnTests['receiver']['checkOptions']);
+    },
+    function(reason){
+      if(reason.xhr.status == 405) {
+        ldnTests['receiver']['checkOptions']['result'] = { 'code': 'FAIL', 'message': 'HTTP 405' };
+      }
+      return Promise.resolve(ldnTests['receiver']['checkOptions']);
+    });
 }
 
-function getTestReport(req, response) {
-  var r = {};
-  var checkTests = [];
-  var implementations = ['sender', 'receiver', 'consumer'];
-  var implementation = ('test-implementation' in req.body && implementations.indexOf(req.body['test-implementation']) > -1) ? req.body['test-implementation'] : undefined;
+function checkHead(req){
+  var headers = {};
+  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+  var url = req.body['test-receiver-url'];
 
-  if (!implementation) { console.log('--- getTestReport: Invalid test implementation'); return; }
+  return getResourceHead(url, headers).then(
+    function(response){
+      ldnTests['receiver']['checkHead']['result'] = { 'code': 'PASS', 'message': '' };
+      return Promise.resolve(ldnTests['receiver']['checkHead']);
+    },
+    function(reason){
+      if(reason.xhr.status == 405) {
+        ldnTests['receiver']['checkHead']['result'] = { 'code': 'FAIL', 'message': 'HTTP 405' };
+      }
+      return Promise.resolve(ldnTests['receiver']['checkHead']);
+    });
+}
 
-  r[implementation.toLowerCase()] = {};
+function checkGet(req){
+  var headers = {};
+  headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+  var url = req.body['test-receiver-url'];
 
-  switch(implementation.toLowerCase()) {
-    case 'sender':
-      break;
-    case 'consumer':
-      break;
-    case 'receiver': default:
-// console.dir(response);
-      switch(response.xhr._method.toUpperCase()) {
-        case 'OPTIONS':
-          checkTests = ['9'];
-          break;
+  return getResource(url, headers).then(
+    function(response){
+      ldnTests['receiver']['checkGet']['result'] = { 'code': 'PASS', 'message': '' };
+      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
+      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'MAY. Manual check.' };
 
-        case 'HEAD':
-          checkTests = ['18'];
-          break;
+      var data = response.xhr.responseText;
+      var contentType = response.xhr.getResponseHeader('Content-Type');
+      if(typeof contentType !== undefined) {
+        if(contentType.indexOf(headers['Accept'] + ';') == 0) {
+          var options = {
+            'contentType': headers['Accept'],
+            'subjectURI': url
+          }
+          return getGraphFromData(data, options).then(
+            function(g) {
+              var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
 
-        case 'GET':
-          checkTests = ['1'];
-          break;
+              var notifications = [];
+              s.ldpcontains.forEach(function(resource) {
+                  notifications.push(resource.toString);
+              });
 
-        case 'POST':
-          checkTests = ['2', '3', '4', '5'];
-          break;
+              if(notifications.length > 0) {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+
+                // var notificationsAsRDFSource = [];
+                // var headers = {};
+                // headers['Accept'] = 'application/ld+json';
+                // notifications.forEach(function(url){
+                //   getResource(url, headers).then(
+                //     function(response){
+                //       var data = response.xhr.responseText;
+                //       var contentType = response.xhr.getResponseHeader('Content-Type');
+                //     }
+                //   });
+                // ldnTests['receiver']['checkGet']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications'. };
+                // });
+              }
+              else {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>.' };
+              }
+              return Promise.resolve(ldnTests['receiver']['checkGet']);
+            },
+            function(reason){
+              ldnTests['receiver']['checkGet']['result'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as ' + headers['Accept'] };
+              return Promise.resolve(ldnTests['receiver']['checkGet']);
+            });      
+        }
+      }
+    },
+    function(reason){
+      var code = 'FAIL';
+      if(reason.xhr.status.indexOf('4') == 0) { //HTTP 4xx
+        code = 'PASS';
       }
 
-      break;
-  }
-
-  checkTests.forEach(function(test){
-    r[implementation][test] = {};
-    r[implementation][test]['result'] = ldnTests[implementation][test]['function'](req, response);
-  })
-
-  return r;
+      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': code, 'message': 'HTTP '+ reason.xhr.status + ', Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') };
+      return Promise.resolve(ldnTests['receiver']['checkGet']);
+    });
 }
 
-//1
-function checkGet(req, response){
-  var c = (response.xhr.status == 200) ? 'PASS' : 'FAIL';
-console.log('1 checkGet: ' + c);
 
-  return c;
+
+function checkPost(req){
+  var headers = {}, data;
+
+  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+  data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
+
+  return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
+    function(response){
+      ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
+
+      //checkPostResponseCreated
+      if(response.xhr.status == 201) {
+        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
+
+        var location = response.xhr.getResponseHeader('Location');
+        if(location){
+          var url = location;
+          if(location.toLowerCase().slice(0,7) != 'http://' || location.toLowerCase().slice(0,8) != 'https://') {
+            //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
+            url = location;
+          }
+
+          var headers = {};
+          headers['Accept'] = 'application/ld+json';
+
+          //checkPostResponseLocation
+          return getResource(url, headers).then(
+            //Maybe use checkPostResponseLocationRetrieveable
+            function(i){
+              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: ' + url + ' found.' };
+              return Promise.resolve(ldnTests['receiver']['checkPost']);
+            },
+            function(j){
+              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: ' + url + ' HTTP ' + j.xhr.status };
+              return Promise.resolve(ldnTests['receiver']['checkPost']);
+            });
+        }
+        else {
+          ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
+          return Promise.resolve(ldnTests['receiver']['checkPost']);
+        }
+      }
+      //checkPostResponseAccepted
+      else if(response.xhr.status == 202) {
+        ldnTests['receiver']['checkPost']['test']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '' };
+      return Promise.resolve(ldnTests['receiver']['checkPost']);
+      }
+    },
+    function(reason){
+console.log(reason);
+      if(reason.xhr.status == 405) {
+        ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': 'HTTP 405' };
+      }
+      return Promise.resolve(ldnTests['receiver']['checkPost']);
+    });
 }
 
-//2
-function checkPost(req, response){
-  var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
-console.log('2 checkPost: ' + c);
-  return c;
-}
 
-//3
-function checkPostResponseCreated(req, response){
-  var c = (response.xhr.status == 201) ? 'PASS' : 'FAIL';
-console.log('3 checkPostResponseCreated: ' + c);
 
-  return c;
-}
+function getTestReportHTML(test){
+  var s = [];
 
-//4
-function checkPostResponseLocation(req, response){
-  var location = response.xhr.getResponseHeader('Location');
+  Object.keys(test).forEach(function(id){
+    if('result' in test[id]) {
+      var testResult = '';
 
-  if(location){
-    var url = location;
-    if(location.toLowerCase().slice(0,7) != 'http://' || location.toLowerCase().slice(0,8) != 'https://') {
-      //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
-      url = location;
-    }
-
-    var headers = {};
-    headers['Accept'] = 'application/ld+json';
-
-    return getResource(url, headers).then(
-      function(i){ console.log('4 checkPostResponseLocation: PASS'); return 'PASS'; },
-      function(j){ console.log('4 checkPostResponseLocation: FAIL'); return 'FAIL'; });
-  }
-  else {
-    console.log('4 checkPostResponseLocation: FAIL');
-    return 'FAIL';
-  }
-}
-
-//5
-function checkPostResponseAccepted(req, response){
-  var c = (response.xhr.status == 202) ? 'PASS' : ((response.xhr.status == 201) ? 'NA' : 'FAIL') ;
-console.log('5 checkPostResponseAccepted: ' + c);
-
-  return c;
-}
-
-//18
-function checkHead(req, response){
-  var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
-console.log('18 checkHead: ' + c);
-  return c;
-}
-
-//9
-function checkOptions(req, response){
-  var c = (response.xhr.status != 405) ? 'PASS' : 'FAIL';
-console.log('10 checkOptions: ' + c);
-  return c;
-}
-
-function getTestReportHTML(report){
-  var s = '';
-
-  Object.keys(report).forEach(function(implementation){
-    Object.keys(report[implementation]).forEach(function(test){
-      var testResult = report[implementation][test]['result'];
-      switch(report[implementation][test]['result']){
-        default: testResult = report[implementation][test]['result']; break;
+      switch(test[id]['result']['code']){
+        default: testResult = test[id]['result']['code']; break;
         case 'PASS': testResult = '✔'; break;
         case 'FAIL': testResult = '✗'; break;
         case 'NA': testResult = '-'; break;
       }
 
-      s += '<tr id="test-' + test + '"><td class="test-id">' + test + '</td><td class="test-result test-' + report[implementation][test]['result'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][test]['description'] + '</td></tr>';
-    });
+      s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td><td class="test-description">' + test[id]['description'] + '</td></tr>');
+    }
+
+    if('test' in test[id]) {
+      s.push(getTestReportHTML(test[id]['test']));
+    }
   });
 
-  return s;
+  return s.join("\n");
 }
 
 function getSelectOptionsHTML(options, selectedOption) {
@@ -372,7 +384,6 @@ padding: 0.25em;
 #test-receiver-response pre { overflow: auto; }
 .dn { display:none }
 
-.test-id,
 .test-result { text-align: center; }
 .test-PASS { background-color: #0f0; }
 .test-FAIL { background-color: #f00; }
