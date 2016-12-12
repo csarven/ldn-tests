@@ -255,17 +255,26 @@ function checkGet(req){
                 resourceTypes.push(type);
               });
               var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
+              var rdftypes = [];
 // console.log(linkHeaders);
-              if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found.' };
-              }
-              else if('type' in linkHeaders && linkHeaders['type'].length > 0){
-                var rdftypes = [];
+
+              if('type' in linkHeaders && (linkHeaders['type'].indexOf(vocab.ldpcontainer["@id"]) || linkHeaders['type'].indexOf(vocab.ldpbasiccontainer["@id"]))){
                 linkHeaders['type'].forEach(function(url){
-                  rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                  if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
+                    rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                  }
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found: ' + rdftypes.join(', ') };
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+              }
+              else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
+                resourceTypes.forEach(function(url){
+                  if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
+                    rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                  }
+                });
+
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found in body: ' + rdftypes.join(', ') };
               }
               else {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
