@@ -37,6 +37,9 @@ var ldnTests = {
             'checkGetResponseLDPContains': {
               'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.'
             },
+            'extraCheckGetResponseLDPContainer': {
+              'description': 'Inbox is an <code>ldp:Container</code>'
+            },
           }
         },
       }
@@ -240,6 +243,21 @@ function checkGet(req){
               else {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>.' };
               }
+
+              var types = s.rdftype;
+              var resourceTypes = [];
+console.log(types);
+              types._array.forEach(function(type){
+                resourceTypes.push(type);
+              });
+
+              if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found' };
+              }
+              else {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found' };
+              }
+
               return Promise.resolve(ldnTests['receiver']['checkGet']);
             },
             function(reason){
