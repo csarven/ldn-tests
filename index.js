@@ -102,7 +102,6 @@ function testResource(req, res, next){
 
         if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
           Object.keys(initTest).forEach(function(id) {
-console.log(id);
             testReceiverPromises.push(initTest[id](req));
           });
 
@@ -117,7 +116,7 @@ console.dir(ldnTests);
     <div id="test-receiver-response">
       <table id="test-receiver-report">
         <caption>Test results</caption>
-        <thead><tr><th>Id</th><th>Description</th><th>Result</th><th>Message</th></tr></thead>
+        <thead><tr><th>Id</th><th>Result</th><th>Message</th><th>Description</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
             <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
@@ -203,7 +202,7 @@ function checkGet(req){
     function(response){
       ldnTests['receiver']['checkGet']['result'] = { 'code': 'PASS', 'message': '' };
       ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
-      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'MAY. Manual check.' };
+      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
@@ -287,16 +286,22 @@ function checkPost(req){
 
           var headers = {};
           headers['Accept'] = 'application/ld+json';
-
+console.log('=======');
+console.log(url);
+console.log('=======');
           //checkPostResponseLocation
           return getResource(url, headers).then(
             //Maybe use checkPostResponseLocationRetrieveable
             function(i){
-              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: ' + url + ' found.' };
+console.log(i);
+              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found.' };
+console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             },
             function(j){
-              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: ' + url + ' HTTP ' + j.xhr.status };
+console.log(j);
+              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> HTTP ' + j.xhr.status };
+console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             });
         }
@@ -308,7 +313,7 @@ function checkPost(req){
       //checkPostResponseAccepted
       else if(response.xhr.status == 202) {
         ldnTests['receiver']['checkPost']['test']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '' };
-      return Promise.resolve(ldnTests['receiver']['checkPost']);
+        return Promise.resolve(ldnTests['receiver']['checkPost']);
       }
     },
     function(reason){
@@ -336,12 +341,7 @@ function getTestReportHTML(test){
         case 'NA': testResult = '-'; break;
       }
 
-      var testResultMessage = '';
-      if('message' in test[id]['result']) {
-        testResultMessage = test[id]['result']['message'];
-      }
-
-      s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-description">' + test[id]['description'] + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td>' + testResultMessage + '</tr>');
+      s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td><td class="test-message">' + test[id]['result']['message'] + '</td><td class="test-description">' + test[id]['description'] + '</td></tr>');
     }
 
     if('test' in test[id]) {
@@ -395,6 +395,13 @@ padding: 0.25em;
 .test-NA { background-color: #eee; }
 tfoot dd:after { content: "\\A"; white-space:pre; }
 tfoot dt, tfoot dd { display:inline; }
+.rfc2119 {
+text-transform:lowercase;
+font-variant:small-caps;
+font-style:normal;
+}
+em.rfc2119 { color: #900; }
+code { color: #c83500; }
 </style>
 <script>
 
