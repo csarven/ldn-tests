@@ -172,7 +172,7 @@ function checkOptions(req){
     },
     function(reason){
       if(reason.xhr.status == 405) {
-        ldnTests['receiver']['checkOptions']['result'] = { 'code': 'FAIL', 'message': 'HTTP 405' };
+        ldnTests['receiver']['checkOptions']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
       }
       return Promise.resolve(ldnTests['receiver']['checkOptions']);
     });
@@ -190,7 +190,7 @@ function checkHead(req){
     },
     function(reason){
       if(reason.xhr.status == 405) {
-        ldnTests['receiver']['checkHead']['result'] = { 'code': 'FAIL', 'message': 'HTTP 405' };
+        ldnTests['receiver']['checkHead']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
       }
       return Promise.resolve(ldnTests['receiver']['checkHead']);
     });
@@ -246,7 +246,6 @@ function checkGet(req){
 
               var types = s.rdftype;
               var resourceTypes = [];
-console.log(types);
               types._array.forEach(function(type){
                 resourceTypes.push(type);
               });
@@ -273,7 +272,7 @@ console.log(types);
         code = 'PASS';
       }
 
-      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': code, 'message': 'HTTP '+ reason.xhr.status + ', Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') };
+      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(ldnTests['receiver']['checkGet']);
     });
 }
@@ -312,13 +311,13 @@ console.log('=======');
             //Maybe use checkPostResponseLocationRetrieveable
             function(i){
 console.log(i);
-              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found.' };
+              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
 console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             },
             function(j){
 console.log(j);
-              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> HTTP ' + j.xhr.status };
+              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code>' };
 console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             });
@@ -337,7 +336,7 @@ console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated'
     function(reason){
 console.log(reason);
       if(reason.xhr.status == 405) {
-        ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': 'HTTP 405' };
+        ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
       }
       return Promise.resolve(ldnTests['receiver']['checkPost']);
     });
