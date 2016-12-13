@@ -378,9 +378,15 @@ function checkPost(req){
     },
     function(reason){
 console.log(reason);
-      if(reason.xhr.status == 405) {
-        ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
+      switch(reason.xhr.status){
+        case '400':
+          ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+          break;
+        case '405':
+          ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
+          break;
       }
+
       return Promise.resolve(ldnTests['receiver']['checkPost']);
     });
 }
