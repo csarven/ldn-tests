@@ -56,6 +56,9 @@ var ldnTests = {
           'test': {
             'checkPostResponseLocation': {
               'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
+            },
+            'checkPostResponseJSONLDAccepted': {
+              'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
             }
           }
         },
@@ -64,6 +67,9 @@ var ldnTests = {
           'test': {
             'checkPostResponseBody': {
               'description': 'TODO: Read the body'
+            },
+            'checkPostResponseJSONLDAccepted': {
+              'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
             }
           }
         }
@@ -327,6 +333,7 @@ function checkPost(req){
       //checkPostResponseCreated
       if(response.xhr.status == 201) {
         ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
+        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '' };
 
         var location = response.xhr.getResponseHeader('Location');
         if(location){
@@ -365,6 +372,7 @@ function checkPost(req){
       //checkPostResponseAccepted
       else if(response.xhr.status == 202) {
         ldnTests['receiver']['checkPost']['test']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '' };
+        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '' };
         return Promise.resolve(ldnTests['receiver']['checkPost']);
       }
     },
