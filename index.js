@@ -74,7 +74,12 @@ var ldnTests = {
               'description': 'TODO: Read the body'
             },
             'checkPostResponseJSONLDAccepted': {
-              'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
+              'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>',
+              'test': {
+                'checkPostResponseProfileLinkRelationAccepted': {
+                  'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
+                }
+              }
             }
           }
         }
@@ -380,6 +385,7 @@ function checkPost(req){
       else if(response.xhr.status == 202) {
         ldnTests['receiver']['checkPost']['test']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '' };
         ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '' };
+        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['test']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
         return Promise.resolve(ldnTests['receiver']['checkPost']);
       }
     },
