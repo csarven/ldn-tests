@@ -384,8 +384,13 @@ console.log(reason);
           ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.' };
           ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           break;
-        case '405': default:
-          ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+        case '405':
+          ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
+          break;
+        default:
+          if(response.xhr.status >= 500 && response.xhr.status < 600) {
+            ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+          }
           break;
       }
 
