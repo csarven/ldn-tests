@@ -38,6 +38,9 @@ var ldnTests = {
             'checkGetResponseLDPContains': {
               'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.'
             },
+            'checkGetResponseWhenNoAccept': {
+              'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).'
+            },
             'extraCheckGetResponseLDPContainer': {
               'description': 'Inbox is an <code>ldp:Container</code>'
             },
@@ -227,6 +230,7 @@ function checkGet(req){
       ldnTests['receiver']['checkGet']['result'] = { 'code': 'PASS', 'message': '' };
       ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
       ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
+      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseWhenNoAccept']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
