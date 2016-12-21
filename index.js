@@ -230,7 +230,10 @@ function checkGet(req){
       ldnTests['receiver']['checkGet']['result'] = { 'code': 'PASS', 'message': '' };
       ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
       ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
-      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseWhenNoAccept']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
+
+      if('test-receiver-mimetype' in req.body && req.body['test-receiver-mimetype'].length >= 0) {
+        ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseWhenNoAccept']['result'] = { 'code': 'PASS', 'message': '' };
+      }
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
