@@ -96,6 +96,7 @@ function testResource(req, res, next){
       if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
         res.status(304);
         res.end();
+        break;
       }
 
       res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
