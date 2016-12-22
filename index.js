@@ -406,6 +406,9 @@ console.log(reason);
         case '405':
           ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
+        case '415':
+          ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is format (other than for JSON-LD</code>.' };
+          break;
         default:
           if(response.xhr.status >= 500 && response.xhr.status < 600) {
             ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
