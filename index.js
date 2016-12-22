@@ -401,7 +401,13 @@ console.log(reason);
       switch(reason.xhr.status){
         case '400':
           ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.' };
-          ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+          //TODO: Maybe handle other formats here
+          if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
+            ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+          }
+          else {
+            ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+          }
           break;
         case '405':
           ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
