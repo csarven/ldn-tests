@@ -21,7 +21,12 @@ var ldnTests = {
   'sender': {},
   'receiver': {
     'checkOptions': {
-      'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>), and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.'
+      'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>)',
+      'test': {
+        'checkOptionsAcceptPost': {
+          'description': '... and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.'
+        }
+      }
     },
     'checkHead': {
       'description': 'Inbox accepts <code>HEAD</code> requests'
@@ -192,6 +197,13 @@ function checkOptions(req){
   return getResourceOptions(url, headers).then(
     function(response){
       ldnTests['receiver']['checkOptions']['result'] = { 'code': 'PASS', 'message': '' };
+        var acceptPost = response.xhr.getResponseHeader('Accept-Post');
+        if(acceptPost){
+          ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['result'] = { 'code': 'PASS', 'message': '' };
+        }
+        else {
+          ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['result'] = { 'code': 'FAIL', 'message': '' };
+        }
       return Promise.resolve(ldnTests['receiver']['checkOptions']);
     },
     function(reason){
