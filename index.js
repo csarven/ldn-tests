@@ -13,6 +13,7 @@ var getResourceOptions = mayktso.getResourceOptions;
 var postResource = mayktso.postResource;
 var htmlEntities = mayktso.htmlEntities;
 var vocab = mayktso.vocab;
+var getGraph = mayktso.getGraph;
 var getGraphFromData = mayktso.getGraphFromData;
 var SimpleRDF = mayktso.SimpleRDF;
 var parseLinkHeader = mayktso.parseLinkHeader;
@@ -46,7 +47,12 @@ var ldnTests = {
               'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.'
             },
             'checkGetResponseLDPContains': {
-              'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.'
+              'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.',
+              'test': {
+                'checkGetResponseNotificationsRDFSource': {
+                  'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.'
+                }
+              }
             },
             'checkGetResponseWhenNoAccept': {
               'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).'
@@ -272,31 +278,6 @@ function checkGet(req){
             function(g) {
               var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
 
-              var notifications = [];
-              s.ldpcontains.forEach(function(resource) {
-                  notifications.push(resource.toString);
-              });
-
-              if(notifications.length > 0) {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
-
-                // var notificationsAsRDFSource = [];
-                // var headers = {};
-                // headers['Accept'] = 'application/ld+json';
-                // notifications.forEach(function(url){
-                //   getResource(url, headers).then(
-                //     function(response){
-                //       var data = response.xhr.responseText;
-                //       var contentType = response.xhr.getResponseHeader('Content-Type');
-                //     }
-                //   });
-                // ldnTests['receiver']['checkGet']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications'. };
-                // });
-              }
-              else {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>.' };
-              }
-
               //These checks are extra, not required by the specification
               var types = s.rdftype;
               var resourceTypes = [];
@@ -341,7 +322,56 @@ function checkGet(req){
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Not found.' };
               }
 
-              return Promise.resolve(ldnTests['receiver']['checkGet']);
+              var notifications = [];
+              s.ldpcontains.forEach(function(resource) {
+                  notifications.push(resource.toString());
+              });
+
+              if(notifications.length > 0) {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+
+                var notificationResponses = [];
+                // var headers = {};
+                // headers['Accept'] = 'application/ld+json';
+                notifications.forEach(function(url){
+                  notificationResponses.push(getGraph(url));
+                  // .then(
+                  //   function(response){
+                  //     var data = response.xhr.responseText;
+                  //     var contentType = response.xhr.getResponseHeader('Content-Type');
+                  //   }
+                  // });
+                });
+
+                Promise.all(notificationResponses)
+                  .then((results) => {
+// console.log(results);
+
+                    var notificationState = [];
+                    var code = 'PASS';
+                    results.forEach(function(g){
+                      var iri = g.iri().toString();
+                      var graphLength = g.graph().length;
+                      if(graphLength < 1){
+                        code = 'FAIL';
+                      }
+                      notificationState.push('<a href="' + iri + '">' + iri + '</a> (' + graphLength + ')</li>');
+                    });
+
+                    notificationState = notificationState.join(', ');
+
+                    ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['test']['checkGetResponseNotificationsRDFSource']['result'] = { 'code': code, 'message': notificationState };
+                    return Promise.resolve(ldnTests['receiver']['checkGet']);
+                  })
+                  .catch((e) => {
+                    console.log('--- catch: notificationResponses ---');
+                    console.log(e);
+                  });
+              }
+              else {
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+                return Promise.resolve(ldnTests['receiver']['checkGet']);
+              }
             },
             function(reason){
               ldnTests['receiver']['checkGet']['result'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as ' + headers['Accept'] };
@@ -516,6 +546,7 @@ padding: 0.25em;
 .dn { display:none }
 
 .test-result { text-align: center; }
+.test-message ul { list-style-position: inside; }
 .test-PASS { background-color: #0f0; }
 .test-FAIL { background-color: #f00; }
 .test-NA { background-color: #eee; }
