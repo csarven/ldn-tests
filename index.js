@@ -301,7 +301,7 @@ function checkGet(req){
                   }
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
               }
               else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
                 resourceTypes.forEach(function(url){
@@ -310,7 +310,7 @@ function checkGet(req){
                   }
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Found in body: ' + rdftypes.join(', ') };
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
               }
               else {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
