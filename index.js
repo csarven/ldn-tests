@@ -220,8 +220,9 @@ function checkOptions(req){
           var acceptPosts = acceptPost.split(',');
           ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['test']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'FAIL', 'message': '' };
           acceptPosts.forEach(function(i){
-            if(i.trim() == 'application/ld+json'){
-              ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['test']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'PASS', 'message': '' };
+            var m = i.trim();
+            if(m == 'application/ld+json' || m == '*/*'){
+              ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['test']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
             }
           })
         }
