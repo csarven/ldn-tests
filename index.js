@@ -148,19 +148,19 @@ function testResource(req, res, next){
       var testReceiverPromises = [];
       var initTest = { '1': checkOptions, '2': checkHead, '3': checkGet, '4': checkPost };
 
-        if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
-          Object.keys(initTest).forEach(function(id) {
-            testReceiverPromises.push(initTest[id](req));
-          });
+      if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
+        Object.keys(initTest).forEach(function(id) {
+          testReceiverPromises.push(initTest[id](req));
+        });
 
-          Promise.all(testReceiverPromises)
-            .then((results) => {
+        Promise.all(testReceiverPromises)
+          .then((results) => {
 // console.dir(results);
 // console.dir(ldnTests);
 
-              var reportHTML = getTestReportHTML(ldnTests['receiver']);
+            var reportHTML = getTestReportHTML(ldnTests['receiver']);
 
-              results['test-receiver-response-html'] = `
+            results['test-receiver-response-html'] = `
     <div id="test-receiver-response">
       <table id="test-receiver-report">
         <caption>Test results</caption>
@@ -178,21 +178,21 @@ ${reportHTML}
       </table>
     </div>`;
 
-              var data = getTestReceiverHTML(req.body, results);
+            var data = getTestReceiverHTML(req.body, results);
 // console.log(data);
 
-              res.set('Content-Type', 'text/html;charset=utf-8');
-              res.set('Allow', 'GET, POST');
-              res.status(200);
-              res.send(data);
+            res.set('Content-Type', 'text/html;charset=utf-8');
+            res.set('Allow', 'GET, POST');
+            res.status(200);
+            res.send(data);
 
-             return next();
-            })
-            .catch((e) => {
-              console.log('--- catch ---');
-              console.log(e);
-            });
-        }
+           return next();
+          })
+          .catch((e) => {
+            console.log('--- catch ---');
+            console.log(e);
+          });
+      }
       break;
 
     default:
