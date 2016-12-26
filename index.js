@@ -15,8 +15,10 @@ var htmlEntities = mayktso.htmlEntities;
 var vocab = mayktso.vocab;
 var getGraph = mayktso.getGraph;
 var getGraphFromData = mayktso.getGraphFromData;
+var serializeData = mayktso.serializeData;
 var SimpleRDF = mayktso.SimpleRDF;
 var parseLinkHeader = mayktso.parseLinkHeader;
+var XMLHttpRequest = mayktso.XMLHttpRequest;
 
 var ldnTests = {
   'sender': {},
@@ -49,6 +51,9 @@ var ldnTests = {
             'checkGetResponseLDPContains': {
               'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.',
               'test': {
+                'checkGetResponseNotificationsJSONLD': {
+                  'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources'
+                },
                 'checkGetResponseNotificationsRDFSource': {
                   'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.'
                 }
@@ -150,8 +155,8 @@ function testResource(req, res, next){
 
           Promise.all(testReceiverPromises)
             .then((results) => {
-//console.dir(results);
-console.dir(ldnTests);
+// console.dir(results);
+// console.dir(ldnTests);
 
               var reportHTML = getTestReportHTML(ldnTests['receiver']);
 
@@ -327,20 +332,57 @@ function checkGet(req){
                   notifications.push(resource.toString());
               });
 
+
               if(notifications.length > 0) {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
 
+                var testAccepts = ['application/ld+json', '*/*', ''];
                 var notificationResponses = [];
-                // var headers = {};
-                // headers['Accept'] = 'application/ld+json';
+
+                var getSerialize = function(url, acceptValue) {
+                  return new Promise(function(resolve, reject) {
+                    var http = new XMLHttpRequest();
+                    http.open('GET', url);
+                    if(acceptValue.length > 0){
+                      http.setRequestHeader('Accept', acceptValue);
+                    }
+                    http.onreadystatechange = function() {
+                      if(this.readyState == this.DONE) {
+                        var anchor = '<a href="' + url + '">' + url + '</a>';
+
+                        if (this.status === 200) {
+                          var data = this.responseText;
+                          var cT = this.getResponseHeader('Content-Type');
+                          var contentType = cT.substr(0, cT.indexOf(';'))
+
+                          if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
+                            resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
+                          }
+                          else {
+                            var options = { 'subjectURI': '_:ldn' }
+                            serializeData(data, contentType, 'application/ld+json', options).then(
+                              function(i){
+                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'PASS', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
+                              },
+                              function(reason){
+                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
+                              }
+                            );
+                          }
+                        }
+                        else {
+                          resolve({ 'url': url, 'Accept-Type': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': HTTP status ' + this.status });
+                        }
+                      }
+                    };
+                    http.send();
+                  });
+                }
+
                 notifications.forEach(function(url){
-                  notificationResponses.push(getGraph(url));
-                  // .then(
-                  //   function(response){
-                  //     var data = response.xhr.responseText;
-                  //     var contentType = response.xhr.getResponseHeader('Content-Type');
-                  //   }
-                  // });
+                  testAccepts.forEach(function(acceptValue){
+                    notificationResponses.push(getSerialize(url, acceptValue));
+                  });
                 });
 
                 Promise.all(notificationResponses)
@@ -348,19 +390,27 @@ function checkGet(req){
 // console.log(results);
 
                     var notificationState = [];
-                    var code = 'PASS';
-                    results.forEach(function(g){
-                      var iri = g.iri().toString();
-                      var graphLength = g.graph().length;
-                      if(graphLength < 1){
-                        code = 'FAIL';
+                    var notificationStateJSONLD = [];
+                    var notificationStateRDFSource = [];
+                    var codeJSONLD = 'PASS';
+                    var codeRDFSource = 'PASS';
+                    results.forEach(function(r){
+                      if(r['Accept'] == 'application/ld+json'){
+                        if (r.code == 'FAIL') { codeJSONLD = 'FAIL'; }
+                        notificationStateJSONLD.push(r.message);
                       }
-                      notificationState.push('<a href="' + iri + '">' + iri + '</a> (' + graphLength + ')</li>');
+                      else {
+                        if (r.code == 'FAIL') { codeRDFSource = 'FAIL'; }
+                        notificationStateRDFSource.push(r.message);
+                      }
+                      notificationState.push(r.message);
                     });
+                    notificationStateJSONLD = notificationStateJSONLD.join(', ');
+                    notificationStateRDFSource = notificationStateRDFSource.join(', ');
 
-                    notificationState = notificationState.join(', ');
+                    ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['test']['checkGetResponseNotificationsJSONLD']['result'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
+                    ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['test']['checkGetResponseNotificationsRDFSource']['result'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
 
-                    ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['test']['checkGetResponseNotificationsRDFSource']['result'] = { 'code': code, 'message': notificationState };
                     return Promise.resolve(ldnTests['receiver']['checkGet']);
                   })
                   .catch((e) => {
