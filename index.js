@@ -106,6 +106,9 @@ var ldnTests = {
               }
             }
           }
+        },
+        'checkPostResponseConstraintsUnmet': {
+          'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
         }
       }
     }
@@ -507,7 +510,9 @@ function checkPost(req){
 console.log(reason);
       switch(reason.xhr.status){
         case '400':
-          ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': 'constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code.' };
+          if('test-receiver-reject' in req.body) {
+            ldnTests['receiver']['checkPost']['test']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': '' };
+          }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
             ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
@@ -594,6 +599,18 @@ width: 15%;
 text-align: right;
 padding: 0.25em;
 }
+input[name="test-receiver-reject"] {
+width:auto;
+margin-left:13.5%;
+}
+#test-receiver label[for="test-receiver-reject"] {
+width:80%;
+text-align:left;
+vertical-align: middle;
+}
+#test-receiver [type="submit"] {
+margin-left:16.5%;
+}
 #test-receiver-response pre { overflow: auto; }
 .dn { display:none }
 
@@ -668,6 +685,10 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                         <li>
                                             <label for="test-receiver-data">Data</label>
                                             <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="test-receiver-reject" checkbox="checkbox" />
+                                            <label for="test-receiver-reject">Receiver should reject this notification</label>
                                         </li>
                                     </ul>
 
