@@ -465,7 +465,8 @@ function checkPost(req){
           var url = location;
           if(location.toLowerCase().slice(0,7) != 'http://' || location.toLowerCase().slice(0,8) != 'https://') {
             //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
-            url = location;
+            var port = (response.xhr._url.port) ? response.xhr._url.port : '';
+            url = response.xhr._url.protocol + '//' + response.xhr._url.hostname + port + location;
           }
 
           var headers = {};
