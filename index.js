@@ -24,95 +24,74 @@ var ldnTests = {
   'sender': {},
   'receiver': {
     'checkOptions': {
-      'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>)',
-      'test': {
-        'checkOptionsAcceptPost': {
-          'description': '... and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.',
-          'test': {
-            'checkOptionsAcceptPostContainsJSONLD': {
-              'description': '... <code>Accept-Post</code> includes <code>application/ld+json</code>'
-            }
-          }
-        }
-      }
+      'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>)'
     },
+    'checkOptionsAcceptPost': {
+      'description': '... and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.'
+    },
+    'checkOptionsAcceptPostContainsJSONLD': {
+      'description': '... <code>Accept-Post</code> includes <code>application/ld+json</code>'
+    },
+
     'checkHead': {
       'description': 'Inbox accepts <code>HEAD</code> requests'
     },
+
     'checkGet': {
       'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.',
-      'test': {
-        'checkGetResponseSuccessful': {
-          'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).',
-          'test': {
-            'checkGetResponseNotificationsLimited': {
-              'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.'
-            },
-            'checkGetResponseLDPContains': {
-              'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.',
-              'test': {
-                'checkGetResponseNotificationsJSONLD': {
-                  'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources'
-                },
-                'checkGetResponseNotificationsRDFSource': {
-                  'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.'
-                }
-              }
-            },
-            'checkGetResponseWhenNoAccept': {
-              'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).'
-            },
-            'extraCheckGetResponseLDPContainer': {
-              'description': 'Inbox is an <code>ldp:Container</code>'
-            },
-            'extraCheckGetResponseLDPConstrainedBy': {
-              'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).'
-            }
-          }
-        },
-      }
     },
+    'checkGetResponseSuccessful': {
+      'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).'
+    },
+    'checkGetResponseNotificationsLimited': {
+      'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.'
+    },
+    'checkGetResponseLDPContains': {
+      'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.'
+    },
+    'checkGetResponseNotificationsJSONLD': {
+      'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources'
+    },
+    'checkGetResponseNotificationsRDFSource': {
+      'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.'
+    },
+    'checkGetResponseWhenNoAccept': {
+      'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).'
+    },
+    'extraCheckGetResponseLDPContainer': {
+      'description': 'Inbox is an <code>ldp:Container</code>'
+    },
+    'extraCheckGetResponseLDPConstrainedBy': {
+      'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).'
+    },
+
+
     'checkPost': {
-      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.',
-      'test': {
-        'checkPostResponseCreated': {
-          'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>',
-          'test': {
-            'checkPostResponseLocation': {
-              'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
-            },
-            'checkPostResponseJSONLDAccepted': {
-              'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>',
-              'test': {
-                'checkPostResponseProfileLinkRelationAccepted': {
-                  'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
-                }
-              }
-            }
-          }
-        },
-        'checkPostResponseAccepted': {
-          'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.',
-          'test': {
-            'checkPostResponseBody': {
-              'description': 'TODO: Read the body'
-            },
-            'checkPostResponseJSONLDAccepted': {
-              'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>',
-              'test': {
-                'checkPostResponseProfileLinkRelationAccepted': {
-                  'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
-                }
-              }
-            }
-          }
-        },
-        'checkPostResponseConstraintsUnmet': {
-          'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
-        }
-      }
+      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.'
+    },
+    'checkPostResponseCreated': {
+      'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>'
+    },
+    'checkPostResponseLocation': {
+      'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
+    },
+    'checkPostResponseJSONLDAccepted': {
+      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>',
+    },
+    'checkPostResponseProfileLinkRelationAccepted': {
+      'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
+    },
+    'checkPostResponseAccepted': {
+      'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.'
+    },
+    // 'checkPostResponseBody': {
+    //   'description': 'TODO: Read the body'
+    // },
+    'checkPostResponseConstraintsUnmet': {
+      'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
     }
   },
+
   'consumer': {}
 }
 
@@ -218,19 +197,19 @@ function checkOptions(req){
       ldnTests['receiver']['checkOptions']['result'] = { 'code': 'PASS', 'message': '' };
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
         if(acceptPost){
-          ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['result'] = { 'code': 'PASS', 'message': '' };
+          ldnTests['receiver']['checkOptionsAcceptPost']['result'] = { 'code': 'PASS', 'message': '' };
 
           var acceptPosts = acceptPost.split(',');
-          ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['test']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'FAIL', 'message': '' };
+          ldnTests['receiver']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'FAIL', 'message': '' };
           acceptPosts.forEach(function(i){
             var m = i.trim();
             if(m == 'application/ld+json' || m == '*/*'){
-              ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['test']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+              ldnTests['receiver']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
             }
           })
         }
         else {
-          ldnTests['receiver']['checkOptions']['test']['checkOptionsAcceptPost']['result'] = { 'code': 'FAIL', 'message': '' };
+          ldnTests['receiver']['checkOptionsAcceptPost']['result'] = { 'code': 'FAIL', 'message': '' };
         }
       return Promise.resolve(ldnTests['receiver']['checkOptions']);
     },
@@ -268,11 +247,11 @@ function checkGet(req){
   return getResource(url, headers).then(
     function(response){
       ldnTests['receiver']['checkGet']['result'] = { 'code': 'PASS', 'message': '' };
-      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
-      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
+      ldnTests['receiver']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
+      ldnTests['receiver']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       if('test-receiver-mimetype' in req.body && req.body['test-receiver-mimetype'].length >= 0) {
-        ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseWhenNoAccept']['result'] = { 'code': 'PASS', 'message': '' };
+        ldnTests['receiver']['checkGetResponseWhenNoAccept']['result'] = { 'code': 'PASS', 'message': '' };
       }
 
       var data = response.xhr.responseText;
@@ -304,7 +283,7 @@ function checkGet(req){
                   }
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+                ldnTests['receiver']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
               }
               else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
                 resourceTypes.forEach(function(url){
@@ -313,10 +292,10 @@ function checkGet(req){
                   }
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
+                ldnTests['receiver']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
               }
               else {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
+                ldnTests['receiver']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
               }
 
               if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
@@ -325,10 +304,10 @@ function checkGet(req){
                   constrainedBys.push('<a href="' + url + '">' + url + '</a>');
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
+                ldnTests['receiver']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
               }
               else {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Not found.' };
+                ldnTests['receiver']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Not found.' };
               }
 
               var notifications = [];
@@ -338,7 +317,7 @@ function checkGet(req){
 
 
               if(notifications.length > 0) {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+                ldnTests['receiver']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
 
                 var testAccepts = ['application/ld+json', '*/*', ''];
                 var notificationResponses = [];
@@ -412,8 +391,8 @@ function checkGet(req){
                     notificationStateJSONLD = notificationStateJSONLD.join(', ');
                     notificationStateRDFSource = notificationStateRDFSource.join(', ');
 
-                    ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['test']['checkGetResponseNotificationsJSONLD']['result'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
-                    ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['test']['checkGetResponseNotificationsRDFSource']['result'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
+                    ldnTests['receiver']['checkGetResponseNotificationsJSONLD']['result'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
+                    ldnTests['receiver']['checkGetResponseNotificationsRDFSource']['result'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
 
                     return Promise.resolve(ldnTests['receiver']['checkGet']);
                   })
@@ -423,7 +402,7 @@ function checkGet(req){
                   });
               }
               else {
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+                ldnTests['receiver']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
                 return Promise.resolve(ldnTests['receiver']['checkGet']);
               }
             },
@@ -440,7 +419,7 @@ function checkGet(req){
         code = 'PASS';
       }
 
-      ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['result'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      ldnTests['receiver']['checkGetResponseSuccessful']['result'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(ldnTests['receiver']['checkGet']);
     });
 }
@@ -459,9 +438,9 @@ function checkPost(req){
 // console.log(response.xhr);
       //checkPostResponseCreated
       if(response.xhr.status == 201) {
-        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
-        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '' };
-        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['test']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
+        ldnTests['receiver']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
+        ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
 
         var location = response.xhr.getResponseHeader('Location');
         if(location){
@@ -482,27 +461,27 @@ function checkPost(req){
             //Maybe use checkPostResponseLocationRetrieveable
             function(i){
 // console.log(i);
-              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
-// console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
+              ldnTests['receiver']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
+// console.log(ldnTests['receiver']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             },
             function(j){
 // console.log(j);
-              ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
-// console.log(ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result']);
+              ldnTests['receiver']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
+// console.log(ldnTests['receiver']['checkPostResponseLocation']['result']);
               return Promise.resolve(ldnTests['receiver']['checkPost']);
             });
         }
         else {
-          ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
+          ldnTests['receiver']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
           return Promise.resolve(ldnTests['receiver']['checkPost']);
         }
       }
       //checkPostResponseAccepted
       else if(response.xhr.status == 202) {
-        ldnTests['receiver']['checkPost']['test']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '' };
-        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '' };
-        ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['test']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
+        ldnTests['receiver']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+        ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
         return Promise.resolve(ldnTests['receiver']['checkPost']);
       }
     },
@@ -511,14 +490,14 @@ console.log(reason);
       switch(reason.xhr.status){
         case '400':
           if('test-receiver-reject' in req.body) {
-            ldnTests['receiver']['checkPost']['test']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': '' };
+            ldnTests['receiver']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': '' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
-            ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           else {
-            ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['test']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
         case '405':
@@ -544,8 +523,12 @@ function getTestReportHTML(test){
   var s = [];
 
   Object.keys(test).forEach(function(id){
-    if('result' in test[id]) {
+    // if('result' in test[id]) {
       var testResult = '';
+
+      if(!('result' in test[id])){
+        test[id]['result'] = { 'code': 'NA', 'message': '' }
+      }
 
       switch(test[id]['result']['code']){
         default: testResult = test[id]['result']['code']; break;
@@ -555,11 +538,11 @@ function getTestReportHTML(test){
       }
 
       s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td><td class="test-message">' + test[id]['result']['message'] + '</td><td class="test-description">' + test[id]['description'] + '</td></tr>');
-    }
+    // }
 
-    if('test' in test[id]) {
-      s.push(getTestReportHTML(test[id]['test']));
-    }
+    // if('test' in test[id]) {
+    //   s.push(getTestReportHTML(test[id]['test']));
+    // }
   });
 
   return s.join("\n");
