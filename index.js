@@ -453,7 +453,7 @@ function checkPost(req){
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
       ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
-
+// console.log(response.xhr);
       //checkPostResponseCreated
       if(response.xhr.status == 201) {
         ldnTests['receiver']['checkPost']['test']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
@@ -463,7 +463,7 @@ function checkPost(req){
         var location = response.xhr.getResponseHeader('Location');
         if(location){
           var url = location;
-          if(location.toLowerCase().slice(0,7) != 'http://' || location.toLowerCase().slice(0,8) != 'https://') {
+          if(location.toLowerCase().slice(0,4) != 'http') {
             //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
             var port = (response.xhr._url.port) ? response.xhr._url.port : '';
             url = response.xhr._url.protocol + '//' + response.xhr._url.hostname + port + location;
