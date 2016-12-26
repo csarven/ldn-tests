@@ -322,7 +322,7 @@ function checkGet(req){
                   constrainedBys.push('<a href="' + url + '">' + url + '</a>');
                 });
 
-                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Found: ' + constrainedBys.join(', ') };
+                ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
               }
               else {
                 ldnTests['receiver']['checkGet']['test']['checkGetResponseSuccessful']['test']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Not found.' };
