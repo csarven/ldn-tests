@@ -1,5 +1,6 @@
 var fs = require('fs');
 var etag = require('etag');
+var uuid = require('node-uuid');
 //var bodyParser = require('body-parser');
 var mayktso = require('mayktso');
 
@@ -143,11 +144,12 @@ function testResource(req, res, next){
 
             var reportHTML = getTestReportHTML(ldnTests['receiver']);
             ldnTests['receiver']['url'] = req.body['test-receiver-url'];
+            ldnTests['receiver']['id'] = uuid.v1();
 
             results['test-receiver-response-html'] = `
     <div id="test-receiver-response">
       <table id="test-receiver-report">
-        <caption>Test results for <a href="${ldnTests['receiver']['url']}">${ldnTests['receiver']['url']}</a></caption>
+        <caption>Test <code>${ldnTests['receiver']['id']}</code> results for <a href="${ldnTests['receiver']['url']}">${ldnTests['receiver']['url']}</a></caption>
         <thead><tr><th>Id</th><th>Result</th><th>Message</th><th>Description</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
