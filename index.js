@@ -440,7 +440,7 @@ function checkPost(req){
       if(response.xhr.status == 201) {
         ldnTests['receiver']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
         ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
+        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': '' };
 
         var location = response.xhr.getResponseHeader('Location');
         if(location){
@@ -481,7 +481,7 @@ function checkPost(req){
       else if(response.xhr.status == 202) {
         ldnTests['receiver']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
         ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'If the request <code>Content-Type</code> included a URI for <code>profile</code>, this is a PASS.' };
+        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': '' };
         return Promise.resolve(ldnTests['receiver']['checkPost']);
       }
     },
