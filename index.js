@@ -271,7 +271,7 @@ function checkGet(req){
       var contentType = response.xhr.getResponseHeader('Content-Type');
 
       if(typeof contentType !== undefined) {
-        if(contentType.split(';')[0] == headers['Accept']) {
+        if(contentType.split(';')[0].trim() == headers['Accept']) {
           var options = {
             'contentType': headers['Accept'],
             'subjectURI': url
@@ -349,7 +349,7 @@ function checkGet(req){
                         if (this.status === 200) {
                           var data = this.responseText;
                           var cT = this.getResponseHeader('Content-Type');
-                          var contentType = cT.split(';')[0];
+                          var contentType = cT.split(';')[0].trim();
 
                           if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
                             resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
