@@ -433,17 +433,13 @@ function checkPost(req){
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
 
+  //TODO: Send Content-Type with profile link relation and see how the server handles it.
+  ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'TODO' };
+
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
       ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
 // console.log(response.xhr);
-      //checkPostResponseCreated
-
-      var contentType = response.xhr.getResponseHeader('Content-Type');
-      var profile = parseProfileLinkRelation(contentType);
-      if(profile.length > 0){
-        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'PASS', 'message': '<code>Content-Type: ' + contentType + '</code>' };
-      }
 
       if(response.xhr.status == 201) {
         ldnTests['receiver']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
