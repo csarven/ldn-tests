@@ -147,7 +147,7 @@ function testResource(req, res, next){
             results['test-receiver-response-html'] = `
     <div id="test-receiver-response">
       <table id="test-receiver-report">
-        <caption>Test results</caption>
+        <caption>Test results for <a href="${ldnTests['receiver']['url']}">${ldnTests['receiver']['url']}</a></caption>
         <thead><tr><th>Id</th><th>Result</th><th>Message</th><th>Description</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
