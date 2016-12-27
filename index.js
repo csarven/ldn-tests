@@ -18,7 +18,7 @@ var getGraphFromData = mayktso.getGraphFromData;
 var serializeData = mayktso.serializeData;
 var SimpleRDF = mayktso.SimpleRDF;
 var parseLinkHeader = mayktso.parseLinkHeader;
-var parseProfileLinkReation = mayktso.parseProfileLinkReation;
+var parseProfileLinkRelation = mayktso.parseProfileLinkRelation;
 var XMLHttpRequest = mayktso.XMLHttpRequest;
 
 var ldnTests = {
@@ -440,7 +440,7 @@ function checkPost(req){
       //checkPostResponseCreated
 
       var contentType = response.xhr.getResponseHeader('Content-Type');
-      var profile = parseProfileLinkReation(contentType);
+      var profile = parseProfileLinkRelation(contentType);
       if(profile.length > 0){
         ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'PASS', 'message': '<code>Content-Type: ' + contentType + '</code>' };
       }
