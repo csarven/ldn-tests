@@ -142,6 +142,7 @@ function testResource(req, res, next){
 // console.dir(ldnTests);
 
             var reportHTML = getTestReportHTML(ldnTests['receiver']);
+            ldnTests['receiver']['url'] = req.body['test-receiver-url'];
 
             results['test-receiver-response-html'] = `
     <div id="test-receiver-response">
