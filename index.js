@@ -140,16 +140,21 @@ function testResource(req, res, next){
         Promise.all(testReceiverPromises)
           .then((results) => {
 // console.dir(results);
-// console.dir(ldnTests);
+            var resultsData = {};
+            results.forEach(function(r){
+              Object.assign(resultsData, r['receiver']);
+            });
+// console.dir(resultsData);
 
-            var reportHTML = getTestReportHTML(ldnTests['receiver']);
-            ldnTests['receiver']['url'] = req.body['test-receiver-url'];
-            ldnTests['receiver']['id'] = uuid.v1();
+            var reportHTML = getTestReportHTML(resultsData);
+            var test = {'url': req.body['test-receiver-url'] };
+            test['id'] = uuid.v1();
+            test['results'] = results
 
-            results['test-receiver-response-html'] = `
+            resultsData['test-receiver-response-html'] = `
     <div id="test-receiver-response">
       <table id="test-receiver-report">
-        <caption>Test <code>${ldnTests['receiver']['id']}</code> results for <a href="${ldnTests['receiver']['url']}">${ldnTests['receiver']['url']}</a></caption>
+        <caption>Test <code>${test['id']}</code> results for <a href="${test['url']}">${test['url']}</a></caption>
         <thead><tr><th>Id</th><th>Result</th><th>Message</th><th>Description</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
@@ -164,7 +169,7 @@ ${reportHTML}
       </table>
     </div>`;
 
-            var data = getTestReceiverHTML(req.body, results);
+            var data = getTestReceiverHTML(req.body, resultsData);
 // console.log(data);
 
             res.set('Content-Type', 'text/html;charset=utf-8');
@@ -194,74 +199,77 @@ ${reportHTML}
 
 
 function checkOptions(req){
+  var testResults = { 'receiver': {} };
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
 
   return getResourceOptions(url, headers).then(
     function(response){
-      ldnTests['receiver']['checkOptions']['result'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '' };
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
         if(acceptPost){
-          ldnTests['receiver']['checkOptionsAcceptPost']['result'] = { 'code': 'PASS', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '' };
 
           var acceptPosts = acceptPost.split(',');
-          ldnTests['receiver']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'FAIL', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'FAIL', 'message': '' };
           acceptPosts.forEach(function(i){
             var m = i.trim();
             if(m == 'application/ld+json' || m == '*/*'){
-              ldnTests['receiver']['checkOptionsAcceptPostContainsJSONLD']['result'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+              testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
             }
           })
         }
         else {
-          ldnTests['receiver']['checkOptionsAcceptPost']['result'] = { 'code': 'FAIL', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'FAIL', 'message': '' };
         }
-      return Promise.resolve(ldnTests['receiver']['checkOptions']);
+      return Promise.resolve(testResults);
     },
     function(reason){
       if(reason.xhr.status == 405) {
-        ldnTests['receiver']['checkOptions']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
+        testResults['receiver']['checkOptions'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
       }
-      return Promise.resolve(ldnTests['receiver']['checkOptions']);
+      return Promise.resolve(testResults);
     });
 }
 
 function checkHead(req){
+  var testResults = { 'receiver': {} };
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
 
   return getResourceHead(url, headers).then(
     function(response){
-      ldnTests['receiver']['checkHead']['result'] = { 'code': 'PASS', 'message': '' };
-      return Promise.resolve(ldnTests['receiver']['checkHead']);
+      testResults['receiver']['checkHead'] = { 'code': 'PASS', 'message': '' };
+      return Promise.resolve(testResults);
     },
     function(reason){
       if(reason.xhr.status == 405) {
-        ldnTests['receiver']['checkHead']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
+        testResults['receiver']['checkHead'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
       }
-      return Promise.resolve(ldnTests['receiver']['checkHead']);
+      return Promise.resolve(testResults);
     });
 }
 
 function checkGet(req){
+  var testResults = { 'receiver': {} };
   var headers = {};
   headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
 
   return getResource(url, headers).then(
     function(response){
-      ldnTests['receiver']['checkGet']['result'] = { 'code': 'PASS', 'message': '' };
-      ldnTests['receiver']['checkGetResponseSuccessful']['result'] = { 'code': 'PASS', 'message': '' };
-      ldnTests['receiver']['checkGetResponseNotificationsLimited']['result'] = { 'code': 'NA', 'message': 'Check manually.' };
+      testResults['receiver']['checkGet'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkGetResponseSuccessful'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       if('test-receiver-mimetype' in req.body && req.body['test-receiver-mimetype'].length >= 0) {
-        ldnTests['receiver']['checkGetResponseWhenNoAccept']['result'] = { 'code': 'PASS', 'message': '' };
+        testResults['receiver']['checkGetResponseWhenNoAccept'] = { 'code': 'PASS', 'message': '' };
       }
-
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
+
       if(typeof contentType !== undefined) {
         if(contentType.split(';')[0] == headers['Accept']) {
           var options = {
@@ -289,7 +297,7 @@ function checkGet(req){
                   }
                 });
 
-                ldnTests['receiver']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+                testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
               }
               else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
                 resourceTypes.forEach(function(url){
@@ -298,10 +306,10 @@ function checkGet(req){
                   }
                 });
 
-                ldnTests['receiver']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
+                testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
               }
               else {
-                ldnTests['receiver']['extraCheckGetResponseLDPContainer']['result'] = { 'code': 'NA', 'message': 'Not found.' };
+                testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'NA', 'message': 'Not found.' };
               }
 
               if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
@@ -310,10 +318,10 @@ function checkGet(req){
                   constrainedBys.push('<a href="' + url + '">' + url + '</a>');
                 });
 
-                ldnTests['receiver']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
+                testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
               }
               else {
-                ldnTests['receiver']['extraCheckGetResponseLDPConstrainedBy']['result'] = { 'code': 'NA', 'message': 'Not found.' };
+                testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'NA', 'message': 'Not found.' };
               }
 
               var notifications = [];
@@ -321,9 +329,8 @@ function checkGet(req){
                   notifications.push(resource.toString());
               });
 
-
               if(notifications.length > 0) {
-                ldnTests['receiver']['checkGetResponseLDPContains']['result'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+                testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
 
                 var testAccepts = ['application/ld+json', '*/*', ''];
                 var notificationResponses = [];
@@ -374,7 +381,7 @@ function checkGet(req){
                   });
                 });
 
-                Promise.all(notificationResponses)
+                return Promise.all(notificationResponses)
                   .then((results) => {
 // console.log(results);
 
@@ -397,10 +404,10 @@ function checkGet(req){
                     notificationStateJSONLD = notificationStateJSONLD.join(', ');
                     notificationStateRDFSource = notificationStateRDFSource.join(', ');
 
-                    ldnTests['receiver']['checkGetResponseNotificationsJSONLD']['result'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
-                    ldnTests['receiver']['checkGetResponseNotificationsRDFSource']['result'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
+                    testResults['receiver']['checkGetResponseNotificationsJSONLD'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
+                    testResults['receiver']['checkGetResponseNotificationsRDFSource'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
 
-                    return Promise.resolve(ldnTests['receiver']['checkGet']);
+                    return Promise.resolve(testResults);
                   })
                   .catch((e) => {
                     console.log('--- catch: notificationResponses ---');
@@ -408,13 +415,13 @@ function checkGet(req){
                   });
               }
               else {
-                ldnTests['receiver']['checkGetResponseLDPContains']['result'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
-                return Promise.resolve(ldnTests['receiver']['checkGet']);
+                testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+                return Promise.resolve(testResults);
               }
             },
             function(reason){
-              ldnTests['receiver']['checkGet']['result'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as ' + headers['Accept'] };
-              return Promise.resolve(ldnTests['receiver']['checkGet']);
+              testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as ' + headers['Accept'] };
+              return Promise.resolve(testResults);
             });      
         }
       }
@@ -425,28 +432,28 @@ function checkGet(req){
         code = 'PASS';
       }
 
-      ldnTests['receiver']['checkGetResponseSuccessful']['result'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
-      return Promise.resolve(ldnTests['receiver']['checkGet']);
+      testResults['receiver']['checkGetResponseSuccessful'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      return Promise.resolve(testResults);
     });
 }
 
 
 
 function checkPost(req){
+  var testResults = { 'receiver': {} };
   var headers = {}, data;
-
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"; charset=utf-8';
   data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
 
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
 // console.log(response.xhr);
-      ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
-      ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
       if(response.xhr.status == 201) {
-        ldnTests['receiver']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
-        ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+        testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '' };
+        testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
 
         var location = response.xhr.getResponseHeader('Location');
         if(location){
@@ -467,27 +474,27 @@ function checkPost(req){
             //Maybe use checkPostResponseLocationRetrieveable
             function(i){
 // console.log(i);
-              ldnTests['receiver']['checkPostResponseLocation']['result'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
-// console.log(ldnTests['receiver']['checkPostResponseLocation']['result']);
-              return Promise.resolve(ldnTests['receiver']['checkPost']);
+              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
+// console.log(testResults['receiver']['checkPostResponseLocation']);
+              return Promise.resolve(testResults);
             },
             function(j){
 // console.log(j);
-              ldnTests['receiver']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
-// console.log(ldnTests['receiver']['checkPostResponseLocation']['result']);
-              return Promise.resolve(ldnTests['receiver']['checkPost']);
+              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
+// console.log(testResults['receiver']['checkPostResponseLocation']);
+              return Promise.resolve(testResults);
             });
         }
         else {
-          ldnTests['receiver']['checkPostResponseLocation']['result'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
-          return Promise.resolve(ldnTests['receiver']['checkPost']);
+          testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
+          return Promise.resolve(testResults);
         }
       }
       //checkPostResponseAccepted
       else if(response.xhr.status == 202) {
-        ldnTests['receiver']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        return Promise.resolve(ldnTests['receiver']['checkPost']);
+        testResults['receiver']['checkPostResponseAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+        testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+        return Promise.resolve(testResults);
       }
     },
     function(reason){
@@ -495,59 +502,60 @@ console.log(reason);
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            ldnTests['receiver']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': '' };
+            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
-            ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           else {
-            ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
         case 405:
-          ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
+          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
         case 415:
           if('test-receiver-reject' in req.body) {
-            ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed (other than JSON-LD)</code>.' };
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed (other than JSON-LD)</code>.' };
           }
           else {
-            ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed. Make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter. Ignore them if they are not intended to be used.</code>.' };
+            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed. Make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter. Ignore them if they are not intended to be used.</code>.' };
           }
-          ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
+          testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
           if(reason.xhr.status >= 500 && reason.xhr.status < 600) {
-            ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           }
           break;
       }
 
-      return Promise.resolve(ldnTests['receiver']['checkPost']);
+      return Promise.resolve(testResults);
     });
 }
 
 
 
-function getTestReportHTML(test){
+function getTestReportHTML(test, implementation){
   var s = [];
+  implementation = implementation || 'receiver';
 
-  Object.keys(test).forEach(function(id){
-      var testResult = '';
+  Object.keys(ldnTests[implementation]).forEach(function(id){
+    var testResult = '';
 
-      if(typeof test[id]['result'] == 'undefined'){
-        test[id]['result'] = { 'code': 'NA', 'message': '' };
-      }
+    if(typeof test[id] == 'undefined'){
+      test[id] = { 'code': 'NA', 'message': '' };
+    }
 
-      switch(test[id]['result']['code']){
-        default: testResult = test[id]['result']['code']; break;
-        case 'PASS': testResult = '✔'; break;
-        case 'FAIL': testResult = '✗'; break;
-        case 'NA': testResult = '-'; break;
-      }
+    switch(test[id]['code']){
+      default: testResult = test[id]['code']; break;
+      case 'PASS': testResult = '✔'; break;
+      case 'FAIL': testResult = '✗'; break;
+      case 'NA': testResult = '-'; break;
+    }
 
-      s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td><td class="test-message">' + test[id]['result']['message'] + '</td><td class="test-description">' + test[id]['description'] + '</td></tr>');
+    s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['code'] + '">' + testResult + '</td><td class="test-message">' + test[id]['message'] + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td></tr>');
   });
 
   return s.join("\n");
