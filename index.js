@@ -433,7 +433,7 @@ function checkGet(req){
 function checkPost(req){
   var headers = {}, data;
 
-  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"';
+  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"; charset=utf-8';
   data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
 
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
