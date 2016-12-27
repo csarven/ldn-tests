@@ -507,7 +507,12 @@ console.log(reason);
           ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
         case 415:
-          ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is format (other than for JSON-LD</code>.' };
+          if('test-receiver-reject' in req.body) {
+            ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed (other than JSON-LD)</code>.' };
+          }
+          else {
+            ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed. Make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter. Ignore them if they are not intended to be used.</code>.' };
+          }
           ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
@@ -527,11 +532,10 @@ function getTestReportHTML(test){
   var s = [];
 
   Object.keys(test).forEach(function(id){
-    // if('result' in test[id]) {
       var testResult = '';
 
-      if(!('result' in test[id])){
-        test[id]['result'] = { 'code': 'NA', 'message': '' }
+      if(typeof test[id]['result'] == 'undefined'){
+        test[id]['result'] = { 'code': 'NA', 'message': '' };
       }
 
       switch(test[id]['result']['code']){
@@ -542,11 +546,6 @@ function getTestReportHTML(test){
       }
 
       s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['result']['code'] + '">' + testResult + '</td><td class="test-message">' + test[id]['result']['message'] + '</td><td class="test-description">' + test[id]['description'] + '</td></tr>');
-    // }
-
-    // if('test' in test[id]) {
-    //   s.push(getTestReportHTML(test[id]['test']));
-    // }
   });
 
   return s.join("\n");
