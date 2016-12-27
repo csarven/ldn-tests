@@ -18,6 +18,7 @@ var getGraphFromData = mayktso.getGraphFromData;
 var serializeData = mayktso.serializeData;
 var SimpleRDF = mayktso.SimpleRDF;
 var parseLinkHeader = mayktso.parseLinkHeader;
+var parseProfileLinkReation = mayktso.parseProfileLinkReation;
 var XMLHttpRequest = mayktso.XMLHttpRequest;
 
 var ldnTests = {
@@ -437,10 +438,16 @@ function checkPost(req){
       ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
 // console.log(response.xhr);
       //checkPostResponseCreated
+
+      var contentType = resonnse.xhr.getResponseHeader('Content-Type');
+      var profile = parseProfileLinkReation(contentType);
+      if(profile.length > 0){
+        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'PASS', 'message': '<code>Content-Type: ' + contentType + '</code>' };
+      }
+
       if(response.xhr.status == 201) {
         ldnTests['receiver']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
         ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': '' };
 
         var location = response.xhr.getResponseHeader('Location');
         if(location){
@@ -481,7 +488,6 @@ function checkPost(req){
       else if(response.xhr.status == 202) {
         ldnTests['receiver']['checkPostResponseAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
         ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': '' };
         return Promise.resolve(ldnTests['receiver']['checkPost']);
       }
     },
