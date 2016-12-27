@@ -439,7 +439,7 @@ function checkPost(req){
 // console.log(response.xhr);
       //checkPostResponseCreated
 
-      var contentType = resonnse.xhr.getResponseHeader('Content-Type');
+      var contentType = response.xhr.getResponseHeader('Content-Type');
       var profile = parseProfileLinkReation(contentType);
       if(profile.length > 0){
         ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'PASS', 'message': '<code>Content-Type: ' + contentType + '</code>' };
