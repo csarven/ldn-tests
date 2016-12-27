@@ -508,7 +508,7 @@ console.log(reason);
           ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          if(response.xhr.status >= 500 && response.xhr.status < 600) {
+          if(reason.xhr.status >= 500 && reason.xhr.status < 600) {
             ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           }
           break;
