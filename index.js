@@ -430,16 +430,14 @@ function checkGet(req){
 function checkPost(req){
   var headers = {}, data;
 
-  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
+  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"';
   data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
-
-  //TODO: Send Content-Type with profile link relation and see how the server handles it.
-  ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'TODO' };
 
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
-      ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
 // console.log(response.xhr);
+      ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '' };
+      ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'PASS', 'message': '' };
 
       if(response.xhr.status == 201) {
         ldnTests['receiver']['checkPostResponseCreated']['result'] = { 'code': 'PASS', 'message': '' };
@@ -507,6 +505,7 @@ console.log(reason);
           break;
         case '415':
           ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is format (other than for JSON-LD</code>.' };
+          ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
           if(response.xhr.status >= 500 && response.xhr.status < 600) {
