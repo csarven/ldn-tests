@@ -171,12 +171,14 @@ ${reportHTML}
             res.set('Allow', 'GET, POST');
             res.status(200);
             res.send(data);
-
-           return next();
+            res.end();
+            return next();
           })
           .catch((e) => {
             console.log('--- catch ---');
             console.log(e);
+            res.end();
+            return next();
           });
       }
       break;
