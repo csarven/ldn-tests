@@ -77,7 +77,7 @@ var ldnTests = {
       'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
     },
     'checkPostResponseJSONLDAccepted': {
-      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>',
+      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
     },
     'checkPostResponseProfileLinkRelationAccepted': {
       'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
@@ -488,7 +488,7 @@ function checkPost(req){
     function(reason){
 console.log(reason);
       switch(reason.xhr.status){
-        case '400':
+        case 400:
           if('test-receiver-reject' in req.body) {
             ldnTests['receiver']['checkPostResponseConstraintsUnmet']['result'] = { 'code': 'PASS', 'message': '' };
           }
@@ -500,10 +500,10 @@ console.log(reason);
             ldnTests['receiver']['checkPostResponseJSONLDAccepted']['result'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
-        case '405':
+        case 405:
           ldnTests['receiver']['checkPost']['result'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
-        case '415':
+        case 415:
           ldnTests['receiver']['checkPost']['result'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is format (other than for JSON-LD</code>.' };
           ldnTests['receiver']['checkPostResponseProfileLinkRelationAccepted']['result'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
