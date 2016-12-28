@@ -448,7 +448,7 @@ function checkPost(req){
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
 // console.log(response.xhr);
-      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
       if('test-receiver-reject' in req.body){
         testResults['receiver']['checkPost']['code'] = 'FAIL';
       }
