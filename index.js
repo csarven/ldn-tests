@@ -381,18 +381,19 @@ function checkGet(req){
                           }
                           else {
                             var options = { 'subjectURI': '_:ldn' }
+                            var codeAccept = (acceptValue == '') ? 'No <code>Accept</code>' : '<code>Accept: ' + acceptValue + '</code>';
                             serializeData(data, contentType, 'application/ld+json', options).then(
                               function(i){
-                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'PASS', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
+                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'PASS', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
                               },
                               function(reason){
-                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
+                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
                               }
                             );
                           }
                         }
                         else {
-                          resolve({ 'url': url, 'Accept-Type': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': HTTP status ' + this.status });
+                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': HTTP status ' + this.status });
                         }
                       }
                     };
