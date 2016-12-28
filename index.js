@@ -26,71 +26,71 @@ var ldnTests = {
   'sender': {},
   'receiver': {
     'checkOptions': {
-      'description': '<em class="rfc2119">MAY</em> accept other RDF content types (e.g., <code>text/turtle</code>, <code>text/html</code>)'
+      'description': 'Accepts other RDF content types.'
     },
     'checkOptionsAcceptPost': {
-      'description': '... and if so, <em class="rfc2119">SHOULD</em> advertise the content types they accept with an <code>Accept-Post</code> header in response to an <code>OPTIONS</code> request on the Inbox URL.'
+      'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.'
     },
     'checkOptionsAcceptPostContainsJSONLD': {
-      'description': '... <code>Accept-Post</code> includes <code>application/ld+json</code>'
+      'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.'
     },
 
     'checkHead': {
-      'description': 'Inbox accepts <code>HEAD</code> requests'
+      'description': 'Accepts <code>HEAD</code> requests.'
     },
 
     'checkGet': {
-      'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.',
+      'description': 'Returns JSON-LD on <code>GET</code> requests.',
     },
     'checkGetResponseSuccessful': {
-      'description': 'A successful <code>GET</code> request on the Inbox <em class="rfc2119">MUST</em> return a <code>HTTP 200 OK</code> with the URIs of notifications, subject to the requester’s access (returning <code>4xx</code> error codes as applicable).'
+      'description': '// merge with checkGet'
     },
     'checkGetResponseNotificationsLimited': {
-      'description': 'Receivers <em class="rfc2119">MAY</em> list only URIs of notifications in the Inbox that the consumer is able to access.'
+      'description': 'Restricts list of notification URIs (eg. according to access control).'
     },
     'checkGetResponseLDPContains': {
-      'description': 'Each notification URI <em class="rfc2119">MUST</em> be related to the Inbox URL with the <code>http://www.w3.org/ns/ldp#contains</code> predicate.'
+      'description': 'Lists notification URIs with <code>ldp:contains</code>.'
     },
     'checkGetResponseNotificationsJSONLD': {
-      'description': 'The JSON-LD content type <em class="rfc2119">MUST</em> be available for all resources'
+      'description': 'Notifications are available as JSON-LD.'
     },
     'checkGetResponseNotificationsRDFSource': {
-      'description': 'Each notification <em class="rfc2119">MUST</em> be an <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-source">RDF source</a>.'
+      'description': 'Notifications are available as RDF.'
     },
     'checkGetResponseWhenNoAccept': {
-      'description': '...but clients may send <code>Accept</code> headers preferring other content types (<a href="#bib-rdfc7231">RFC7231</a> Section 3.4 - Content Negotiation). If the client sends no <code>Accept</code> header, the server may send the data in JSON-LD or any format which faithfully conveys the same information (e.g., Turtle).'
+      'description': 'Responds with RDF when no <code>Accept</code> header is sent.'
     },
     'extraCheckGetResponseLDPContainer': {
-      'description': 'Inbox is an <code>ldp:Container</code>'
+      'description': 'Inbox has type <code>ldp:Container</code>.'
     },
     'extraCheckGetResponseLDPConstrainedBy': {
-      'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).'
+      'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.'
     },
 
 
     'checkPost': {
-      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.'
+      'description': 'Accepts <code>POST</code> requests.'
     },
     'checkPostResponseCreated': {
-      'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>'
+      'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.'
     },
     'checkPostResponseLocation': {
-      'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
+      'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.'
     },
     'checkPostResponseJSONLDAccepted': {
-      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
+      'description': '// merge with checkPostResponseCreated'
     },
     'checkPostResponseProfileLinkRelationAccepted': {
-      'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
+      'description': 'Succeeds when the content type includes a <code>profile</code> parameter.'
     },
     'checkPostResponseAccepted': {
-      'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.'
+      'description': '// merge with checkPostResponseCreated'
     },
     // 'checkPostResponseBody': {
     //   'description': 'TODO: Read the body'
     // },
     'checkPostResponseConstraintsUnmet': {
-      'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
+      'description': 'Fails to process notifications if implementation-specific constraints are not met.'
     }
   },
 
