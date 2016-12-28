@@ -446,8 +446,9 @@ function checkPost(req){
 
         // If 'reject' was ticked, creating was wrong, fail
         if('test-receiver-reject' in req.body){
-          testResults['receiver']['checkPostResponseCreated']['code'] = 'FAIL';
-          testResults['receiver']['checkPostResponseCreated']['message'] = 'Payload did not meet constraints, should NOT accept.';
+          testResults['receiver']['checkPostResponseCreated'] = { 'code' : 'FAIL', 'message' : 'Payload did NOT meet constraints, but the receiver indicated success (<code>' + response.xhr.status + '</code>)' };
+          testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'FAIL', 'message': '' };
+          return Promise.resolve(testResults);
 
         // Otherwise, pass
         }else{
