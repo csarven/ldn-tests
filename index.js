@@ -697,9 +697,9 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                     <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
                         <h2 property="schema:name">Receiver</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a pass/fail response for individual requirements of the LDN spec. It also tests some optional features; you'll get an <code>n/a</code> response if you don't implement them, rather than a fail.</p>
+                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="test-PASS">pass</span>/<span class="test-FAIL">fail</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get a <span class="test-NA">not applicable</span> response if you don't implement them, rather than a fail.</p>
                             <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
-                            <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the 'Receiver should reject this notification' box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
+                            <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
                             <form action="" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
@@ -712,7 +712,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
 
                                         <li>
                                             <label for="test-receiver-data">Data</label>
-                                            <textarea name="test-receiver-data" cols="80" rows="10" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
+                                            <textarea name="test-receiver-data" cols="80" rows="2" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
                                         </li>
                                         <li>
                                             <input type="checkbox" name="test-receiver-reject" checkbox="checkbox" />
