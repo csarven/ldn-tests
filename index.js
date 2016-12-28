@@ -39,6 +39,31 @@ var ldnTests = {
       'description': 'Inbox accepts <code>HEAD</code> requests'
     },
 
+    'checkPost': {
+      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.'
+    },
+    'checkPostResponseCreated': {
+      'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>'
+    },
+    'checkPostResponseLocation': {
+      'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
+    },
+    'checkPostResponseJSONLDAccepted': {
+      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
+    },
+    'checkPostResponseProfileLinkRelationAccepted': {
+      'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
+    },
+    'checkPostResponseAccepted': {
+      'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.'
+    },
+    // 'checkPostResponseBody': {
+    //   'description': 'TODO: Read the body'
+    // },
+    'checkPostResponseConstraintsUnmet': {
+      'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
+    },
+
     'checkGet': {
       'description': '<em class="rfc2119">MUST</em> support <code>GET</code> request on the Inbox URL.',
     },
@@ -65,32 +90,6 @@ var ldnTests = {
     },
     'extraCheckGetResponseLDPConstrainedBy': {
       'description': 'Any additional description about the Inbox itself <em class="rfc2119">MAY</em> also be returned (e.g., <a href="#constraints">Constraints</a>).'
-    },
-
-
-    'checkPost': {
-      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.'
-    },
-    'checkPostResponseCreated': {
-      'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>'
-    },
-    'checkPostResponseLocation': {
-      'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
-    },
-    'checkPostResponseJSONLDAccepted': {
-      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
-    },
-    'checkPostResponseProfileLinkRelationAccepted': {
-      'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
-    },
-    'checkPostResponseAccepted': {
-      'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.'
-    },
-    // 'checkPostResponseBody': {
-    //   'description': 'TODO: Read the body'
-    // },
-    'checkPostResponseConstraintsUnmet': {
-      'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
     }
   },
 
@@ -130,7 +129,7 @@ function testResource(req, res, next){
 
     case 'POST':
       var testReceiverPromises = [];
-      var initTest = { '1': checkOptions, '2': checkHead, '3': checkGet, '4': checkPost };
+      var initTest = { '1': checkOptions, '2': checkHead, '3': checkPost, '4': checkGet };
 
       if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
         Object.keys(initTest).forEach(function(id) {
