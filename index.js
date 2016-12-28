@@ -529,9 +529,7 @@ console.log(reason);
           testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          if(reason.xhr.status >= 500 && reason.xhr.status < 600) {
-            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
-          }
+          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           break;
       }
 
