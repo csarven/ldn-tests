@@ -39,6 +39,25 @@ var ldnTests = {
       'description': 'Accepts other RDF content types.'
     },
 
+    'checkPost': {
+      'description': 'Accepts <code>POST</code> requests.'
+    },
+    'checkPostResponseCreated': {
+      'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.'
+    },
+    'checkPostResponseLocation': {
+      'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.'
+    },
+    'checkPostResponseProfileLinkRelationAccepted': {
+      'description': 'Succeeds when the content type includes a <code>profile</code> parameter.'
+    },
+    // 'checkPostResponseBody': {
+    //   'description': 'TODO: Read the body'
+    // },
+    'checkPostResponseConstraintsUnmet': {
+      'description': 'Fails to process notifications if implementation-specific constraints are not met.'
+    },
+
     'checkGet': {
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
     },
@@ -59,26 +78,6 @@ var ldnTests = {
     },
     'extraCheckGetResponseLDPConstrainedBy': {
       'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.'
-    },
-
-
-    'checkPost': {
-      'description': 'Accepts <code>POST</code> requests.'
-    },
-    'checkPostResponseCreated': {
-      'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.'
-    },
-    'checkPostResponseLocation': {
-      'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.'
-    },
-    'checkPostResponseProfileLinkRelationAccepted': {
-      'description': 'Succeeds when the content type includes a <code>profile</code> parameter.'
-    },
-    // 'checkPostResponseBody': {
-    //   'description': 'TODO: Read the body'
-    // },
-    'checkPostResponseConstraintsUnmet': {
-      'description': 'Fails to process notifications if implementation-specific constraints are not met.'
     }
   },
 
@@ -464,22 +463,17 @@ function checkPost(req){
 
               var headers = {};
               headers['Accept'] = 'application/ld+json';
-    // console.log('=======');
-    // console.log(url);
-    // console.log('=======');
-              //checkPostResponseLocation
+
               return getResource(url, headers).then(
                 //Maybe use checkPostResponseLocationRetrieveable
                 function(i){
-    // console.log(i);
+// console.log(i);
                   testResults['receiver']['checkPostResponseLocation'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
-    // console.log(testResults['receiver']['checkPostResponseLocation']);
                   return Promise.resolve(testResults);
                 },
                 function(j){
-    // console.log(j);
+// console.log(j);
                   testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
-    // console.log(testResults['receiver']['checkPostResponseLocation']);
                   return Promise.resolve(testResults);
                 });
             }
@@ -494,7 +488,7 @@ function checkPost(req){
 
     },
     function(reason){
-console.log(reason);
+// console.log(reason);
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
