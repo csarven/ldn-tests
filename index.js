@@ -637,7 +637,9 @@ margin-left:16.5%;
 #test-receiver-response pre { overflow: auto; }
 .dn { display:none }
 
+td { border-bottom: 1px solid #eee; }
 .test-result { text-align: center; }
+.test-description { width: 50%; }
 .test-message ul { list-style-position: inside; }
 .test-PASS { background-color: #0f0; }
 .test-FAIL { background-color: #f00; }
