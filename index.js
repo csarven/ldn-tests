@@ -448,7 +448,10 @@ function checkPost(req){
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
 // console.log(response.xhr);
-      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      if('test-receiver-reject' in req.body){
+        testResults['receiver']['checkPost']['code'] = 'FAIL';
+      }
       testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
       if(response.xhr.status == 201) {
@@ -502,7 +505,8 @@ console.log(reason);
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '' };
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
