@@ -448,7 +448,10 @@ function checkPost(req){
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
 // console.log(response.xhr);
-      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+      if('test-receiver-reject' in req.body){
+        testResults['receiver']['checkPost']['code'] = 'FAIL';
+      }
       testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
       if(response.xhr.status == 201) {
@@ -502,7 +505,7 @@ console.log(reason);
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            // Message should be the HTTP code, but I don't know that it will always be 400 for constraints unmet?
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
             testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           }
           //TODO: Maybe handle other formats here
@@ -526,9 +529,7 @@ console.log(reason);
           testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          if(reason.xhr.status >= 500 && reason.xhr.status < 600) {
-            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
-          }
+          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           break;
       }
 
