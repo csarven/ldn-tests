@@ -155,7 +155,7 @@ function testResource(req, res, next){
     <div id="test-receiver-response">
       <table id="test-receiver-report">
         <caption>Test <code>${test['id']}</code> results for <a href="${test['url']}">${test['url']}</a></caption>
-        <thead><tr><th>Id</th><th>Result</th><th>Message</th><th>Description</th></tr></thead>
+        <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
             <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
@@ -555,7 +555,7 @@ function getTestReportHTML(test, implementation){
       case 'NA': testResult = '-'; break;
     }
 
-    s.push('<tr id="test-' + id + '"><td class="test-id">' + id + '</td><td class="test-result test-' + test[id]['code'] + '">' + testResult + '</td><td class="test-message">' + test[id]['message'] + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td></tr>');
+    s.push('<tr id="test-' + id + '"><td class="test-result test-' + test[id]['code'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['message'] + '</td></tr>');
   });
 
   return s.join("\n");
