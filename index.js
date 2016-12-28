@@ -39,31 +39,6 @@ var ldnTests = {
       'description': 'Accepts <code>HEAD</code> requests.'
     },
 
-    'checkPost': {
-      'description': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.'
-    },
-    'checkPostResponseCreated': {
-      'description': '<em class="rfc2119">MUST</em> respond with status code <code>201 Created</code>'
-    },
-    'checkPostResponseLocation': {
-      'description': '<code>Location</code> header set to the URL from which the notification data can be retrieved.'
-    },
-    'checkPostResponseJSONLDAccepted': {
-      'description': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>'
-    },
-    'checkPostResponseProfileLinkRelationAccepted': {
-      'description': '...which <em class="rfc2119">MAY</em> include a <code>profile</code> URI'
-    },
-    'checkPostResponseAccepted': {
-      'description': 'If the request was queued to be processed asynchronously, the receiver <em class="rfc2119">MUST</em> respond with a status code of <code>202 Accepted</code> and include information about the status of the request in the body of the response.'
-    },
-    // 'checkPostResponseBody': {
-    //   'description': 'TODO: Read the body'
-    // },
-    'checkPostResponseConstraintsUnmet': {
-      'description': 'Receivers which enforce constraints on the notifications <em class="rfc2119">SHOULD</em> fail to process the notification if the constraints are not met and return the appropriate <code>4xx</code> error code. Receivers <em class="rfc2119">SHOULD</em> use <a href="#constraints">constraints</a> to filter unwarranted notifications from being created on the server and exposed by the Inbox.'
-    },
-
     'checkGet': {
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
     },
@@ -99,14 +74,8 @@ var ldnTests = {
     'checkPostResponseLocation': {
       'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.'
     },
-    'checkPostResponseJSONLDAccepted': {
-      'description': '// merge with checkPostResponseCreated'
-    },
     'checkPostResponseProfileLinkRelationAccepted': {
       'description': 'Succeeds when the content type includes a <code>profile</code> parameter.'
-    },
-    'checkPostResponseAccepted': {
-      'description': '// merge with checkPostResponseCreated'
     },
     // 'checkPostResponseBody': {
     //   'description': 'TODO: Read the body'
@@ -467,73 +436,77 @@ function checkPost(req){
 
   return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
     function(response){
-// console.log(response.xhr);
+
+      // POST requests are supported, with and without profiles
       testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-      if('test-receiver-reject' in req.body){
-        testResults['receiver']['checkPost']['code'] = 'FAIL';
-      }
       testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
-      if(response.xhr.status == 201) {
-        testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+      // If 201 or 202
+      if(response.xhr.status == 201 || response.xhr.status == 202) {
 
-        var location = response.xhr.getResponseHeader('Location');
-        if(location){
-          var url = location;
-          if(location.toLowerCase().slice(0,4) != 'http') {
-            //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
-            var port = (response.xhr._url.port) ? response.xhr._url.port : '';
-            url = response.xhr._url.protocol + '//' + response.xhr._url.hostname + port + location;
-          }
+        // If 'reject' was ticked, creating was wrong, fail
+        if('test-receiver-reject' in req.body){
+          testResults['receiver']['checkPostResponseCreated']['code'] = 'FAIL';
+          testResults['receiver']['checkPostResponseCreated']['message'] = 'Payload did not meet constraints, should NOT accept.';
 
-          var headers = {};
-          headers['Accept'] = 'application/ld+json';
-// console.log('=======');
-// console.log(url);
-// console.log('=======');
-          //checkPostResponseLocation
-          return getResource(url, headers).then(
-            //Maybe use checkPostResponseLocationRetrieveable
-            function(i){
-// console.log(i);
-              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
-// console.log(testResults['receiver']['checkPostResponseLocation']);
+        // Otherwise, pass
+        }else{
+          testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+
+          // If 201, check Location header
+          if(response.xhr.status == 201){
+
+            var location = response.xhr.getResponseHeader('Location');
+            if(location){
+              var url = location;
+              if(location.toLowerCase().slice(0,4) != 'http') {
+                //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
+                var port = (response.xhr._url.port) ? response.xhr._url.port : '';
+                url = response.xhr._url.protocol + '//' + response.xhr._url.hostname + port + location;
+              }
+
+              var headers = {};
+              headers['Accept'] = 'application/ld+json';
+    // console.log('=======');
+    // console.log(url);
+    // console.log('=======');
+              //checkPostResponseLocation
+              return getResource(url, headers).then(
+                //Maybe use checkPostResponseLocationRetrieveable
+                function(i){
+    // console.log(i);
+                  testResults['receiver']['checkPostResponseLocation'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
+    // console.log(testResults['receiver']['checkPostResponseLocation']);
+                  return Promise.resolve(testResults);
+                },
+                function(j){
+    // console.log(j);
+                  testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
+    // console.log(testResults['receiver']['checkPostResponseLocation']);
+                  return Promise.resolve(testResults);
+                });
+            }
+            else {
+              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
               return Promise.resolve(testResults);
-            },
-            function(j){
-// console.log(j);
-              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
-// console.log(testResults['receiver']['checkPostResponseLocation']);
-              return Promise.resolve(testResults);
-            });
-        }
-        else {
-          testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
-          return Promise.resolve(testResults);
-        }
-      }
-      //checkPostResponseAccepted
-      else if(response.xhr.status == 202) {
-        testResults['receiver']['checkPostResponseAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
-        return Promise.resolve(testResults);
-      }
+            }
+          } // end if 201
+        } // end if test-reject
+
+      } // end if 201/202
+
     },
     function(reason){
 console.log(reason);
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
-            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': 'Deliberately rejected (<code>HTTP ' + reason.xhr.status + '</code>)' };
+            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': 'Payload successfully filtered out (<code>HTTP ' + reason.xhr.status + '</code>)' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
-            testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
-          }
-          else {
-            testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            testResults['receiver']['checkPostResponseCreated'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
         case 405:
@@ -541,10 +514,10 @@ console.log(reason);
           break;
         case 415:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed (other than JSON-LD)</code>.' };
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
           }
           else {
-            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> or the payload format is unallowed. Make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter. Ignore them if they are not intended to be used.</code>.' };
+            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
           }
           testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
