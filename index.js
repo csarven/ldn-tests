@@ -45,17 +45,17 @@ var ldnTests = {
     'checkGetResponseSuccessful': {
       'description': '// merge with checkGet'
     },
-    'checkGetResponseNotificationsLimited': {
-      'description': 'Restricts list of notification URIs (eg. according to access control).'
-    },
     'checkGetResponseLDPContains': {
       'description': 'Lists notification URIs with <code>ldp:contains</code>.'
+    },
+    'checkGetResponseNotificationsLimited': {
+      'description': 'Restricts list of notification URIs (eg. according to access control).'
     },
     'checkGetResponseNotificationsJSONLD': {
       'description': 'Notifications are available as JSON-LD.'
     },
     'checkGetResponseNotificationsRDFSource': {
-      'description': 'Notifications are available as RDF.'
+      'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.'
     },
     'extraCheckGetResponseLDPContainer': {
       'description': 'Inbox has type <code>ldp:Container</code>.'
