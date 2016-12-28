@@ -586,7 +586,7 @@ function getTestReceiverHTML(request, results){
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Linked Data Notifications (LDN) Tests - Receiver</title>
+        <title>LDN Tests for Receivers</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
 <style>
@@ -662,12 +662,15 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
     <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
         <main>
             <article about="" typeof="schema:Article">
-                <h1 property="schema:name">Linked Data Notifications (LDN) Tests - Receiver</h1>
+                <h1 property="schema:name">LDN Tests for Receivers</h1>
 
                 <div id="content">
                     <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
                         <h2 property="schema:name">Receiver</h2>
                         <div datatype="rdf:HTML" property="schema:description">
+                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a pass/fail response for individual requirements of the LDN spec. It also tests some optional features; you'll get an <code>n/a</code> response if you don't implement them, rather than a fail.</p>
+                            <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
+                            <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the 'Receiver should reject this notification' box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
                             <form action="" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
