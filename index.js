@@ -234,19 +234,19 @@ function checkOptions(req){
       testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '' };
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
         if(acceptPost){
-          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
 
           var acceptPosts = acceptPost.split(',');
-          testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'FAIL', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'FAIL', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
           acceptPosts.forEach(function(i){
             var m = i.trim();
             if(m == 'application/ld+json' || m == '*/*'){
-              testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+              testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'PASS', 'message': '' };
             }
           })
         }
         else {
-          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'FAIL', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'FAIL', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
         }
       return Promise.resolve(testResults);
     },
