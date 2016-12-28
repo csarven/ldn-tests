@@ -42,9 +42,6 @@ var ldnTests = {
     'checkGet': {
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
     },
-    'checkGetResponseSuccessful': {
-      'description': '// merge with checkGet'
-    },
     'checkGetResponseLDPContains': {
       'description': 'Lists notification URIs with <code>ldp:contains</code>.'
     },
@@ -252,7 +249,6 @@ function checkGet(req){
   return getResource(url, headers).then(
     function(response){
       testResults['receiver']['checkGet'] = { 'code': 'PASS', 'message': '' };
-      testResults['receiver']['checkGetResponseSuccessful'] = { 'code': 'PASS', 'message': '' };
       testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       var data = response.xhr.responseText;
@@ -421,7 +417,7 @@ function checkGet(req){
         code = 'PASS';
       }
 
-      testResults['receiver']['checkGetResponseSuccessful'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      testResults['receiver']['checkGet'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(testResults);
     });
 }
