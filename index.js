@@ -82,9 +82,6 @@ var ldnTests = {
     'checkGetResponseNotificationsRDFSource': {
       'description': 'Notifications are available as RDF.'
     },
-    'checkGetResponseWhenNoAccept': {
-      'description': 'Responds with RDF when no <code>Accept</code> header is sent.'
-    },
     'extraCheckGetResponseLDPContainer': {
       'description': 'Inbox has type <code>ldp:Container</code>.'
     },
@@ -289,9 +286,6 @@ function checkGet(req){
       testResults['receiver']['checkGetResponseSuccessful'] = { 'code': 'PASS', 'message': '' };
       testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'NA', 'message': 'Check manually.' };
 
-      if('test-receiver-mimetype' in req.body && req.body['test-receiver-mimetype'].length >= 0) {
-        testResults['receiver']['checkGetResponseWhenNoAccept'] = { 'code': 'PASS', 'message': 'Returns <code>' + response.xhr.getResponseHeader('Content-Type') + '</code>' };
-      }
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
 
