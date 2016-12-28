@@ -265,7 +265,7 @@ function checkGet(req){
       testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       if('test-receiver-mimetype' in req.body && req.body['test-receiver-mimetype'].length >= 0) {
-        testResults['receiver']['checkGetResponseWhenNoAccept'] = { 'code': 'PASS', 'message': '' };
+        testResults['receiver']['checkGetResponseWhenNoAccept'] = { 'code': 'PASS', 'message': 'Returns <code>' + response.xhr.getResponseHeader('Content-Type') + '</code>' };
       }
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
@@ -452,7 +452,7 @@ function checkPost(req){
       testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
       if(response.xhr.status == 201) {
-        testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '' };
+        testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
         testResults['receiver']['checkPostResponseJSONLDAccepted'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
 
         var location = response.xhr.getResponseHeader('Location');
@@ -502,7 +502,8 @@ console.log(reason);
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '' };
+            // Message should be the HTTP code, but I don't know that it will always be 400 for constraints unmet?
+            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
