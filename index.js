@@ -25,18 +25,18 @@ var XMLHttpRequest = mayktso.XMLHttpRequest;
 var ldnTests = {
   'sender': {},
   'receiver': {
-    'checkOptions': {
-      'description': 'Accepts other RDF content types.'
+    'checkHead': {
+      'description': 'Accepts <code>HEAD</code> requests.'
     },
+
     'checkOptionsAcceptPost': {
       'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.'
     },
     'checkOptionsAcceptPostContainsJSONLD': {
       'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.'
     },
-
-    'checkHead': {
-      'description': 'Accepts <code>HEAD</code> requests.'
+    'checkOptions': {
+      'description': 'Accepts other RDF content types.'
     },
 
     'checkGet': {
@@ -197,10 +197,10 @@ function checkOptions(req){
 
   return getResourceOptions(url, headers).then(
     function(response){
-      testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '' };
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
+        testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
         if(acceptPost){
-          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '' };
 
           var acceptPosts = acceptPost.split(',');
           testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'FAIL', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
