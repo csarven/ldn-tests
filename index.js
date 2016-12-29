@@ -489,6 +489,7 @@ function checkPost(req){
     },
     function(reason){
 // console.log(reason);
+      testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>: <q>' + reason.xhr.responseText + '</q>'};
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
@@ -513,7 +514,7 @@ function checkPost(req){
           testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>: <q>' + reason.xhr.responseText + '</q>'};
           break;
       }
 
