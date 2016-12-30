@@ -163,16 +163,16 @@ ${reportHTML}
           <legend>LDN Report</legend>
           <ul>
             <li>
-              <label for="implementation">Project URI</label>
-              <input type="text" name="implementation" value="" />
+              <label for="implementation">Implementation URI</label>
+              <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
             </li>
             <li>
               <label for="maintainer">Maintainer URI</label>
-              <input type="text" name="maintainer" value="" placeholder="Maintainer of a project, a project leader, or organisation." />
+              <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
             </li>
             <li>
-              <label for="notes">Notes</label>
-              <textarea name="notes" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
+              <label for="note">Note</label>
+              <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
             </li>
           </ul>
 
@@ -601,7 +601,7 @@ function getTestReceiverHTML(request, results){
         <meta charset="utf-8" />
         <title>LDN Tests for Receivers</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
+        <link href="https://localhost:8443/dokieli/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
 <style>
 .test-receiver label {
 width: 15%;
@@ -738,24 +738,34 @@ function createReceiverTestReport(req, res, next){
 @prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
 @prefix ldn: <https://www.w3.org/TR/ldn/#>.
 @prefix : <>.
-@prefix d: <#>.
-`;
+@prefix d: <#>.`;
+
+  var implementation = '';
+  var maintainer = '';
+  if(req.body['implementation'] && req.body['implementation'].length > 0 && req.body['implementation'].startsWith('http') && req.body['maintainer'] && req.body['maintainer'].length > 0 && req.body['maintainer'].startsWith('http')) {
+    implementation = req.body['implementation'].trim();
+    maintainer = req.body['maintainer'].trim();
+  }
+  else {
+    res.status(400);
+    res.end();
+    return next();
+  }
+
+  var doap = `<${implementation}>
+  a doap:Project;
+  doap:maintainer <${maintainer}>.`;
+
   var dataset = `<>
   a qb:DataSet, as:Object;
   dcterms:identifier "${test['id']}";
-  as:published "${dateTime}"^^xsd:dateTime.`;
-
-  var maintainer = req.body['maintainer'];
-  if(maintainer && maintainer.trim().length > 0 && maintainer.startsWith('http')){
-    dataset = dataset + `;
-  as:creator <${maintainer.trim()}>`;
-  }
+  as:published "${dateTime}"^^xsd:dateTime;
+  as:creator <${maintainer}>`;
 
   if(req.body['note'] && req.body['note'].trim().length > 0){
     dataset = dataset + `;
-  as:summary <${req.body['summary'].trim()}>`;
+  as:summary """${req.body['note'].trim()}"""^^rdf:HTML.`;
   }
-  dataset = dataset + '.\n';
 
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
@@ -764,7 +774,7 @@ function createReceiverTestReport(req, res, next){
     var observation = `d:${i}
   a qb:Observation;
   qb:dataSet <>;
-  ldnTests:implementation <${req.body['implementation'].trim()}>;
+  ldnTests:implementation <${implementation}>;
   ldnTests:implementationType ldn:receiver;
   ldnTests:check ldnTests:${i};
   ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
@@ -777,22 +787,22 @@ function createReceiverTestReport(req, res, next){
     observations.push(observation + '.\n');
   });
 
-  dataset = `${dataset}
-<>
-  rdfs:seeAlso ${datasetSeeAlso.join(', ')}.
-`
+  datasetSeeAlso = `<>
+  rdfs:seeAlso ${datasetSeeAlso.join(', ')}.`
 
-  var report = prefixes + dataset + observations.join('\n');
+  observations = observations.join('\n');
 
-  var doap = `<${req.body['implementation'].trim()}>
-  a doa:Project ;
-  doap:maintainer <${maintainer.trim()}>
-.`;
+  var data = `${prefixes}
 
-//console.log(report);
-  var data = `${report}
+${doap}
+
+${dataset}
+
+${datasetSeeAlso}
+
+${observations}
 `;
-
+console.log(data);
   return data;
 }
 
@@ -843,7 +853,6 @@ function reportTest(req, res, next){
   }
   else {
     res.status(405);
-    res.set('Allow', 'POST');
     res.end();
     return next();
   }
