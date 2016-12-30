@@ -585,7 +585,7 @@ function getTestReceiverHTML(request, results){
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
 <style>
-#test-receiver label {
+.test-receiver label {
 width: 15%;
 text-align: right;
 padding: 0.25em;
@@ -594,12 +594,12 @@ input[name="test-receiver-reject"] {
 width:auto;
 margin-left:13.5%;
 }
-#test-receiver label[for="test-receiver-reject"] {
+.test-receiver label[for="test-receiver-reject"] {
 width:80%;
 text-align:left;
 vertical-align: middle;
 }
-#test-receiver [type="submit"] {
+.test-receiver [type="submit"] {
 margin-left:16.5%;
 }
 #test-receiver-response pre { overflow: auto; }
@@ -668,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                             <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="test-PASS">pass</span>/<span class="test-FAIL">fail</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get a <span class="test-NA">not applicable</span> response if you don't implement them, rather than a fail.</p>
                             <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
                             <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
-                            <form action="" id="test-receiver" method="post">
+                            <form action="" class="test-receiver" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
 
