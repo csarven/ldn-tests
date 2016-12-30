@@ -9,6 +9,7 @@ mayktso.init();
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/process-report').all(reportTest);
 //console.log(mayktso.app._router.stack);
+var config = mayktso.config;
 var getResource = mayktso.getResource;
 var getResourceHead = mayktso.getResourceHead;
 var getResourceOptions = mayktso.getResourceOptions;
@@ -21,6 +22,7 @@ var serializeData = mayktso.serializeData;
 var SimpleRDF = mayktso.SimpleRDF;
 var parseLinkHeader = mayktso.parseLinkHeader;
 var parseProfileLinkRelation = mayktso.parseProfileLinkRelation;
+var getBaseURL = mayktso.getBaseURL;
 var XMLHttpRequest = mayktso.XMLHttpRequest;
 
 var ldnTests = {
@@ -765,7 +767,12 @@ function reportTest(req, res, next){
 
     var headers = {};
     headers['Content-Type'] = 'text/turtle;charset=utf-8';
-    postResource('http://localhost:3000/reports/', '', data, headers['Content-Type']).then(
+
+    //TODO: make mayktso's config available here
+//    var inboxURL = getBaseURL(req.getUrl()) + config.basePath + "/" + config.reportsPath;
+    var inboxURL = 'http://localhost:3000/reports/'
+
+    postResource(inboxURL, '', data, headers['Content-Type']).then(
       function(response){
         var location = response.xhr.getResponseHeader('Location');
         res.set('Content-Type', 'text/html;charset=utf-8');
