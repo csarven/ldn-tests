@@ -772,7 +772,7 @@ function reportTest(req, res, next){
 //    var inboxURL = getBaseURL(req.getUrl()) + config.basePath + "/" + config.reportsPath;
     var inboxURL = 'http://localhost:3000/reports/'
 
-    postResource(inboxURL, '', data, headers['Content-Type']).then(
+    postResource(inboxURL, test['id'], data, headers['Content-Type']).then(
       function(response){
         var location = response.xhr.getResponseHeader('Location');
         res.set('Content-Type', 'text/html;charset=utf-8');
