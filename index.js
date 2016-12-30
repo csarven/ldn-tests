@@ -4,12 +4,13 @@ var uuid = require('node-uuid');
 //var bodyParser = require('body-parser');
 var mayktso = require('mayktso');
 
-mayktso.init();
+var config = mayktso.config();
+mayktso.init({'config': config});
 
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/process-report').all(reportTest);
 //console.log(mayktso.app._router.stack);
-var config = mayktso.config;
+
 var getResource = mayktso.getResource;
 var getResourceHead = mayktso.getResourceHead;
 var getResourceOptions = mayktso.getResourceOptions;
@@ -769,10 +770,12 @@ function reportTest(req, res, next){
     headers['Content-Type'] = 'text/turtle;charset=utf-8';
 
     //TODO: make mayktso's config available here
-//    var inboxURL = getBaseURL(req.getUrl()) + config.basePath + "/" + config.reportsPath;
-    var inboxURL = 'http://localhost:3000/reports/'
+    var baseURL = getBaseURL(req.getUrl());
+    var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
+    var basePath = config.basePath.endsWith('/') ? config.basePath : '';
+    var reportsInbox = base + basePath + config.reportsPath;
 
-    postResource(inboxURL, test['id'], data, headers['Content-Type']).then(
+    postResource(reportsInbox, test['id'], data, headers['Content-Type']).then(
       function(response){
         var location = response.xhr.getResponseHeader('Location');
         res.set('Content-Type', 'text/html;charset=utf-8');
