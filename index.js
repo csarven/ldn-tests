@@ -818,7 +818,6 @@ function reportTest(req, res, next){
     var headers = {};
     headers['Content-Type'] = 'text/turtle;charset=utf-8';
 
-    //TODO: make mayktso's config available here
     var baseURL = getBaseURL(req.getUrl());
     var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
     var basePath = config.basePath.endsWith('/') ? config.basePath : '';
@@ -837,8 +836,19 @@ function reportTest(req, res, next){
       function(response){
         var location = response.xhr.getResponseHeader('Location');
         res.set('Content-Type', 'text/html;charset=utf-8');
+        var responseBody = '';
+        switch(response.xhr.status){
+          case 200:
+            responseBody = 'Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a>';
+            break;
+          case 201:
+            responseBody = response.xhr.responseText;
+            break;
+          default:
+            break;
+        }
         res.status(200);
-        res.send('Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a>');
+        res.send(responseBody);
         res.end();
         return next();
       },
