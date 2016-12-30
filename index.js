@@ -753,7 +753,7 @@ function createReceiverTestReport(req, res, next){
     var observation = `d:${i}
   a qb:Observation;
   qb:dataSet <>;
-  ldnTests:implementation <${trim(test['implementation'])}>;
+  ldnTests:implementation <${req.body['implementation'].trim()}>;
   ldnTests:implementationType ldn:receiver;
   ldnTests:check ldnTests:${i};
   ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
