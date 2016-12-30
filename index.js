@@ -710,15 +710,16 @@ function createReceiverTestReport(req, res, next){
   var date = new Date();
   var dateTime = date.toISOString();
 
-  var prefixes = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix as: <https://www.w3.org/ns/activitystreams#> .
-@prefix qb: <http://purl.org/linked-data/cube#> .
-@prefix ldnTests: <https://linkedresearch.org/ldn/tests/#> .
-@prefix : <> .
-@prefix d: <#> .
+  var prefixes = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix as: <https://www.w3.org/ns/activitystreams#>.
+@prefix qb: <http://purl.org/linked-data/cube#>.
+@prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
+@prefix ldn: <https://www.w3.org/TR/ldn/#>.
+@prefix : <>.
+@prefix d: <#>.
 `;
   var dataset = `<>
   a qb:DataSet, as:Object;
@@ -734,6 +735,7 @@ function createReceiverTestReport(req, res, next){
     var observation = `d:${i}
   a qb:Observation;
   qb:dataSet <>;
+  ldnTests:implementation ldn:receiver;
   ldnTests:check ldnTests:${i};
   ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
 
