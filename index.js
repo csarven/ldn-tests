@@ -703,15 +703,14 @@ ${(results && 'test-receiver-report-html' in results) ? results['test-receiver-r
 `;
 }
 
-function reportTest(req, res, next){
-  if(req.method == 'POST') {
-    var test = JSON.parse(req.body['test-receiver-report-value']);
-    var observations = [];
-//    var datasetURI = 'https://linkedresearch.org/ldn/tests/reports/' + test['id'];
-    var date = new Date();
-    var dateTime = date.toISOString();
 
-    var prefixes = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+function createReceiverTestReport(req, res, next){
+  var test = JSON.parse(req.body['test-receiver-report-value']);
+  var observations = [];
+  var date = new Date();
+  var dateTime = date.toISOString();
+
+  var prefixes = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -721,50 +720,52 @@ function reportTest(req, res, next){
 @prefix : <> .
 @prefix d: <#> .
 `;
-    var dataset = `<>
+  var dataset = `<>
   a qb:DataSet, as:Object;
   dcterms:identifier "${test['id']}";
   as:published "${dateTime}"^^xsd:dateTime;
   as:creator <http://csarven.ca/#i>.
 `;
-// console.log(test['results'])
-    var datasetSeeAlso = [];
-    Object.keys(test['results']).forEach(function(i){
-      datasetSeeAlso.push('d:' + i);
 
-      var observation = `d:${i}
+  var datasetSeeAlso = [];
+  Object.keys(test['results']).forEach(function(i){
+    datasetSeeAlso.push('d:' + i);
+
+    var observation = `d:${i}
   a qb:Observation;
   qb:dataSet <>;
   ldnTests:check ldnTests:${i};
   ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
 
-      if(test['results'][i]['message'] != '') {
-        observation = observation + `;
+    if(test['results'][i]['message'] != '') {
+      observation = observation + `;
   dcterms:description """${test['results'][i]['message']}"""^^rdf:HTML`;
-      }
+    }
 
-      observations.push(observation + '.\n');
-    });
+    observations.push(observation + '.\n');
+  });
 
-    dataset = `${dataset}
+  dataset = `${dataset}
 <>
   rdfs:seeAlso ${datasetSeeAlso.join(', ')}.
 `
 
-    var report = prefixes + dataset + observations.join('\n');
+  var report = prefixes + dataset + observations.join('\n');
 //console.log(report);
-    var data = `${report}
+  var data = `${report}
 `;
 
-    // serializeData(data, 'text/turtle', 'application/ld+json', { 'subjectURI': datasetURI }).then(
-    //   function(i){
-    //     console.log(i)
-    //   }
-    // );
+  return data;
+}
 
-    //TODO
-      //Check if uuid exists, assign another
-      //In order for ldnTests report submission to count as an LDN sender, it needs to discover the target's inbox. 1) add inbox to /ldn/tests/ 2) use dokieli's getEndpoint() and then send
+
+function reportTest(req, res, next){
+  if(req.method == 'POST') {
+    var data = '', test = {};
+    if(req.body['test-receiver-report-value'] && req.body['test-receiver-report-value'].length > 0){
+      test = JSON.parse(req.body['test-receiver-report-value']);
+      data = createReceiverTestReport(req);
+    }
 
     var headers = {};
     headers['Content-Type'] = 'text/turtle;charset=utf-8';
@@ -775,6 +776,15 @@ function reportTest(req, res, next){
     var basePath = config.basePath.endsWith('/') ? config.basePath : '';
     var reportsInbox = base + basePath + config.reportsPath;
 
+    // serializeData(data, 'text/turtle', 'application/ld+json', { 'subjectURI': datasetURI }).then(
+    //   function(i){
+    //     console.log(i)
+    //   }
+    // );
+
+    //TODO
+      //Check if uuid exists, assign another
+      //In order for ldnTests report submission to count as an LDN sender, it needs to discover the target's inbox. 1) add inbox to /ldn/tests/ 2) use dokieli's getEndpoint() and then send
     postResource(reportsInbox, test['id'], data, headers['Content-Type']).then(
       function(response){
         var location = response.xhr.getResponseHeader('Location');
