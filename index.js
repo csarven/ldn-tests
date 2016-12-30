@@ -158,9 +158,27 @@ function testResource(req, res, next){
 ${reportHTML}
         </tbody>
       </table>
-      <form action="send-report" id="test-receiver-report-value" method="post">
-        <input type="hidden" name="test-receiver-report-value" value='${JSON.stringify(test)}' />
-        <input type="submit" value="Send Report" />
+      <form action="send-report" class="test-receiver" id="test-receiver-report" method="post">
+        <fieldset>
+          <legend>LDN Report</legend>
+          <ul>
+            <li>
+              <label for="implementation">Implementation URL</label>
+              <input type="text" name="implementation" value="" />
+            </li>
+            <li>
+              <label for="source">Source code URL</label>
+              <input type="text" name="source" value="" />
+            </li>
+            <li>
+              <label for="creator">Creator URL</label>
+              <input type="text" name="creator" value="" />
+            </li>
+          </ul>
+
+          <input type="hidden" name="test-receiver-report-value" value='${JSON.stringify(test)}' />
+          <input type="submit" value="Send Report" />
+        </fieldset>
       </form>
     </div>`;
 
