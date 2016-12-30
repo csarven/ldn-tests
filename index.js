@@ -155,6 +155,10 @@ function testResource(req, res, next){
 ${reportHTML}
         </tbody>
       </table>
+      <form action="process-report" id="test-receiver-report-value" method="post">
+        <input type="hidden" name="test-receiver-report-value" value='${JSON.stringify(test)}' />
+        <input type="submit" value="Send Report" />
+      </form>
     </div>`;
 
             var data = getTestReceiverHTML(req.body, resultsData);
