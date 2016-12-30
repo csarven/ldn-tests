@@ -742,9 +742,13 @@ function createReceiverTestReport(req, res, next){
   var dataset = `<>
   a qb:DataSet, as:Object;
   dcterms:identifier "${test['id']}";
-  as:published "${dateTime}"^^xsd:dateTime;
-  as:creator <http://csarven.ca/#i>.
-`;
+  as:published "${dateTime}"^^xsd:dateTime`;
+
+  if(req.body['creator'] && req.body['creator'].trim().length > 0 && req.body['creator'].startsWith('http')){
+    dataset = dataset + `;
+as:creator <${req.body['creator'].trim()}>`;
+  }
+  dataset = dataset + '.\n';
 
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
