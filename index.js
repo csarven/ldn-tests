@@ -163,11 +163,11 @@ ${reportHTML}
           <legend>LDN Report</legend>
           <ul>
             <li>
-              <label for="implementation">Implementation URI</label>
+              <label for="implementation">Implementation</label>
               <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
             </li>
             <li>
-              <label for="maintainer">Maintainer URI</label>
+              <label for="maintainer">Maintainer</label>
               <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
             </li>
             <li>
@@ -604,7 +604,7 @@ function getTestReceiverHTML(request, results){
         <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
 <style>
 .test-receiver label {
-width: 15%;
+width: 18%;
 text-align: right;
 padding: 0.25em;
 }
