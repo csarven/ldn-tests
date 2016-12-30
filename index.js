@@ -163,16 +163,16 @@ ${reportHTML}
           <legend>LDN Report</legend>
           <ul>
             <li>
-              <label for="implementation">Implementation URL</label>
+              <label for="implementation">Project URI</label>
               <input type="text" name="implementation" value="" />
             </li>
             <li>
-              <label for="source">Source code URL</label>
-              <input type="text" name="source" value="" />
+              <label for="maintainer">Maintainer URI</label>
+              <input type="text" name="maintainer" value="" placeholder="Maintainer of a project, a project leader, or organisation." />
             </li>
             <li>
-              <label for="creator">Creator URL</label>
-              <input type="text" name="creator" value="" />
+              <label for="notes">Notes</label>
+              <textarea name="notes" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
             </li>
           </ul>
 
@@ -734,6 +734,7 @@ function createReceiverTestReport(req, res, next){
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix as: <https://www.w3.org/ns/activitystreams#>.
 @prefix qb: <http://purl.org/linked-data/cube#>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
 @prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
 @prefix ldn: <https://www.w3.org/TR/ldn/#>.
 @prefix : <>.
@@ -742,11 +743,17 @@ function createReceiverTestReport(req, res, next){
   var dataset = `<>
   a qb:DataSet, as:Object;
   dcterms:identifier "${test['id']}";
-  as:published "${dateTime}"^^xsd:dateTime`;
+  as:published "${dateTime}"^^xsd:dateTime.`;
 
-  if(req.body['creator'] && req.body['creator'].trim().length > 0 && req.body['creator'].startsWith('http')){
+  var maintainer = req.body['maintainer'];
+  if(maintainer && maintainer.trim().length > 0 && maintainer.startsWith('http')){
     dataset = dataset + `;
-as:creator <${req.body['creator'].trim()}>`;
+  as:creator <${maintainer.trim()}>`;
+  }
+
+  if(req.body['note'] && req.body['note'].trim().length > 0){
+    dataset = dataset + `;
+  as:summary <${req.body['summary'].trim()}>`;
   }
   dataset = dataset + '.\n';
 
@@ -776,6 +783,12 @@ as:creator <${req.body['creator'].trim()}>`;
 `
 
   var report = prefixes + dataset + observations.join('\n');
+
+  var doap = `<${req.body['implementation'].trim()}>
+  a doa:Project ;
+  doap:maintainer <${maintainer.trim()}>
+.`;
+
 //console.log(report);
   var data = `${report}
 `;
