@@ -7,6 +7,7 @@ var mayktso = require('mayktso');
 mayktso.init();
 
 mayktso.app.route('/receiver').all(testResource);
+mayktso.app.route('/process-report').all(testReport);
 //console.log(mayktso.app._router.stack);
 var getResource = mayktso.getResource;
 var getResourceHead = mayktso.getResourceHead;
@@ -136,9 +137,9 @@ function testResource(req, res, next){
             var reportHTML = getTestReportHTML(resultsData);
             var test = {'url': req.body['test-receiver-url'] };
             test['id'] = uuid.v1();
-            test['results'] = results
+            test['results'] = resultsData;
 
-            resultsData['test-receiver-response-html'] = `
+            resultsData['test-receiver-report-html'] = `
     <div id="test-receiver-response">
       <table id="test-receiver-report">
         <caption>Test <code>${test['id']}</code> results for <a href="${test['url']}">${test['url']}</a></caption>
@@ -684,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                                     <input type="submit" value="Submit" />
                                 </fieldset>
                             </form>
-${(results && 'test-receiver-response-html' in results) ? results['test-receiver-response-html'] : ''}
+${(results && 'test-receiver-report-html' in results) ? results['test-receiver-report-html'] : ''}
                         </div>
                     </section>
                 </div>
@@ -694,10 +695,6 @@ ${(results && 'test-receiver-response-html' in results) ? results['test-receiver
 </html>
 `;
 }
-
-//${(request && 'test-receiver-url' in request) ? request['test-receiver-url'] : ''}
-//${(request && 'test-receiver-data' in request) ? request['test-receiver-data'] : ''}
-
 
 module.exports = {
 ldnTests
