@@ -812,7 +812,7 @@ function reportTest(req, res, next){
     var data = '', test = {};
     if(req.body['test-receiver-report-value'] && req.body['test-receiver-report-value'].length > 0){
       test = JSON.parse(req.body['test-receiver-report-value']);
-      data = createReceiverTestReport(req);
+      data = createReceiverTestReport(req, res, next);
     }
 
     var headers = {};
