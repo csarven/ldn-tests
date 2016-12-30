@@ -11,7 +11,7 @@ Stay tuned.. or if you are a legendary Web developer, dive into:
 ## Setup
 ```bash
 $ git clone https://github.com/csarven/ldn-tests tests
-$ cd tests && mkdir inbox && mkdir reports
+$ cd tests && mkdir inbox && mkdir reports && mkdir queue
 $ npm install
 $ node index.js
 ```
