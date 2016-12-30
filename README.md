@@ -23,7 +23,7 @@ See [mayktso](https://github.com/csarven/mayktso) for more details on the config
 . If you want to use your own config, copy the default and update:
 
 ```bash
-cp node_modules/mayktso/config.json.default node_modules/mayktso/config.json
+cp node_modules/mayktso/config.json.default config.json
 ```
 
 Requests to http://localhost:3000/ , http://localhost:3000/inbox/ should work
