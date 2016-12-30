@@ -610,10 +610,10 @@ padding: 0.25em;
 }
 input[name="test-receiver-reject"] {
 width:auto;
-margin-left:13.5%;
+margin-left:16.5%;
 }
 .test-receiver label[for="test-receiver-reject"] {
-width:80%;
+width:65%;
 text-align:left;
 vertical-align: middle;
 }
@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
 
                                         <li>
                                             <label for="test-receiver-data">Data</label>
-                                            <textarea name="test-receiver-data" cols="80" rows="2" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
+                                            <textarea name="test-receiver-data" cols="80" rows="3" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
                                         </li>
                                         <li>
                                             <input type="checkbox" name="test-receiver-reject" checkbox="checkbox" />
