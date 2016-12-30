@@ -601,7 +601,7 @@ function getTestReceiverHTML(request, results){
         <meta charset="utf-8" />
         <title>LDN Tests for Receivers</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="https://localhost:8443/dokieli/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
+        <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
 <style>
 .test-receiver label {
 width: 15%;
