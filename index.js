@@ -7,7 +7,7 @@ var mayktso = require('mayktso');
 mayktso.init();
 
 mayktso.app.route('/receiver').all(testResource);
-mayktso.app.route('/process-report').all(testReport);
+mayktso.app.route('/process-report').all(reportTest);
 //console.log(mayktso.app._router.stack);
 var getResource = mayktso.getResource;
 var getResourceHead = mayktso.getResourceHead;
@@ -694,6 +694,79 @@ ${(results && 'test-receiver-report-html' in results) ? results['test-receiver-r
     </body>
 </html>
 `;
+}
+
+function reportTest(req, res, next){
+  if(req.method == 'POST') {
+    var test = JSON.parse(req.body['test-receiver-report-value']);
+    var observations = [];
+    var datasetURI = 'https://linkedresearch.org/ldn/tests/reports/' + test['id'];
+    var date = new Date();
+    var dateTime = date.toISOString();
+
+    var prefixes = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix as: <https://www.w3.org/ns/activitystreams#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix ldnTests: <https://linkedresearch.org/ldn/tests/#> .
+@prefix : <> .
+@prefix d: <#> .
+`;
+    var dataset = `<>
+  a qb:DataSet, as:Object;
+  dcterms:identifier "${test['id']}";
+  as:published "${dateTime}"^^xsd:dateTime;
+  as:creator <http://csarven.ca/#i>.
+`;
+// console.log(test['results'])
+    var datasetSeeAlso = [];
+    Object.keys(test['results']).forEach(function(i){
+      datasetSeeAlso.push('d:' + i);
+
+      var observation = `d:${i}
+  a qb:Observation;
+  qb:dataSet <>;
+  ldnTests:check ldnTests:${i};
+  ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
+
+      if(test['results'][i]['message'] != '') {
+        observation = observation + `;
+  dcterms:description """${test['results'][i]['message']}"""^^rdf:HTML`;
+      }
+
+      observations.push(observation + '.\n');
+    });
+
+    dataset = `${dataset}
+<>
+  rdfs:seeAlso ${datasetSeeAlso.join(', ')}.
+`
+
+    var report = prefixes + dataset + observations.join('\n');
+//console.log(report);
+    var data = `${report}
+`;
+
+    // serializeData(data, 'text/turtle', 'application/ld+json', { 'subjectURI': datasetURI }).then(
+    //   function(i){
+    //     console.log(i)
+    //   }
+    // );
+
+    res.set('Content-Type', 'text/turtle;charset=utf-8');
+    res.set('Allow', 'POST');
+    res.status(200);
+    res.send(data);
+    res.end();
+    return next();
+  }
+
+  res.status(405);
+  res.set('Allow', 'POST');
+  res.end();
+  return next();
 }
 
 module.exports = {
