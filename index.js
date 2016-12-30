@@ -704,7 +704,7 @@ function reportTest(req, res, next){
   if(req.method == 'POST') {
     var test = JSON.parse(req.body['test-receiver-report-value']);
     var observations = [];
-    var datasetURI = 'https://linkedresearch.org/ldn/tests/reports/' + test['id'];
+//    var datasetURI = 'https://linkedresearch.org/ldn/tests/reports/' + test['id'];
     var date = new Date();
     var dateTime = date.toISOString();
 
@@ -759,18 +759,36 @@ function reportTest(req, res, next){
     //   }
     // );
 
-    res.set('Content-Type', 'text/turtle;charset=utf-8');
+    //TODO
+      //Check if uuid exists, assign another
+      //In order for ldnTests report submission to count as an LDN sender, it needs to discover the target's inbox. 1) add inbox to /ldn/tests/ 2) use dokieli's getEndpoint() and then send
+
+    var headers = {};
+    headers['Content-Type'] = 'text/turtle;charset=utf-8';
+    postResource('http://localhost:3000/reports/', '', data, headers['Content-Type']).then(
+      function(response){
+        var location = response.xhr.getResponseHeader('Location');
+        res.set('Content-Type', 'text/html;charset=utf-8');
+        res.status(200);
+        res.send('Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a>');
+        res.end();
+        return next();
+      },
+      function(reason){
+        res.set('Content-Type', 'text/html;charset=utf-8');
+        res.status(reason.xhr.status);
+        res.send('Well, something went wrong: ' + reason.xhr.responseText);
+        res.end();
+        return next();
+      }
+    );
+  }
+  else {
+    res.status(405);
     res.set('Allow', 'POST');
-    res.status(200);
-    res.send(data);
     res.end();
     return next();
   }
-
-  res.status(405);
-  res.set('Allow', 'POST');
-  res.end();
-  return next();
 }
 
 module.exports = {
