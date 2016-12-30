@@ -837,11 +837,11 @@ function reportTest(req, res, next){
         var location = response.xhr.getResponseHeader('Location');
         res.set('Content-Type', 'text/html;charset=utf-8');
         var responseBody = '';
-        switch(response.status){
-          case 200:
+        switch(response.xhr.status){
+          case 201:
             responseBody = 'Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a>';
             break;
-          case 201:
+          case 202:
             responseBody = response.xhr.responseText;
             break;
           default:
