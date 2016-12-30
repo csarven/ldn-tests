@@ -8,7 +8,7 @@ var config = mayktso.config();
 mayktso.init({'config': config});
 
 mayktso.app.route('/receiver').all(testResource);
-mayktso.app.route('/process-report').all(reportTest);
+mayktso.app.route('/send-report').all(reportTest);
 //console.log(mayktso.app._router.stack);
 
 var getResource = mayktso.getResource;
@@ -158,7 +158,7 @@ function testResource(req, res, next){
 ${reportHTML}
         </tbody>
       </table>
-      <form action="process-report" id="test-receiver-report-value" method="post">
+      <form action="send-report" id="test-receiver-report-value" method="post">
         <input type="hidden" name="test-receiver-report-value" value='${JSON.stringify(test)}' />
         <input type="submit" value="Send Report" />
       </form>
