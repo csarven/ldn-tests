@@ -1,11 +1,10 @@
 var fs = require('fs');
 var etag = require('etag');
 var uuid = require('node-uuid');
-//var bodyParser = require('body-parser');
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config});
+mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report']});
 
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/send-report').all(reportTest);
