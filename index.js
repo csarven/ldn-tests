@@ -146,7 +146,7 @@ function testResource(req, res, next){
             resultsData['test-receiver-report-html'] = `
     <div id="test-receiver-response">
       <table id="test-receiver-report">
-        <caption>Test <code>${test['id']}</code> results for <a href="${test['url']}">${test['url']}</a></caption>
+        <caption>Test results for <a href="${test['url']}">${test['url']}</a></caption>
         <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
