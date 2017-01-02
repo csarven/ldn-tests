@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/csarven/ldn-tests",
   "dependencies": {
+    "atob": "^2.0.3",
+    "btoa": "^1.1.2",
     "etag": "^1.7.0",
     "fs": "0.0.1-security",
     "mayktso": "git://github.com/csarven/mayktso.git#master"
