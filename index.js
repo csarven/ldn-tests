@@ -1,6 +1,8 @@
 var fs = require('fs');
 var etag = require('etag');
 var uuid = require('node-uuid');
+var btoa = require("btoa");
+var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
@@ -175,7 +177,7 @@ ${reportHTML}
             </li>
           </ul>
 
-          <input type="hidden" name="test-receiver-report-value" value='${JSON.stringify(test)}' />
+          <input type="hidden" name="test-receiver-report-value" value="${btoa(JSON.stringify(test))}" />
           <input type="submit" value="Send Report" />
         </fieldset>
       </form>
@@ -722,7 +724,7 @@ ${(results && 'test-receiver-report-html' in results) ? results['test-receiver-r
 
 
 function createReceiverTestReport(req, res, next){
-  var test = JSON.parse(req.body['test-receiver-report-value']);
+  var test = JSON.parse(atob(req.body['test-receiver-report-value']));
   var observations = [];
   var date = new Date();
   var dateTime = date.toISOString();
@@ -810,7 +812,7 @@ function reportTest(req, res, next){
   if(req.method == 'POST') {
     var data = '', test = {};
     if(req.body['test-receiver-report-value'] && req.body['test-receiver-report-value'].length > 0){
-      test = JSON.parse(req.body['test-receiver-report-value']);
+      test = JSON.parse(atob(req.body['test-receiver-report-value']));
       data = createReceiverTestReport(req, res, next);
     }
 
