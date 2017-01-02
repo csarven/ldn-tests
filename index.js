@@ -10,6 +10,7 @@ mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report']});
 
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/send-report').all(reportTest);
+mayktso.app.route('/view-reports').all(viewReports);
 //console.log(mayktso.app._router.stack);
 
 var getResource = mayktso.getResource;
@@ -22,10 +23,13 @@ var getGraph = mayktso.getGraph;
 var getGraphFromData = mayktso.getGraphFromData;
 var serializeData = mayktso.serializeData;
 var SimpleRDF = mayktso.SimpleRDF;
+var RDFstore = mayktso.RDFstore;
 var parseLinkHeader = mayktso.parseLinkHeader;
 var parseProfileLinkRelation = mayktso.parseProfileLinkRelation;
 var getBaseURL = mayktso.getBaseURL;
 var XMLHttpRequest = mayktso.XMLHttpRequest;
+var discoverInbox = mayktso.discoverInbox;
+var getInboxNotifications = mayktso.getInboxNotifications;
 
 var ldnTests = {
   'sender': {},
@@ -687,6 +691,8 @@ document.addEventListener('DOMContentLoaded', function(){ init(); });
                             <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="test-PASS">pass</span>/<span class="test-FAIL">fail</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get a <span class="test-NA">not applicable</span> response if you don't implement them, rather than a fail.</p>
                             <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
                             <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
+                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
+
                             <form action="" class="test-receiver" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
@@ -868,6 +874,181 @@ function reportTest(req, res, next){
     return next();
   }
 }
+
+
+function viewReports(req, res, next){
+  switch(req.method){
+    //TODO: This only responds to text/html. Maybe include RDFa? Anything new/interesting for the report?
+    case 'GET':
+      if(!req.accepts(['text/html', '*/*'])) {
+        res.status(406);
+        res.end();
+        return next();
+      }
+
+      var fetchNotifications = function(url){
+        // return new Promise(function(resolve, reject) {
+          return discoverInbox(url).then(
+            function(i){
+              console.log('--- viewReports --')
+              console.log(i);
+              console.log('--//viewReports --')
+              return i;
+            },
+            function(reason){
+              console.log('--- FAIL viewReports --')
+              console.log(reason);
+              console.log('--- FAIL viewReports --')
+              return reason;
+            }
+          );
+        // });
+      }
+
+      //Discover Inbox
+      var baseURL = getBaseURL(req.getUrl());
+      var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
+      var basePath = config.basePath.endsWith('/') ? config.basePath : '';
+      var url = base + basePath + 'receiver';
+
+      discoverInbox(url).then(
+        function(inboxes){
+          //get inbox contents
+          return getResource(inboxes[0], { 'Accept': 'application/ld+json' }).then(
+            function(response){
+// console.log(response)
+              var options = {
+                'contentType': 'application/ld+json',
+                'subjectURI': inboxes[0]
+              }
+              var data = response.xhr.responseText;
+// console.log(data);
+              //get list of notifications
+              return getInboxNotifications(data, options).then(
+                function(notifications){
+console.log(notifications)
+                  var nData = [];
+                  notifications.forEach(function(nURL){
+                    nData.push(SimpleRDF(vocab, nURL, null, RDFstore).get())
+                  })
+                  return Promise.all(nData)
+                });
+            });
+        })
+        .then(
+        function(s){//s is an array of SimpleRDF promises
+
+///Just for debugging
+          var a = [];
+          s.forEach(function(o){
+            var html = '<h2>Notification URL: ' + o.iri().toString() + '</h2>';
+            html += '<pre>' + htmlEntities(o.toString()) + '</pre>';
+            a.push(html);
+          });
+          var string = a.join('<hr />');
+
+          var data = getReportsHTML(string);
+///
+
+
+          if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+            res.status(304);
+            res.end();
+            return next();
+          }
+
+          res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+          res.set('Content-Type', 'text/html;charset=utf-8');
+          res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+          res.set('ETag', etag(data));
+          res.set('Vary', 'Origin');
+          res.set('Allow', 'GET');
+          res.status(200);
+          res.send(data);
+          res.end();
+          return next();
+        },
+        function(reason){
+          res.status(500);
+          res.end();
+          return next();
+        }
+      );
+      break;
+
+    default:
+      res.status(405);
+      res.set('Allow', 'GET');
+      res.end();
+      return next();
+      break;
+  }
+}
+
+function getReportsHTML(data){
+    return `<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>LDN Test Reports</title>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
+<style>
+.test-receiver label {
+width: 18%;
+text-align: right;
+padding: 0.25em;
+}
+input[name="test-receiver-reject"] {
+width:auto;
+margin-left:16.5%;
+}
+.test-receiver label[for="test-receiver-reject"] {
+width:65%;
+text-align:left;
+vertical-align: middle;
+}
+.test-receiver [type="submit"] {
+margin-left:16.5%;
+}
+#test-receiver-response pre { overflow: auto; }
+.dn { display:none }
+
+td { border-bottom: 1px solid #eee; }
+.test-result { text-align: center; }
+.test-description { width: 50%; }
+.test-message ul { list-style-position: inside; }
+.test-PASS { background-color: #0f0; }
+.test-FAIL { background-color: #f00; }
+.test-NA { background-color: #eee; }
+tfoot dd:after { content: "\\A"; white-space:pre; }
+tfoot dt, tfoot dd { display:inline; }
+.rfc2119 {
+text-transform:lowercase;
+font-variant:small-caps;
+font-style:normal;
+}
+em.rfc2119 { color: #900; }
+code { color: #c83500; }
+</style>
+    </head>
+
+    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+        <main>
+            <article about="" typeof="schema:Article">
+                <h1 property="schema:name">LDN Test Reports</h1>
+
+                <div id="content">
+${data}
+                </div>
+            </article>
+        </main>
+    </body>
+</html>
+`;
+}
+
+
 
 module.exports = {
 ldnTests
