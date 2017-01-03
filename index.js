@@ -6,8 +6,9 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report']});
+mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report', '/view-reports', '/media']});
 
+mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/send-report').all(reportTest);
 mayktso.app.route('/view-reports').all(viewReports);
@@ -607,76 +608,7 @@ function getTestReceiverHTML(request, results){
         <title>LDN Tests for Receivers</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
-<style>
-.test-receiver label {
-width: 18%;
-text-align: right;
-padding: 0.25em;
-}
-input[name="test-receiver-reject"] {
-width:auto;
-margin-left:16.5%;
-}
-.test-receiver label[for="test-receiver-reject"] {
-width:65%;
-text-align:left;
-vertical-align: middle;
-}
-.test-receiver [type="submit"] {
-margin-left:16.5%;
-}
-#test-receiver-response pre { overflow: auto; }
-.dn { display:none }
-
-td { border-bottom: 1px solid #eee; }
-.test-result { text-align: center; }
-.test-description { width: 50%; }
-.test-message ul { list-style-position: inside; }
-.test-PASS { background-color: #0f0; }
-.test-FAIL { background-color: #f00; }
-.test-NA { background-color: #eee; }
-tfoot dd:after { content: "\\A"; white-space:pre; }
-tfoot dt, tfoot dd { display:inline; }
-.rfc2119 {
-text-transform:lowercase;
-font-variant:small-caps;
-font-style:normal;
-}
-em.rfc2119 { color: #900; }
-code { color: #c83500; }
-</style>
-<script>
-
-function updateForm(node, options){
-  var data = document.querySelector('textarea[name="test-receiver-data"]');
-  var mimetypeLabel = document.querySelectorAll('label[for="test-receiver-mimetype"] span');
-
-  switch(node.value){
-    case 'GET': case 'HEAD': case 'OPTIONS': default:
-      data.parentNode.classList.add('dn');
-      data.setAttribute('disabled', 'disabled');
-      mimetypeLabel[0].classList.remove('dn');
-      mimetypeLabel[2].classList.add('dn');
-      break;
-    case 'POST':
-      data.parentNode.classList.remove('dn');
-      data.removeAttribute('disabled');
-      mimetypeLabel[0].classList.add('dn');
-      mimetypeLabel[2].classList.remove('dn');
-      break;
-  }
-}
-
-function init() {
-  // var selectReceiverMethod = document.querySelector('select[name="test-receiver-method"]');
-  // updateForm(selectReceiverMethod);
-
-  // selectReceiverMethod.addEventListener('change', function(e) {
-  //   updateForm(e.target);
-  // });
-}
-document.addEventListener('DOMContentLoaded', function(){ init(); });
-</script>
+        <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
 
     <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
@@ -993,44 +925,7 @@ function getReportsHTML(data){
         <title>LDN Test Reports</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
-<style>
-.test-receiver label {
-width: 18%;
-text-align: right;
-padding: 0.25em;
-}
-input[name="test-receiver-reject"] {
-width:auto;
-margin-left:16.5%;
-}
-.test-receiver label[for="test-receiver-reject"] {
-width:65%;
-text-align:left;
-vertical-align: middle;
-}
-.test-receiver [type="submit"] {
-margin-left:16.5%;
-}
-#test-receiver-response pre { overflow: auto; }
-.dn { display:none }
-
-td { border-bottom: 1px solid #eee; }
-.test-result { text-align: center; }
-.test-description { width: 50%; }
-.test-message ul { list-style-position: inside; }
-.test-PASS { background-color: #0f0; }
-.test-FAIL { background-color: #f00; }
-.test-NA { background-color: #eee; }
-tfoot dd:after { content: "\\A"; white-space:pre; }
-tfoot dt, tfoot dd { display:inline; }
-.rfc2119 {
-text-transform:lowercase;
-font-variant:small-caps;
-font-style:normal;
-}
-em.rfc2119 { color: #900; }
-code { color: #c83500; }
-</style>
+        <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
 
     <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
