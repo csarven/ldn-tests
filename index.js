@@ -703,8 +703,9 @@ function createReceiverTestReport(req, res, next){
 
   if(req.body['note'] && req.body['note'].trim().length > 0){
     dataset = dataset + `;
-  as:summary """${req.body['note'].trim()}"""^^rdf:HTML.`;
+  as:summary """${req.body['note'].trim()}"""^^rdf:HTML`;
   }
+  dataset = dataset + '.';
 
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
