@@ -145,7 +145,6 @@ function testResource(req, res, next){
 
             var reportHTML = getTestReportHTML(resultsData);
             var test = {'url': req.body['test-receiver-url'] };
-            test['id'] = uuid.v1();
             test['results'] = resultsData;
 
             resultsData['test-receiver-report-html'] = `
@@ -694,6 +693,8 @@ function createReceiverTestReport(req, res, next){
   var doap = `<${implementation}>
   a doap:Project;
   doap:maintainer <${maintainer}>.`;
+
+  test['id'] = uuid.v1();
 
   var dataset = `<>
   a qb:DataSet, as:Object;
