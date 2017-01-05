@@ -1,0 +1,41 @@
+/*TODO:
+dokieli/basic.css should probably be generalised enough to handle most of this.
+So we don't have to keep this URL around
+ */
+.test-receiver label {
+width: 18%;
+text-align: right;
+padding: 0.25em;
+}
+input[name="test-receiver-reject"] {
+width:auto;
+margin-left:16.5%;
+}
+.test-receiver label[for="test-receiver-reject"] {
+width:65%;
+text-align:left;
+vertical-align: middle;
+}
+.test-receiver [type="submit"] {
+margin-left:16.5%;
+}
+#test-receiver-response pre { overflow: auto; }
+.dn { display:none }
+
+td { border-bottom: 1px solid #eee; }
+.test-result { text-align: center; }
+.test-description { width: 50%; }
+.test-message ul { list-style-position: inside; }
+.test-PASS { background-color: #0f0; }
+.test-FAIL { background-color: #f00; }
+.test-NA { background-color: #eee; }
+tfoot dd:after { content: "\\A"; white-space:pre; }
+tfoot dt, tfoot dd { display:inline; }
+.rfc2119 {
+text-transform:lowercase;
+font-variant:small-caps;
+font-style:normal;
+}
+em.rfc2119 { color: #900; }
+code { color: #c83500; }
+}
