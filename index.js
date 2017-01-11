@@ -542,7 +542,7 @@ console.log(response);
         }
       }
       else {
-        testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': 'Returned <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>. <q>' + response.xhr.responseText + '</q>'};
+        testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
         return Promise.resolve(testResults);
       }
     },
