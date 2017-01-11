@@ -248,13 +248,7 @@ function checkOptions(req){
       return Promise.resolve(testResults);
     },
     function(reason){
-// console.log(reason);
-      switch(reason.xhr.status){
-        default:
-          testResults['receiver']['checkOptions'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
-          break;
-      }
-
+      testResults['receiver']['checkOptions'] = { 'code': 'NA', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
@@ -271,13 +265,7 @@ function checkHead(req){
       return Promise.resolve(testResults);
     },
     function(reason){
-// console.log(reason);
-      switch(reason.xhr.status){
-        default:
-          testResults['receiver']['checkHead'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
-          break;
-      }
-
+      testResults['receiver']['checkHead'] = { 'code': 'NA', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
