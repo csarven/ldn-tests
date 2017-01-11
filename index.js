@@ -314,6 +314,8 @@ function checkGet(req){
         return getGraphFromData(data, options).then(
           function(g) {
             var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
+console.log(s.iri().toString());
+
             //These checks are extra, not required by the specification
             var types = s.rdftype;
             var resourceTypes = [];
@@ -484,14 +486,13 @@ function checkPost(req){
 // console.log('checkGet: ' + url);
   return postResource(url, '', data, headers['Content-Type']).then(
     function(response){
-
+console.log(response);
       // POST requests are supported, with and without profiles
       testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
       testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
       // If 201 or 202
       if(response.xhr.status == 201 || response.xhr.status == 202) {
-
         // If 'reject' was ticked, creating was wrong, fail
         if('test-receiver-reject' in req.body){
           testResults['receiver']['checkPostResponseCreated'] = { 'code' : 'FAIL', 'message' : 'Payload did NOT meet constraints, but the receiver indicated success (<code>' + response.xhr.status + '</code>)' };
@@ -499,12 +500,12 @@ function checkPost(req){
           return Promise.resolve(testResults);
 
         // Otherwise, pass
-        }else{
+        }
+        else{
           testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
 
           // If 201, check Location header
           if(response.xhr.status == 201){
-
             var location = response.xhr.getResponseHeader('Location');
             if(location){
               var url = location;
@@ -534,14 +535,19 @@ function checkPost(req){
               testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
               return Promise.resolve(testResults);
             }
-          } // end if 201
-        } // end if test-reject
-
-      } // end if 201/202
-
+          }
+          else {
+            //TODO 202
+          }
+        }
+      }
+      else {
+        testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': 'Returned <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>. <q>' + response.xhr.responseText + '</q>'};
+        return Promise.resolve(testResults);
+      }
     },
     function(reason){
-// console.log(reason);
+console.log(reason);
       testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>: <q>' + reason.xhr.responseText + '</q>'};
       switch(reason.xhr.status){
         case 400:
