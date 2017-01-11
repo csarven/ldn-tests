@@ -29,7 +29,7 @@ td { border-bottom: 1px solid #eee; }
 .test-PASS { background-color: #0f0; }
 .test-FAIL { background-color: #f00; }
 .test-NA { background-color: #eee; }
-tfoot dd:after { content: "\\A"; white-space:pre; }
+tfoot dd:after { content: "\A"; white-space:pre; }
 tfoot dt, tfoot dd { display:inline; }
 .rfc2119 {
 text-transform:lowercase;
