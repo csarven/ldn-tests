@@ -300,10 +300,10 @@ function checkGet(req){
           testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
           return Promise.resolve(testResults);
       }
-      // else if(contentType.split(';')[0].trim() != headers['Accept']) {
-      //     testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
-      //     return Promise.resolve(testResults);
-      // }
+      else if(contentType.split(';')[0].trim() != headers['Accept']) {
+          testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
+          return Promise.resolve(testResults);
+      }
       else {
         testResults['receiver']['checkGet'] = { 'code': 'PASS', 'message': '' };
         var options = {
