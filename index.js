@@ -11,7 +11,7 @@ mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report', '/vi
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/send-report').all(reportTest);
-mayktso.app.route('/view-reports').all(viewReports);
+mayktso.app.route('/summary').all(showSummary);
 //console.log(mayktso.app._router.stack);
 
 var getResource = mayktso.getResource;
@@ -835,7 +835,7 @@ function reportTest(req, res, next){
 }
 
 
-function viewReports(req, res, next){
+function showSummary(req, res, next){
   switch(req.method){
     //TODO: This only responds to text/html. Maybe include RDFa? Anything new/interesting for the report?
     case 'GET':
@@ -849,15 +849,15 @@ function viewReports(req, res, next){
         // return new Promise(function(resolve, reject) {
           return discoverInbox(url).then(
             function(i){
-              console.log('--- viewReports --')
+              console.log('--- showSummary --')
               console.log(i);
-              console.log('--//viewReports --')
+              console.log('--//showSummary --')
               return i;
             },
             function(reason){
-              console.log('--- FAIL viewReports --')
+              console.log('--- FAIL showSummary --')
               console.log(reason);
-              console.log('--- FAIL viewReports --')
+              console.log('--- FAIL showSummary --')
               return reason;
             }
           );
