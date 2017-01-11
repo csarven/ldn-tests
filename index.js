@@ -39,14 +39,14 @@ var ldnTests = {
       'description': 'Accepts <code>HEAD</code> requests.'
     },
 
+    'checkOptions': {
+      'description': 'Accepts <code>OPTIONS</code> requests.'
+    },
     'checkOptionsAcceptPost': {
       'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.'
     },
     'checkOptionsAcceptPostContainsJSONLD': {
       'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.'
-    },
-    'checkOptions': {
-      'description': 'Accepts other RDF content types.'
     },
 
     'checkPost': {
@@ -128,6 +128,10 @@ function testResource(req, res, next){
     case 'POST':
       var testReceiverPromises = [];
       var initTest = { '1': checkOptions, '2': checkHead, '3': checkPost, '4': checkGet };
+      // var initTest = { '1': checkOptions };
+      // var initTest = { '2': checkHead };
+      // var initTest = { '3': checkPost };
+      // var initTest = { '4': checkGet };
 
       if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
         Object.keys(initTest).forEach(function(id) {
@@ -221,13 +225,13 @@ function checkOptions(req){
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-
+// console.log('checkOptions: ' + url);
   return getResourceOptions(url, headers).then(
     function(response){
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
-        testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+        testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '' };
         if(acceptPost){
-          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
 
           var acceptPosts = acceptPost.split(',');
           testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'FAIL', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
@@ -244,9 +248,13 @@ function checkOptions(req){
       return Promise.resolve(testResults);
     },
     function(reason){
-      if(reason.xhr.status == 405) {
-        testResults['receiver']['checkOptions'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
+// console.log(reason);
+      switch(reason.xhr.status){
+        default:
+          testResults['receiver']['checkOptions'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+          break;
       }
+
       return Promise.resolve(testResults);
     });
 }
@@ -256,16 +264,20 @@ function checkHead(req){
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-
+// console.log('checkHead: ' + url);
   return getResourceHead(url, headers).then(
     function(response){
       testResults['receiver']['checkHead'] = { 'code': 'PASS', 'message': '' };
       return Promise.resolve(testResults);
     },
     function(reason){
-      if(reason.xhr.status == 405) {
-        testResults['receiver']['checkHead'] = { 'code': 'FAIL', 'message': '<code>HTTP 405</code>' };
+// console.log(reason);
+      switch(reason.xhr.status){
+        default:
+          testResults['receiver']['checkHead'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+          break;
       }
+
       return Promise.resolve(testResults);
     });
 }
@@ -275,173 +287,182 @@ function checkGet(req){
   var headers = {};
   headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-
+// console.log('checkGet: ' + url);
   return getResource(url, headers).then(
     function(response){
-      testResults['receiver']['checkGet'] = { 'code': 'PASS', 'message': '' };
+// console.log(response);
       testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'NA', 'message': 'Check manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
+// console.log(contentType);
+      if(typeof contentType == undefined){
+          testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+          return Promise.resolve(testResults);
+      }
+      // else if(contentType.split(';')[0].trim() != headers['Accept']) {
+      //     testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
+      //     return Promise.resolve(testResults);
+      // }
+      else {
+        testResults['receiver']['checkGet'] = { 'code': 'PASS', 'message': '' };
+        var options = {
+          'contentType': 'application/ld+json',
+          'subjectURI': url
+        }
 
-      if(typeof contentType !== undefined) {
-        if(contentType.split(';')[0].trim() == headers['Accept']) {
-          var options = {
-            'contentType': headers['Accept'],
-            'subjectURI': url
-          }
-          return getGraphFromData(data, options).then(
-            function(g) {
-              var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
-
-              //These checks are extra, not required by the specification
-              var types = s.rdftype;
-              var resourceTypes = [];
-              types._array.forEach(function(type){
-                resourceTypes.push(type);
-              });
-              var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
-              var rdftypes = [];
+        return getGraphFromData(data, options).then(
+          function(g) {
+            var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
+            //These checks are extra, not required by the specification
+            var types = s.rdftype;
+            var resourceTypes = [];
+            types._array.forEach(function(type){
+              resourceTypes.push(type);
+            });
+            var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
+            var rdftypes = [];
 // console.log(linkHeaders);
 
-              if('type' in linkHeaders && (linkHeaders['type'].indexOf(vocab.ldpcontainer["@id"]) || linkHeaders['type'].indexOf(vocab.ldpbasiccontainer["@id"]))){
-                linkHeaders['type'].forEach(function(url){
-                  if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
-                    rdftypes.push('<a href="' + url + '">' + url + '</a>');
-                  }
-                });
-
-                testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
-              }
-              else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
-                resourceTypes.forEach(function(url){
-                  if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
-                    rdftypes.push('<a href="' + url + '">' + url + '</a>');
-                  }
-                });
-
-                testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
-              }
-              else {
-                testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'NA', 'message': 'Not found.' };
-              }
-
-              if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
-                var constrainedBys = [];
-                linkHeaders[vocab['ldpconstrainedBy']['@id']].forEach(function(url){
-                  constrainedBys.push('<a href="' + url + '">' + url + '</a>');
-                });
-
-                testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
-              }
-              else {
-                testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'NA', 'message': 'Not found.' };
-              }
-
-              var notifications = [];
-              s.ldpcontains.forEach(function(resource) {
-                  notifications.push(resource.toString());
+            if('type' in linkHeaders && (linkHeaders['type'].indexOf(vocab.ldpcontainer["@id"]) || linkHeaders['type'].indexOf(vocab.ldpbasiccontainer["@id"]))){
+              linkHeaders['type'].forEach(function(url){
+                if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
+                  rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                }
               });
 
-              if(notifications.length > 0) {
-                testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+            }
+            else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
+              resourceTypes.forEach(function(url){
+                if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
+                  rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                }
+              });
 
-                var testAccepts = ['application/ld+json', '*/*', ''];
-                var notificationResponses = [];
+              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
+            }
+            else {
+              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'NA', 'message': 'Not found.' };
+            }
 
-                var getSerialize = function(url, acceptValue) {
-                  return new Promise(function(resolve, reject) {
-                    var http = new XMLHttpRequest();
-                    http.open('GET', url);
-                    if(acceptValue.length > 0){
-                      http.setRequestHeader('Accept', acceptValue);
-                    }
-                    http.onreadystatechange = function() {
-                      if(this.readyState == this.DONE) {
-                        var anchor = '<a href="' + url + '">' + url + '</a>';
+            if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
+              var constrainedBys = [];
+              linkHeaders[vocab['ldpconstrainedBy']['@id']].forEach(function(url){
+                constrainedBys.push('<a href="' + url + '">' + url + '</a>');
+              });
 
-                        if (this.status === 200) {
-                          var data = this.responseText;
-                          var cT = this.getResponseHeader('Content-Type');
-                          var contentType = cT.split(';')[0].trim();
+              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
+            }
+            else {
+              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'NA', 'message': 'Not found.' };
+            }
 
-                          if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
-                            resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
-                          }
-                          else {
-                            var options = { 'subjectURI': '_:ldn' }
-                            var codeAccept = (acceptValue == '') ? 'No <code>Accept</code>' : '<code>Accept: ' + acceptValue + '</code>';
-                            serializeData(data, contentType, 'application/ld+json', options).then(
-                              function(i){
-                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'PASS', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
-                              },
-                              function(reason){
-                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
-                              }
-                            );
-                          }
+            var notifications = [];
+            s.ldpcontains.forEach(function(resource) {
+                notifications.push(resource.toString());
+            });
+
+            if(notifications.length > 0) {
+              testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+
+              var testAccepts = ['application/ld+json', '*/*', ''];
+              var notificationResponses = [];
+
+              var getSerialize = function(url, acceptValue) {
+                return new Promise(function(resolve, reject) {
+                  var http = new XMLHttpRequest();
+                  http.open('GET', url);
+                  if(acceptValue.length > 0){
+                    http.setRequestHeader('Accept', acceptValue);
+                  }
+                  http.onreadystatechange = function() {
+                    if(this.readyState == this.DONE) {
+                      var anchor = '<a href="' + url + '">' + url + '</a>';
+
+                      if (this.status === 200) {
+                        var data = this.responseText;
+                        var cT = this.getResponseHeader('Content-Type');
+                        var contentType = cT.split(';')[0].trim();
+
+                        if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
+                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
                         }
                         else {
-                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': HTTP status ' + this.status });
+                          var options = { 'subjectURI': '_:ldn' }
+                          var codeAccept = (acceptValue == '') ? 'No <code>Accept</code>' : '<code>Accept: ' + acceptValue + '</code>';
+                          serializeData(data, contentType, 'application/ld+json', options).then(
+                            function(i){
+                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'PASS', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
+                            },
+                            function(reason){
+                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
+                            }
+                          );
                         }
                       }
-                    };
-                    http.send();
-                  });
-                }
-
-                notifications.forEach(function(url){
-                  testAccepts.forEach(function(acceptValue){
-                    notificationResponses.push(getSerialize(url, acceptValue));
-                  });
+                      else {
+                        resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': HTTP status ' + this.status });
+                      }
+                    }
+                  };
+                  http.send();
                 });
+              }
 
-                return Promise.all(notificationResponses)
-                  .then((results) => {
+              notifications.forEach(function(url){
+                testAccepts.forEach(function(acceptValue){
+                  notificationResponses.push(getSerialize(url, acceptValue));
+                });
+              });
+
+              return Promise.all(notificationResponses)
+                .then((results) => {
 // console.log(results);
 
-                    var notificationState = [];
-                    var notificationStateJSONLD = [];
-                    var notificationStateRDFSource = [];
-                    var codeJSONLD = 'PASS';
-                    var codeRDFSource = 'PASS';
-                    results.forEach(function(r){
-                      if(r['Accept'] == 'application/ld+json'){
-                        if (r.code == 'FAIL') { codeJSONLD = 'FAIL'; }
-                        notificationStateJSONLD.push(r.message);
-                      }
-                      else {
-                        if (r.code == 'FAIL') { codeRDFSource = 'FAIL'; }
-                        notificationStateRDFSource.push(r.message);
-                      }
-                      notificationState.push(r.message);
-                    });
-                    notificationStateJSONLD = notificationStateJSONLD.join(', ');
-                    notificationStateRDFSource = notificationStateRDFSource.join(', ');
-
-                    testResults['receiver']['checkGetResponseNotificationsJSONLD'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
-                    testResults['receiver']['checkGetResponseNotificationsRDFSource'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
-
-                    return Promise.resolve(testResults);
-                  })
-                  .catch((e) => {
-                    console.log('--- catch: notificationResponses ---');
-                    console.log(e);
+                  var notificationState = [];
+                  var notificationStateJSONLD = [];
+                  var notificationStateRDFSource = [];
+                  var codeJSONLD = 'PASS';
+                  var codeRDFSource = 'PASS';
+                  results.forEach(function(r){
+                    if(r['Accept'] == 'application/ld+json'){
+                      if (r.code == 'FAIL') { codeJSONLD = 'FAIL'; }
+                      notificationStateJSONLD.push(r.message);
+                    }
+                    else {
+                      if (r.code == 'FAIL') { codeRDFSource = 'FAIL'; }
+                      notificationStateRDFSource.push(r.message);
+                    }
+                    notificationState.push(r.message);
                   });
-              }
-              else {
-                testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
-                return Promise.resolve(testResults);
-              }
-            },
-            function(reason){
-              testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as ' + headers['Accept'] };
+                  notificationStateJSONLD = notificationStateJSONLD.join(', ');
+                  notificationStateRDFSource = notificationStateRDFSource.join(', ');
+
+                  testResults['receiver']['checkGetResponseNotificationsJSONLD'] = { 'code': codeJSONLD, 'message': notificationStateJSONLD };
+                  testResults['receiver']['checkGetResponseNotificationsRDFSource'] = { 'code': codeRDFSource, 'message': notificationStateRDFSource };
+
+                  return Promise.resolve(testResults);
+                })
+                .catch((e) => {
+                  console.log('--- catch: notificationResponses ---');
+                  console.log(e);
+                });
+            }
+            else {
+              testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
               return Promise.resolve(testResults);
-            });      
-        }
+            }
+          },
+          function(reason){
+console.log(reason);
+            testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+            return Promise.resolve(testResults);
+          });
       }
     },
     function(reason){
+// console.log(reason);
       var code = 'FAIL';
       if(typeof reason.xhr.status !== 'undefined' && reason.xhr.status >= 400 && reason.xhr.status < 500) { //HTTP 4xx
         code = 'PASS';
@@ -456,11 +477,12 @@ function checkGet(req){
 
 function checkPost(req){
   var testResults = { 'receiver': {} };
-  var headers = {}, data;
+  var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"; charset=utf-8';
-  data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
-
-  return postResource(req.body['test-receiver-url'], '', data, headers['Content-Type']).then(
+  var data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
+  var url = req.body['test-receiver-url'];
+// console.log('checkGet: ' + url);
+  return postResource(url, '', data, headers['Content-Type']).then(
     function(response){
 
       // POST requests are supported, with and without profiles
