@@ -536,9 +536,6 @@ console.log(response);
               return Promise.resolve(testResults);
             }
           }
-          else {
-            //TODO 202
-          }
         }
       }
       else {
