@@ -469,23 +469,24 @@ function checkPost(req){
 // console.log('checkGet: ' + url);
   return postResource(url, '', data, headers['Content-Type']).then(
     function(response){
-console.log(response);
+// console.log(response);
       // POST requests are supported, with and without profiles
-      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+      var status = '<code>HTTP ' + response.xhr.status + '</code>';
+      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': status };
       testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
 
       // If 201 or 202
       if(response.xhr.status == 201 || response.xhr.status == 202) {
         // If 'reject' was ticked, creating was wrong, fail
         if('test-receiver-reject' in req.body){
-          testResults['receiver']['checkPostResponseCreated'] = { 'code' : 'FAIL', 'message' : 'Payload did NOT meet constraints, but the receiver indicated success (<code>' + response.xhr.status + '</code>)' };
+          testResults['receiver']['checkPostResponseCreated'] = { 'code' : 'FAIL', 'message' : 'Payload did NOT meet constraints, but the receiver indicated success (' + status + ')' };
           testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'FAIL', 'message': '' };
           return Promise.resolve(testResults);
 
         // Otherwise, pass
         }
         else{
-          testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': '<code>HTTP ' + response.xhr.status + '</code>' };
+          testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': status };
 
           // If 201, check Location header
           if(response.xhr.status == 201){
@@ -527,13 +528,16 @@ console.log(response);
       }
     },
     function(reason){
-console.log(reason);
-      testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>: <q>' + reason.xhr.responseText + '</q>'};
+// console.log(reason);
+      var status = '<code>HTTP ' + reason.xhr.status + '</code>';
+      var responseText = (reason.xhr.responseText.length > 0 ) ? ', <q>' + reason.xhr.responseText + '</q>' : '';
+
+      testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': status + responseText };
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': 'Deliberately rejected (<code>HTTP ' + reason.xhr.status + '</code>)' };
-            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': 'Payload successfully filtered out (<code>HTTP ' + reason.xhr.status + '</code>)' };
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': 'Deliberately rejected (' + status + ')' };
+            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': 'Payload successfully filtered out (' + status + ')' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
@@ -545,15 +549,15 @@ console.log(reason);
           break;
         case 415:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
+            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
           }
           else {
-            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
+            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
           }
           testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<code>HTTP ' + reason.xhr.status + '</code>: <q>' + reason.xhr.responseText + '</q>'};
+          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': status + responseText};
           break;
       }
 
