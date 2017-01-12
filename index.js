@@ -463,11 +463,12 @@ console.log(reason);
 function checkPost(req){
   var testResults = { 'receiver': {} };
   var headers = {};
-  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"; charset=utf-8';
-  var data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
   var url = req.body['test-receiver-url'];
+  headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"; charset=utf-8';
+  headers['Slug'] = uuid.v1() + '.jsonld';
+  var data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
 // console.log('checkGet: ' + url);
-  return postResource(url, '', data, headers['Content-Type']).then(
+  return postResource(url, headers['Slug'], data, headers['Content-Type']).then(
     function(response){
 // console.log(response);
       // POST requests are supported, with and without profiles
