@@ -697,7 +697,6 @@ function createReceiverTestReport(req, res, next){
 @prefix doap: <http://usefulinc.com/ns/doap#>.
 @prefix earl: <https://www.w3.org/ns/earl#>.
 @prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
-@prefix ldnR: <https://linkedresearch.org/ldn/tests/receiver/#>.
 @prefix ldn: <https://www.w3.org/TR/ldn/#>.
 @prefix : <>.
 @prefix d: <#>.`;
@@ -715,7 +714,7 @@ function createReceiverTestReport(req, res, next){
   }
 
   var doap = `<${implementation}>
-  a doap:Project;
+  a doap:Project, ldn:Receiver;
   doap:maintainer <${maintainer}>.`;
 
   test['id'] = uuid.v1();
@@ -748,9 +747,8 @@ function createReceiverTestReport(req, res, next){
   a qb:Observation, earl:Assertion;
   qb:dataSet <>;
   earl:subject <${implementation}>;
-  ldnTests:implementationType ldn:receiver;
-  earl:test ldnR:${i};
-  earl:result d:${i}-result .`;
+  earl:test ldnTests:${i};
+  earl:result d:${i}-result .\n`;
 
     observation += `d:${i}-result
   earl:outcome earl:${earlResult}`;
@@ -908,11 +906,18 @@ console.log(notifications)
 
 ///Just for debugging
           var a = [];
-          s.forEach(function(o){
-            var html = '<h2>Notification URL: ' + o.iri().toString() + '</h2>';
-            html += '<pre>' + htmlEntities(o.toString()) + '</pre>';
-            a.push(html);
-          });
+          // s.forEach(function(g){
+          //   var observationUris = g.rdfsseeAlso;
+
+          //   observationUris.forEach(function(observationUri){
+          //     var observationGraph = g.child(observationUri);
+          //     var implementationGraph = observationGraph['https://www.w3.org/ns/earl#subject'];
+          //     var resultGraph = observationGraph['https://www.w3.org/ns/earl#result'];
+          //     // var testGraph = observationGraph['https://www.w3.org/ns/earl#test'];
+          //     console.log(implementationGraph.toString());
+          //   });
+
+          // });
           var string = a.join('<hr />');
 
           var data = getReportsHTML(string);
@@ -954,6 +959,32 @@ console.log(notifications)
 }
 
 function getReportsHTML(data){
+
+    var rTestsCount = Object.keys(ldnTests['receiver']).length;
+    var cTestsCount = Object.keys(ldnTests['consumer']).length;
+    var sTestsCount = Object.keys(ldnTests['sender']).length;
+    var implCount = 8;
+
+    var trs = '<tr>';
+    for(var i=0;i<implCount;i=i+1){
+      trs = trs + '  <th>imp ${i}</th>';
+    }
+    trs = trs + '</tr>';
+
+    var first = true;
+    Object.keys(ldnTests['receiver']).forEach(function(test){
+      trs = trs + '<tr>';
+      if(first){
+        trs = trs + '  <td rowspan="' + rTestsCount + '">R</td>';
+      }
+      trs = trs + '  <td>' + test + '</td>';
+      for(var i=0;i<implCount;i=i+1){
+        trs = trs + ' <td>x</td>';
+      }
+      trs = trs + '</tr>';
+      first = false;
+    });
+
     return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -970,7 +1001,13 @@ function getReportsHTML(data){
                 <h1 property="schema:name">LDN Test Reports</h1>
 
                 <div id="content">
-${data}
+                  <table>
+                    <tr>
+                      <th colspan="2" rowspan="2">Test</th>
+                      <th colspan="${implCount}">Implementations</th>
+                    </tr>
+${trs}
+                  </table>
                 </div>
             </article>
         </main>
