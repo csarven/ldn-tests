@@ -453,12 +453,7 @@ console.log(reason);
     },
     function(reason){
 // console.log(reason);
-      var code = 'FAIL';
-      if(typeof reason.xhr.status !== 'undefined' && reason.xhr.status >= 400 && reason.xhr.status < 500) { //HTTP 4xx
-        code = 'PASS';
-      }
-
-      testResults['receiver']['checkGet'] = { 'code': code, 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(testResults);
     });
 }
