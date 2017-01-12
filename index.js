@@ -736,20 +736,30 @@ function createReceiverTestReport(req, res, next){
   Object.keys(test['results']).forEach(function(i){
     datasetSeeAlso.push('d:' + i);
 
+    var earlResult = "inapplicable";
+    if(test['results'][i]['code'] == "PASS"){
+      earlResult = "passed";
+    }else if(test['results'][i]['code'] == "FAIL"){
+      earlResult = "failed";
+    }
+    // TODO: for things that say 'check manually' should be earl:untested or earl:canttell
+
     var observation = `d:${i}
-  a qb:Observation;
+  a qb:Observation, earl:Assertion;
   qb:dataSet <>;
-  ldnTests:implementation <${implementation}>;
+  earl:subject <${implementation}>;
   ldnTests:implementationType ldn:receiver;
   earl:test ldnR:${i};
-  ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
+  earl:result d:${i}-result .`;
 
+    observation += `d:${i}-result
+  earl:outcome earl:${earlResult}`;
     if(test['results'][i]['message'] != '') {
       observation = observation + `;
-  dcterms:description """${test['results'][i]['message']}"""^^rdf:HTML`;
+  earl:info """${test['results'][i]['message']}"""^^rdf:HTML`;
     }
 
-    observations.push(observation + '.\n');
+    observations.push(observation + ' .\n');
   });
 
   datasetSeeAlso = `<>
