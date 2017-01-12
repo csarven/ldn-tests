@@ -6,7 +6,7 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report', '/view-reports', '/media']});
+mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report', '/summary', '/media']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/receiver').all(testResource);
