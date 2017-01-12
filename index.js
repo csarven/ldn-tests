@@ -612,7 +612,10 @@ function getTestReceiverHTML(request, results){
   // var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
   // selectedOption = (request && request['test-receiver-mimetype']) ? request['test-receiver-mimetype'] : '';
   // var receiverMimetypeOptionsHTML = getSelectOptionsHTML(['application/ld+json', 'text/turtle'], selectedOption);
-
+  var testsList = '';
+  Object.keys(ldnTests['receiver']).forEach(function(t) {
+    testsList += '<li id="'+t+'" about="#'+t+'" typeof="earl:TestCriterion" property="schema:description">'+ldnTests['receiver'][t]['description']+'</li>\n';
+  });
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -623,7 +626,7 @@ function getTestReceiverHTML(request, results){
         <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
 
-    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms# earl: https://www.w3.org/ns/earl#" typeof="schema:CreativeWork sioc:Post prov:Entity">
         <main>
             <article about="" typeof="schema:Article">
                 <h1 property="schema:name">LDN Tests for Receivers</h1>
@@ -664,6 +667,12 @@ function getTestReceiverHTML(request, results){
 ${(results && 'test-receiver-report-html' in results) ? results['test-receiver-report-html'] : ''}
                         </div>
                     </section>
+                    <section id="tests" inlist="" rel="schema:hasPart" resource="#tests">
+                      <h2 property="schema:name">For reference, the tests that will run are:</h2>
+                      <ul>
+${testsList}
+                      </ul>
+                    </section>
                 </div>
             </article>
         </main>
@@ -686,7 +695,9 @@ function createReceiverTestReport(req, res, next){
 @prefix as: <https://www.w3.org/ns/activitystreams#>.
 @prefix qb: <http://purl.org/linked-data/cube#>.
 @prefix doap: <http://usefulinc.com/ns/doap#>.
+@prefix earl: <https://www.w3.org/ns/earl#>.
 @prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
+@prefix ldnR: <https://linkedresearch.org/ldn/tests/receiver/#>.
 @prefix ldn: <https://www.w3.org/TR/ldn/#>.
 @prefix : <>.
 @prefix d: <#>.`;
@@ -730,7 +741,7 @@ function createReceiverTestReport(req, res, next){
   qb:dataSet <>;
   ldnTests:implementation <${implementation}>;
   ldnTests:implementationType ldn:receiver;
-  ldnTests:check ldnTests:${i};
+  earl:test ldnR:${i};
   ldnTests:obsValue ldnTests:${test['results'][i]['code']}`
 
     if(test['results'][i]['message'] != '') {
