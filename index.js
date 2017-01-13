@@ -622,7 +622,6 @@ function getTestReceiverHTML(request, results){
         <meta charset="utf-8" />
         <title>LDN Tests for Receivers</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
         <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
 
@@ -991,7 +990,6 @@ function getReportsHTML(data){
         <meta charset="utf-8" />
         <title>LDN Test Reports</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="https://dokie.li/media/css/basic.css" media="all" rel="stylesheet" title="Basic" />
         <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
 
