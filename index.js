@@ -6,12 +6,21 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/receiver', '/send-report', '/summary', '/media']});
+mayktso.init({'config': config, 'omitRoutes': ['/media', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/receiver', '/send-report', '/summary']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/receiver').all(testResource);
 mayktso.app.route('/send-report').all(reportTest);
 mayktso.app.route('/summary').all(showSummary);
+
+// mayktso.app.route('/consumer').all(handleResource);
+mayktso.app.route('/discover-inbox-link-header').all(discoverTargetInbox);
+mayktso.app.route('/discover-inbox-rdf-body').all(discoverTargetInbox);
+// mayktso.app.route('/inbox-compact/').all(inboxContents);
+// mayktso.app.route('/inbox-expanded/').all(inboxContents);
+// mayktso.app.route('/notification-compact/').all(notificationCompact);
+// mayktso.app.route('/notification-expanded/').all(notificationExpanded);
+
 //console.log(mayktso.app._router.stack);
 
 var getResource = mayktso.getResource;
@@ -1012,6 +1021,137 @@ ${trs}
     </body>
 </html>
 `;
+}
+
+
+
+
+function discoverTargetInbox(req, res, next){
+// console.log(req.getUrl());
+// console.log(req.originalUrl);
+// console.log(req.requestedType);
+  switch(req.method){
+    case 'GET': case 'HEAD': case 'OPTIONS':
+      break;
+    default:
+      res.status(405);
+      res.set('Allow', 'GET, HEAD, OPTIONS');
+      res.end();
+      return next();
+      break;
+  }
+  if(!req.requestedType){
+    res.status(406);
+    res.end();
+    return next();
+  }
+
+  var discoverInboxHTML;
+  switch(req.originalUrl) {
+    case '/discover-inbox-link-header': default:
+      discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
+      break;
+    case '/discover-inbox-rdf-body':
+      discoverInboxHTML = `<p>This target resource announces its <a href="inbox-compact/" rel="ldp:inbox">Inbox</a> right here.</p>`;
+      break;
+  }
+  var data = `<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>LDN Consumer Test</title>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
+    </head>
+
+    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+        <main>
+            <article about="" typeof="schema:Article">
+                <h1 property="schema:name">LDN Discovery Test</h1>
+
+                <div id="content">
+${discoverInboxHTML}
+                </div>
+            </article>
+        </main>
+    </body>
+</html>
+`;
+
+  if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+    res.status(304);
+    res.end();
+  }
+
+  var fromContentType = 'text/html';
+  var toContentType = req.requestedType;
+
+  var baseURL = getBaseURL(req.getUrl());
+  var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
+  var basePath = config.basePath.endsWith('/') ? config.basePath : '';
+  var inboxURL = base + basePath + config.inboxPath;
+  var sendHeaders = function(outputData, contentType) {
+    var linkRelations = ['<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"'];
+    if(req.originalUrl == '/discover-inbox-link-header'){
+      linkRelations.push('<' + base + basePath + 'inbox-compact' + '>; rel="http://www.w3.org/ns/ldp#inbox"');
+    }
+    res.set('Link', linkRelations);
+    res.set('Content-Type', contentType +';charset=utf-8');
+    res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
+    res.set('ETag', etag(outputData));
+    // res.set('Last-Modified', stats.mtime);
+    res.set('Vary', 'Origin');
+    res.set('Allow', 'GET, HEAD, OPTIONS');
+  }
+
+  if(req.accepts(['text/html', 'application/xhtml+xml'])){
+    sendHeaders(data, 'text/html');
+    res.status(200);
+    res.send(data);
+    return next();
+  }
+  else {
+    var options = { 'subjectURI': base };
+    serializeData(data, fromContentType, toContentType, options).then(
+      function(transformedData){
+        switch(toContentType) {
+          case 'application/ld+json':
+            var x = JSON.parse(transformedData);
+            x[0]["@context"] = ["http://www.w3.org/ns/ldp"];
+            transformedData = JSON.stringify(x);
+            break;
+          default:
+            break;
+        }
+
+        var outputData = (fromContentType != toContentType) ? transformedData : data;
+// console.log(outputData);
+        sendHeaders(outputData, req.requestedType);
+
+        switch(req.method) {
+          case 'GET': default:
+            res.status(200);
+            res.send(outputData);
+            break;
+          case 'HEAD':
+            res.status(200);
+            res.send();
+            break;
+          case 'OPTIONS':
+            res.status(204);
+            break;
+        }
+
+        res.end();
+        return next();
+      },
+      function(reason){
+        res.status(500);
+        res.end();
+        return next();
+      }
+    );
+  }
 }
 
 
