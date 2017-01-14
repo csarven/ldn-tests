@@ -1093,7 +1093,7 @@ ${discoverInboxHTML}
   var sendHeaders = function(outputData, contentType) {
     var linkRelations = ['<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"'];
     if(req.originalUrl == '/discover-inbox-link-header'){
-      linkRelations.push('<' + base + basePath + 'inbox-compact' + '>; rel="http://www.w3.org/ns/ldp#inbox"');
+      linkRelations.push('<' + base + basePath + 'inbox-compact' + '/>; rel="http://www.w3.org/ns/ldp#inbox"');
     }
     res.set('Link', linkRelations);
     res.set('Content-Type', contentType +';charset=utf-8');
