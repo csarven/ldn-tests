@@ -1052,7 +1052,7 @@ function discoverTargetInbox(req, res, next){
       discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
       break;
     case '/discover-inbox-rdf-body':
-      discoverInboxHTML = `<p>This target resource announces its <a href="inbox-compact/" rel="ldp:inbox">Inbox</a> right here.</p>`;
+      discoverInboxHTML = `<p>This target resource announces its <a href="inbox-expanded/" rel="ldp:inbox">Inbox</a> right here.</p>`;
       break;
   }
   var data = `<!DOCTYPE html>
