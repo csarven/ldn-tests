@@ -1,6 +1,6 @@
 [
   {
-    "@id": "http://json-ld.org/playground/",
+    "@id": "",
     "@type": [
       "http://rdfs.org/sioc/ns#Comment"
     ],

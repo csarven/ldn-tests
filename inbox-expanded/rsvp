@@ -1,6 +1,6 @@
 [
   {
-    "@id": "http://json-ld.org/playground/",
+    "@id": "",
     "@type": [
       "http://schema.org/RsvpAction"
     ],
