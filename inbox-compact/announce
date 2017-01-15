@@ -1,0 +1,10 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "@id": "",
+  "@type": "Announce",
+  "actor": "https://rhiaro.co.uk/#me",
+  "object": "http://example.net/note",
+  "target": "http://example.org/article",
+  "updated": "2016-06-28T19:56:20.114Z"
+}
+

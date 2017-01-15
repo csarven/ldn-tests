@@ -1,0 +1,30 @@
+{
+  "@context": [{"prov": "http://www.w3.org/ns/prov#"}],
+  "@id": "http://example.org/activity/804c4e7efaa828e146b4ada1c805617ffbc79dc7",
+  "@type": "prov:Activity",
+  "http://www.w3.org/2000/01/rdf-schema#label": {
+    "@language": "en",
+    "@value": "Make it so"
+  },
+  "prov:endedAtTime": {
+    "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+    "@value": "2016-06-14T20:57:39.000Z"
+  },
+  "prov:generated": {
+    "@id": "http://example.org/entity/804c4e7efaa828e146b4ada1c805617ffbc79dc7",
+    "@type": "prov:Entity",
+    "prov:specializationOf": { "@id": "http://example.org/entity/file" },
+    "prov:wasGeneratedBy": {
+      "@id": "http://example.org/activity/804c4e7efaa828e146b4ada1c805617ffbc79dc7"
+    }
+  },
+  "prov:wasAssociatedWith": {
+    "@id": "http://csarven.ca/#i",
+    "@type": "prov:Agent",
+    "http://xmlns.com/foaf/0.1/name": {
+      "@language": "hy",
+      "@value": "Սարվէն Չափատիշլի"
+    }
+  }
+}
+

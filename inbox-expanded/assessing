@@ -1,0 +1,49 @@
+[
+  {
+    "@id": "http://example.org/inbox/14a792f0",
+    "@type": [
+      "http://www.w3.org/ns/activitystreams#Announce"
+    ],
+    "http://www.w3.org/ns/activitystreams#actor": [
+      {
+        "@id": "http://csarven.ca/#i",
+        "http://www.w3.org/ns/activitystreams#name": [
+          {
+            "@language": "en",
+            "@value": "Sarven Capadisli"
+          }
+        ]
+      }
+    ],
+    "http://www.w3.org/ns/activitystreams#object": [
+      {
+        "@id": "http://example.net/note",
+        "@type": [
+          "http://www.w3.org/ns/oa#Annotation"
+        ],
+        "http://www.w3.org/ns/oa#motivatedBy": [
+          {
+            "@id": "http://www.w3.org/ns/oa#assessing"
+          }
+        ],
+        "http://purl.org/dc/terms/rights": [
+          {
+            "@id": "http://creativecommons.org/licenses/by/4.0/"
+          }
+        ]
+      }
+    ],
+    "http://www.w3.org/ns/activitystreams#target": [
+      {
+        "@id": "http://example.org/article"
+      }
+    ],
+    "http://www.w3.org/ns/activitystreams#updated": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "@value": "2016-06-28T19:56:20.114Z"
+      }
+    ]
+  }
+]
+

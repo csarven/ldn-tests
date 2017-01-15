@@ -1,0 +1,19 @@
+[
+  {
+    "@id": "http://json-ld.org/playground/",
+    "@type": [
+      "http://schema.org/RsvpAction"
+    ],
+    "http://schema.org/agent": [
+      {
+        "@id": "https://rhiaro.co.uk/#me"
+      }
+    ],
+    "http://schema.org/event": [
+      {
+        "@id": "http://example.org/event"
+      }
+    ]
+  }
+]
+

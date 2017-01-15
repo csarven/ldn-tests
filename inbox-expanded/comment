@@ -1,0 +1,50 @@
+[
+  {
+    "@id": "http://json-ld.org/playground/",
+    "@type": [
+      "http://rdfs.org/sioc/ns#Comment"
+    ],
+    "http://rdfs.org/sioc/ns#content": [
+      {
+        "@language": "en",
+        "@value": "This is a great article!"
+      }
+    ],
+    "http://rdfs.org/sioc/ns#created_at": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "@value": "2015-12-23T16:44:21Z"
+      }
+    ],
+    "http://rdfs.org/sioc/ns#has_creator": [
+      {
+        "@id": "http://example.org/profile",
+        "@type": [
+          "http://rdfs.org/sioc/ns#UserAccount"
+        ],
+        "http://xmlns.com/foaf/0.1/name": [
+          {
+            "@language": "en",
+            "@value": "Alice"
+          }
+        ],
+        "http://rdfs.org/sioc/ns#account_of": [
+          {
+            "@id": "http://example.org/profile#alice"
+          }
+        ],
+        "http://rdfs.org/sioc/ns#avatar": [
+          {
+            "@id": "http://example.org/profile/avatar.png"
+          }
+        ]
+      }
+    ],
+    "http://rdfs.org/sioc/ns#reply_of": [
+      {
+        "@id": "http://example.org/article"
+      }
+    ]
+  }
+]
+
