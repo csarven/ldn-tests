@@ -1212,7 +1212,7 @@ function getTestConsumerHTML() {
 
                 <div id="content">
                     <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
-                        <h2 property="schema:name">Receiver</h2>
+                        <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
                             <p>Run your consumer software against these tests, then submit the report below.</p>
                             <dl>
