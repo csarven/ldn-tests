@@ -1223,6 +1223,12 @@ function getTestConsumerHTML() {
                                       <li><a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a></li>
                                       <li><a href="inbox-compacted/">inbox-compacted/</a></li>
                                       <li><a href="inbox-expanded/">inbox-expanded/</a></li>
+                                      <li><a href="inbox-compacted/announce">inbox-announce/</a></li>
+                                      <li><a href="inbox-compacted/changelog">inbox-changelog/</a></li>
+                                      <li><a href="inbox-compacted/citation">inbox-citation/</a></li>
+                                      <li><a href="inbox-expanded/assessing">inbox-expanded/assessing</a></li>
+                                      <li><a href="inbox-expanded/comment">inbox-expanded/comment</a></li>
+                                      <li><a href="inbox-expanded/rsvp">inbox-expanded/rsvp</a></li>
                                     </ul>
                                 </dd>
                             </dl>
@@ -1251,6 +1257,31 @@ function getTestConsumerHTML() {
                                             <label for="test-consumer-inbox-expanded">URLs</label>
                                             <input type="text" name="test-consumer-inbox-expanded" value="" />
                                         </li>
+                                        <li>
+                                          <label for="inbox-compacted/announce">Notification <a href="inbox-compacted/announce">announce</a></label>
+                                          <textarea name="note" cols="80" rows="2"></textarea>
+                                        </li>
+                                        <li>
+                                          <label for="inbox-compacted/changelog">Notification <a href="changelog">changelog</a></label>
+                                          <textarea name="note" cols="80" rows="2"></textarea>
+                                        </li>
+                                        <li>
+                                          <label for="note">Notification <a href="inbox-compacted/citation">citation</a></label>
+                                          <textarea name="inbox-compacted/citation" cols="80" rows="2"></textarea>
+                                        </li>
+                                        <li>
+                                          <label for="note">Notification <a href="inbox-compacted/announce">assessing</a></label>
+                                          <textarea name="inbox-expanded/assessing" cols="80" rows="2"></textarea>
+                                        </li>
+                                        <li>
+                                          <label for="inbox-expanded/comment">Notification <a href="inbox-compacted/announce">comment</a></label>
+                                          <textarea name="inbox-expanded/comment" cols="80" rows="2"></textarea>
+                                        </li>
+                                        <li>
+                                          <label for="inbox-expanded/rsvp">Notification <a href="inbox-compacted/announce">rsvp</a></label>
+                                          <textarea name="inbox-expanded/rsvp" cols="80" rows="2"></textarea>
+                                        </li>
+
                                     </ul>
                                 </fieldset>
 
@@ -1277,7 +1308,7 @@ function getTestConsumerHTML() {
                         </div>
                     </section>
                 </div>
-            </artice>
+            </article>
         </main>
     </body>
 </html>
