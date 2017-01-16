@@ -404,7 +404,7 @@ counter-increment:precode;
 dokieli/basic.css should probably be generalised enough to handle most of this.
 So we don't have to keep this URL around
  */
-.test-receiver label {
+.form-tests label {
 width: 18%;
 text-align: right;
 padding: 0.25em;
@@ -413,12 +413,12 @@ input[name="test-receiver-reject"] {
 width:auto;
 margin-left:16.5%;
 }
-.test-receiver label[for="test-receiver-reject"] {
+.form-tests label[for="test-receiver-reject"] {
 width:65%;
 text-align:left;
 vertical-align: middle;
 }
-.test-receiver [type="submit"] {
+.form-tests [type="submit"] {
 margin-left:16.5%;
 }
 #test-receiver-response pre { overflow: auto; }

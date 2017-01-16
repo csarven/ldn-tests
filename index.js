@@ -9,11 +9,11 @@ var config = mayktso.config();
 mayktso.init({'config': config, 'omitRoutes': ['/media', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/', '/inbox-expanded/', '/receiver', '/send-report', '/summary']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
-mayktso.app.route('/receiver').all(testResource);
+mayktso.app.route('/receiver').all(testReceiver);
 mayktso.app.route('/send-report').all(reportTest);
 mayktso.app.route('/summary').all(showSummary);
 
-// mayktso.app.route('/consumer').all(handleResource);
+mayktso.app.route('/consumer').all(testConsumer);
 mayktso.app.route('/discover-inbox-link-header').all(discoverTargetInbox);
 mayktso.app.route('/discover-inbox-rdf-body').all(discoverTargetInbox);
 mayktso.app.route('/inbox-compacted/').all(function(res, req, next){
@@ -107,13 +107,13 @@ var ldnTests = {
   'consumer': {}
 }
 
-function testResource(req, res, next){
+function testReceiver(req, res, next){
 // console.log(req.requestedPath);
 // console.log(req);
 
   switch(req.method){
     case 'GET':
-      if(!req.accepts(['text/html', '*/*'])) {
+      if(!req.accepts(['text/html', 'application/xhtml+xml', '*/*'])) {
         res.status(406);
         res.end();
         return next();
@@ -180,9 +180,9 @@ function testResource(req, res, next){
 ${reportHTML}
         </tbody>
       </table>
-      <form action="send-report" class="test-receiver" id="test-receiver-report" method="post">
+      <form action="send-report" class="form-tests" id="test-receiver-report" method="post">
         <fieldset>
-          <legend>LDN Report</legend>
+          <legend>LDN Receiver Report</legend>
           <ul>
             <li>
               <label for="implementation">Implementation</label>
@@ -652,7 +652,7 @@ function getTestReceiverHTML(request, results){
                             <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
                             <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 
-                            <form action="" class="test-receiver" id="test-receiver" method="post">
+                            <form action="" class="form-tests" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
 
@@ -1158,6 +1158,132 @@ ${discoverInboxHTML}
   }
 }
 
+
+function testConsumer(req, res, next){
+// console.log(req.requestedPath);
+// console.log(req);
+
+  switch(req.method){
+    case 'GET':
+      if(!req.accepts(['text/html', 'application/xhtml+xml', '*/*'])) {
+        res.status(406);
+        res.end();
+        return next();
+      }
+
+      var data = getTestConsumerHTML();
+
+      if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+        res.status(304);
+        res.end();
+        break;
+      }
+
+      res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+      res.set('Content-Type', 'text/html;charset=utf-8');
+      res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+      res.set('ETag', etag(data));
+      res.set('Vary', 'Origin');
+      res.set('Allow', 'GET, POST');
+      res.status(200);
+      res.send(data);
+      return next();
+      break;
+
+    case 'POST':
+      break;
+  }
+}
+
+function getTestConsumerHTML() {
+  return `<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>LDN Tests for Consumers</title>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
+    </head>
+
+    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms# earl: https://www.w3.org/ns/earl#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+        <main>
+            <article about="" typeof="schema:Article">
+                <h1 property="schema:name">LDN Tests for Consumers</h1>
+
+                <div id="content">
+                    <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
+                        <h2 property="schema:name">Receiver</h2>
+                        <div datatype="rdf:HTML" property="schema:description">
+                            <p>Run your consumer software against these tests, then submit the report below.</p>
+                            <dl>
+                                <dt>Tests</dt>
+                                <dd>
+                                    <ul>
+                                      <li><a href="discover-inbox-link-header">discover-inbox-link-header</a></li>
+                                      <li><a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a></li>
+                                      <li><a href="inbox-compacted/">inbox-compacted/</a></li>
+                                      <li><a href="inbox-expanded/">inbox-expanded/</a></li>
+                                    </ul>
+                                </dd>
+                            </dl>
+
+                            <form action="send-report" class="form-tests" id="test-consumer-report" method="post">
+                                <fieldset>
+                                    <legend>Test Consumer</legend>
+                                    <ul>
+                                        <li>
+                                            <p>URL of the Inbox from <a href="discover-inbox-link-header">discover-inbox-link-header</a> (in header):</p>
+                                            <label for="test-consumer-discover-inbox-link-header">URL</label>
+                                            <input type="text" name="test-consumer-discover-inbox-link-header" value="" />
+                                        </li>
+                                        <li>
+                                            <p>URL of the Inbox from <a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a> (in RDF body):</p>
+                                            <label for="test-consumer-discover-inbox-rdf-body">URL</label>
+                                            <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" />
+                                        </li>
+                                        <li>
+                                            <p>URLs of the notifications in <a href="inbox-compacted/">inbox-compacted/</a> (JSON-LD compacted):</p>
+                                            <label for="test-consumer-inbox-compacted">URLs</label>
+                                            <input type="text" name="test-consumer-inbox-compacted" value="" />
+                                        </li>
+                                        <li>
+                                            <p>URLs of the notifications in <a href="inbox-expanded/">inbox-expanded/</a> (JSON-LD expanded):</p>
+                                            <label for="test-consumer-inbox-expanded">URLs</label>
+                                            <input type="text" name="test-consumer-inbox-expanded" value="" />
+                                        </li>
+                                    </ul>
+                                </fieldset>
+
+                                <fieldset>
+                                    <legend>LDN Consumer Report</legend>
+                                    <ul>
+                                      <li>
+                                        <label for="implementation">Implementation</label>
+                                        <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
+                                      </li>
+                                      <li>
+                                        <label for="maintainer">Maintainer</label>
+                                        <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
+                                      </li>
+                                      <li>
+                                        <label for="note">Note</label>
+                                        <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
+                                      </li>
+                                    </ul>
+
+                                    <input type="submit" value="Send Report" />
+                                </fieldset>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </artice>
+        </main>
+    </body>
+</html>
+`;
+
+}
 
 
 module.exports = {
