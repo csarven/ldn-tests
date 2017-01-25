@@ -918,18 +918,22 @@ console.log(notifications)
 
 ///Just for debugging
           var a = [];
-          // s.forEach(function(g){
-          //   var observationUris = g.rdfsseeAlso;
+          s.forEach(function(g){
+            var observationUris = g.rdfsseeAlso;
+            // console.log(observationUris);
 
-          //   observationUris.forEach(function(observationUri){
-          //     var observationGraph = g.child(observationUri);
-          //     var implementationGraph = observationGraph['https://www.w3.org/ns/earl#subject'];
-          //     var resultGraph = observationGraph['https://www.w3.org/ns/earl#result'];
-          //     // var testGraph = observationGraph['https://www.w3.org/ns/earl#test'];
-          //     console.log(implementationGraph.toString());
-          //   });
+            observationUris.forEach(function(observationUri){
+              var observationGraph = g.child(observationUri);
+              var implementationUri = observationGraph['https://www.w3.org/ns/earl#subject'];
+              // I don't understand why this ^^^^^ doesn't just give the URI value of earl:subject
+              // I think it returns the entire graph (g). What am I missing?
+              console.log(implementationUri);
+              console.log('-----');
+              console.log(observationGraph.toString());
+              // This ^^^^^^^^ is also the entire graph, not only the parts of the graph with observationUri as the subject, which would have been what I expected given the description of what .child() is supposed to do.
+            });
 
-          // });
+          });
           var string = a.join('<hr />');
 
           var data = getReportsHTML(string);
