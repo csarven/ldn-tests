@@ -45,6 +45,17 @@ var XMLHttpRequest = mayktso.XMLHttpRequest;
 var discoverInbox = mayktso.discoverInbox;
 var getInboxNotifications = mayktso.getInboxNotifications;
 
+var ldnTestsVocab = {
+  "earlAssertion": { "@id": "https://www.w3.org/ns/earl#Assertion", "@type": "@id" },
+  "earlinfo": { "@id": "https://www.w3.org/ns/earl#info", "@type": "@id" },
+  "earloutcome": { "@id": "https://www.w3.org/ns/earl#outcome", "@type": "@id" },
+  "earlsubject": { "@id": "https://www.w3.org/ns/earl#subject", "@type": "@id" },
+  "earlresult": { "@id": "https://www.w3.org/ns/earl#result", "@type": "@id" },
+  "earltest": { "@id": "https://www.w3.org/ns/earl#test", "@type": "@id" },
+  "qbObservation": { "@id": "http://purl.org/linked-data/cube#Observation", "@type": "@id" }
+}
+Object.assign(vocab, ldnTestsVocab);
+
 var ldnTests = {
   'sender': {},
   'receiver': {
@@ -904,7 +915,7 @@ function showSummary(req, res, next){
               //get list of notifications
               return getInboxNotifications(data, options).then(
                 function(notifications){
-console.log(notifications)
+// console.log(notifications)
                   var nData = [];
                   notifications.forEach(function(nURL){
                     nData.push(SimpleRDF(vocab, nURL, null, RDFstore).get())
@@ -915,7 +926,6 @@ console.log(notifications)
         })
         .then(
         function(s){//s is an array of SimpleRDF promises
-
 ///Just for debugging
           var a = [];
           s.forEach(function(g){
@@ -924,13 +934,13 @@ console.log(notifications)
 
             observationUris.forEach(function(observationUri){
               var observationGraph = g.child(observationUri);
-              var implementationUri = observationGraph['https://www.w3.org/ns/earl#subject'];
-              // I don't understand why this ^^^^^ doesn't just give the URI value of earl:subject
-              // I think it returns the entire graph (g). What am I missing?
-              console.log(implementationUri);
+// console.log(observationGraph);
+
+              var implementationUri = observationGraph.earlsubject;
+              console.log('earl:subject: ' + implementationUri);
               console.log('-----');
-              console.log(observationGraph.toString());
-              // This ^^^^^^^^ is also the entire graph, not only the parts of the graph with observationUri as the subject, which would have been what I expected given the description of what .child() is supposed to do.
+
+              // console.log(observationGraph.toString());
             });
 
           });
