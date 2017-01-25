@@ -47,12 +47,13 @@ var getInboxNotifications = mayktso.getInboxNotifications;
 
 var ldnTestsVocab = {
   "earlAssertion": { "@id": "https://www.w3.org/ns/earl#Assertion", "@type": "@id" },
-  "earlinfo": { "@id": "https://www.w3.org/ns/earl#info", "@type": "@id" },
+  "earlinfo": { "@id": "https://www.w3.org/ns/earl#info" },
   "earloutcome": { "@id": "https://www.w3.org/ns/earl#outcome", "@type": "@id" },
   "earlsubject": { "@id": "https://www.w3.org/ns/earl#subject", "@type": "@id" },
   "earlresult": { "@id": "https://www.w3.org/ns/earl#result", "@type": "@id" },
   "earltest": { "@id": "https://www.w3.org/ns/earl#test", "@type": "@id" },
-  "qbObservation": { "@id": "http://purl.org/linked-data/cube#Observation", "@type": "@id" }
+  "qbObservation": { "@id": "http://purl.org/linked-data/cube#Observation", "@type": "@id" },
+  "doapname": { "@id": "http://usefulinc.com/ns/doap#name" }
 }
 Object.assign(vocab, ldnTestsVocab);
 
@@ -927,28 +928,37 @@ function showSummary(req, res, next){
         .then(
         function(s){//s is an array of SimpleRDF promises
 ///Just for debugging
-          var a = [];
+          var results = [];
           s.forEach(function(g){
             var observationUris = g.rdfsseeAlso;
-            // console.log(observationUris);
 
             observationUris.forEach(function(observationUri){
               var observationGraph = g.child(observationUri);
-// console.log(observationGraph);
-
               var implementationUri = observationGraph.earlsubject;
-              console.log('earl:subject: ' + implementationUri);
-              console.log('-----');
+              var implementationGraph = g.child(implementationUri);
+              var projectName = implementationGraph.doapname;
+              var resultGraph = g.child(observationGraph.earlresult)
+              if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#inapplicable"){
+                var outcome = "na";
+              }else if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#passed"){
+                var outcome = "p";
+              }else if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#failed"){
+                var outcome = "f";
+              }else{
+                var outcome = resultGraph.earloutcome;
+              }
 
-              // console.log(observationGraph.toString());
+              if(typeof results[implementationUri] === 'undefined'){
+                results[implementationUri] = [];
+              }
+              results[implementationUri]["name"] = projectName;
+              results[implementationUri][observationGraph.earltest] = outcome; 
+
             });
 
           });
-          var string = a.join('<hr />');
-
-          var data = getReportsHTML(string);
-///
-
+          console.log(results);
+          var data = getReportsHTML(results);
 
           if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
             res.status(304);
@@ -989,7 +999,7 @@ function getReportsHTML(data){
     var rTestsCount = Object.keys(ldnTests['receiver']).length;
     var cTestsCount = Object.keys(ldnTests['consumer']).length;
     var sTestsCount = Object.keys(ldnTests['sender']).length;
-    var implCount = 8;
+    var implCount = Object.keys(data).length;
 
     var trs = '<tr><th rowspan="2">Implementations</th><th colspan="' + rTestsCount + '">Receiver Tests</th></tr>';
     trs = trs + '<tr>';
@@ -998,14 +1008,14 @@ function getReportsHTML(data){
     });
     trs = trs + '</tr>';
 
-    for(var i=0;i<implCount;i=i+1){
+    Object.keys(data).forEach(function(result){
       trs = trs + '<tr>';
-      trs = trs + '  <td>$imp</td>';
+      trs = trs + '  <td><a href="' + result + '">' + data[result]['name'] + '</a></td>';
       Object.keys(ldnTests['receiver']).forEach(function(test){
-        trs = trs + '  <td>x</td>';
+        trs = trs + '  <td class="' + data[result]['https://linkedresearch.org/ldn/tests/#' + test] + '"></td>';
       });
       trs = trs + '</tr>';
-    }
+    });
 
     return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -1019,6 +1029,9 @@ function getReportsHTML(data){
           tr:nth-of-type(2) td {
             max-width: 2em; overflow: hidden;
           }
+          .na { background-color: #ccc; }
+          .p { background-color: green; }
+          .f { background-color: red; }
         </style>
     </head>
 
@@ -1028,8 +1041,7 @@ function getReportsHTML(data){
                 <h1 property="schema:name">LDN Test Reports</h1>
 
                 <div id="content">
-                  <table>
-                    
+                  <table>               
 ${trs}
                   </table>
                 </div>
