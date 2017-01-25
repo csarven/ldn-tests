@@ -201,6 +201,10 @@ ${reportHTML}
               <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
             </li>
             <li>
+              <label for="name">Implementation name</label>
+              <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
+            </li>
+            <li>
               <label for="maintainer">Maintainer</label>
               <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
             </li>
@@ -730,6 +734,7 @@ function createReceiverTestReport(req, res, next){
   if(req.body['implementation'] && req.body['implementation'].length > 0 && req.body['implementation'].startsWith('http') && req.body['maintainer'] && req.body['maintainer'].length > 0 && req.body['maintainer'].startsWith('http')) {
     implementation = req.body['implementation'].trim();
     maintainer = req.body['maintainer'].trim();
+    name = req.body['name'].trim();
   }
   else {
     res.status(400);
@@ -739,6 +744,7 @@ function createReceiverTestReport(req, res, next){
 
   var doap = `<${implementation}>
   a doap:Project, ldn:Receiver;
+  doap:name """${name}""";
   doap:maintainer <${maintainer}>.`;
 
   test['id'] = uuid.v1();
@@ -1316,6 +1322,10 @@ function getTestConsumerHTML() {
                                       <li>
                                         <label for="implementation">Implementation</label>
                                         <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
+                                      </li>
+                                      <li>
+                                        <label for="name">Implementation name</label>
+                                        <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
                                       </li>
                                       <li>
                                         <label for="maintainer">Maintainer</label>
