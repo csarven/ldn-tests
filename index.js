@@ -942,7 +942,11 @@ function showSummary(req, res, next){
               var observationGraph = g.child(observationUri);
               var implementationUri = observationGraph.earlsubject;
               var implementationGraph = g.child(implementationUri);
-              var projectName = implementationGraph.doapname;
+              if(implementationGraph.doapname){
+                var projectName = implementationGraph.doapname;
+              }else{
+                var projectName = implementationUri;
+              }
               var resultGraph = g.child(observationGraph.earlresult)
               if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#inapplicable"){
                 var outcome = "na";
