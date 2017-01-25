@@ -977,25 +977,21 @@ function getReportsHTML(data){
     var sTestsCount = Object.keys(ldnTests['sender']).length;
     var implCount = 8;
 
-    var trs = '<tr>';
-    for(var i=0;i<implCount;i=i+1){
-      trs = trs + '  <th>imp ${i}</th>';
-    }
+    var trs = '<tr><th rowspan="2">Implementations</th><th colspan="' + rTestsCount + '">Receiver Tests</th></tr>';
+    trs = trs + '<tr>';
+    Object.keys(ldnTests['receiver']).forEach(function(test){
+      trs = trs + ' <td title="' + test + '">' + test + '</td>';
+    });
     trs = trs + '</tr>';
 
-    var first = true;
-    Object.keys(ldnTests['receiver']).forEach(function(test){
+    for(var i=0;i<implCount;i=i+1){
       trs = trs + '<tr>';
-      if(first){
-        trs = trs + '  <td rowspan="' + rTestsCount + '">R</td>';
-      }
-      trs = trs + '  <td>' + test + '</td>';
-      for(var i=0;i<implCount;i=i+1){
-        trs = trs + ' <td>x</td>';
-      }
+      trs = trs + '  <td>$imp</td>';
+      Object.keys(ldnTests['receiver']).forEach(function(test){
+        trs = trs + '  <td>x</td>';
+      });
       trs = trs + '</tr>';
-      first = false;
-    });
+    }
 
     return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -1004,6 +1000,12 @@ function getReportsHTML(data){
         <title>LDN Test Reports</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
+        <style>
+          table td, th, tr { border: 1px solid silver; }
+          tr:nth-of-type(2) td {
+            max-width: 2em; overflow: hidden;
+          }
+        </style>
     </head>
 
     <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
@@ -1013,10 +1015,7 @@ function getReportsHTML(data){
 
                 <div id="content">
                   <table>
-                    <tr>
-                      <th colspan="2" rowspan="2">Test</th>
-                      <th colspan="${implCount}">Implementations</th>
-                    </tr>
+                    
 ${trs}
                   </table>
                 </div>
