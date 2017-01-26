@@ -183,9 +183,9 @@ function testReceiver(req, res, next){
         <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
-            <dt class="test-PASS"><abbr title="Pass">✔</abbr></dt><dd>Pass</dd>
-            <dt class="test-FAIL"><abbr title="Fail">✗</abbr></dt><dd>Fail</dd>
-            <dt class="test-NA"><abbr title="Not applicable">-</abbr></dt><dd>Not applicable</dd>
+            <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
+            <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
+            <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
           </dl>
         </td></tr></tfoot>
         <tbody>
@@ -258,26 +258,26 @@ function checkOptions(req){
   return getResourceOptions(url, headers).then(
     function(response){
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
-        testResults['receiver']['checkOptions'] = { 'code': 'PASS', 'message': '' };
+        testResults['receiver']['checkOptions'] = { 'code': 'earl:passed', 'message': '' };
         if(acceptPost){
-          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'PASS', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'earl:passed', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
 
           var acceptPosts = acceptPost.split(',');
-          testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'FAIL', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'earl:failed', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
           acceptPosts.forEach(function(i){
             var m = i.trim();
             if(m == 'application/ld+json' || m == '*/*'){
-              testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'PASS', 'message': '' };
+              testResults['receiver']['checkOptionsAcceptPostContainsJSONLD'] = { 'code': 'earl:passed', 'message': '' };
             }
           })
         }
         else {
-          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'FAIL', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['checkOptionsAcceptPost'] = { 'code': 'earl:failed', 'message': '<code>Accept-Post: ' + acceptPost + '</code>' };
         }
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['receiver']['checkOptions'] = { 'code': 'NA', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['checkOptions'] = { 'code': 'earl:inapplicable', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
@@ -290,11 +290,11 @@ function checkHead(req){
 // console.log('checkHead: ' + url);
   return getResourceHead(url, headers).then(
     function(response){
-      testResults['receiver']['checkHead'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkHead'] = { 'code': 'earl:passed', 'message': '' };
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['receiver']['checkHead'] = { 'code': 'NA', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['checkHead'] = { 'code': 'earl:inapplicable', 'message': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
@@ -308,21 +308,21 @@ function checkGet(req){
   return getResource(url, headers).then(
     function(response){
 // console.log(response);
-      testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'NA', 'message': 'Check manually.' };
+      testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'code': 'earl:inapplicable', 'message': 'Check manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
 // console.log(contentType);
       if(typeof contentType == undefined){
-          testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+          testResults['receiver']['checkGet'] = { 'code': 'earl:failed', 'message': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
           return Promise.resolve(testResults);
       }
       else if(contentType.split(';')[0].trim() != headers['Accept']) {
-          testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
+          testResults['receiver']['checkGet'] = { 'code': 'earl:failed', 'message': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
           return Promise.resolve(testResults);
       }
       else {
-        testResults['receiver']['checkGet'] = { 'code': 'PASS', 'message': '' };
+        testResults['receiver']['checkGet'] = { 'code': 'earl:passed', 'message': '' };
         var options = {
           'contentType': 'application/ld+json',
           'subjectURI': url
@@ -350,7 +350,7 @@ console.log(s.iri().toString());
                 }
               });
 
-              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'earl:passed', 'message': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
             }
             else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
               resourceTypes.forEach(function(url){
@@ -359,10 +359,10 @@ console.log(s.iri().toString());
                 }
               });
 
-              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'PASS', 'message': 'Found in body: ' + rdftypes.join(', ') };
+              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'earl:passed', 'message': 'Found in body: ' + rdftypes.join(', ') };
             }
             else {
-              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'NA', 'message': 'Not found.' };
+              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'code': 'earl:inapplicable', 'message': 'Not found.' };
             }
 
             if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
@@ -371,10 +371,10 @@ console.log(s.iri().toString());
                 constrainedBys.push('<a href="' + url + '">' + url + '</a>');
               });
 
-              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'PASS', 'message': 'Found: ' + constrainedBys.join(', ') };
+              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'earl:passed', 'message': 'Found: ' + constrainedBys.join(', ') };
             }
             else {
-              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'NA', 'message': 'Not found.' };
+              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'code': 'earl:inapplicable', 'message': 'Not found.' };
             }
 
             var notifications = [];
@@ -383,7 +383,7 @@ console.log(s.iri().toString());
             });
 
             if(notifications.length > 0) {
-              testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'PASS', 'message': 'Found ' + notifications.length + ' notifications.' };
+              testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'earl:passed', 'message': 'Found ' + notifications.length + ' notifications.' };
 
               var testAccepts = ['application/ld+json', '*/*', ''];
               var notificationResponses = [];
@@ -405,23 +405,23 @@ console.log(s.iri().toString());
                         var contentType = cT.split(';')[0].trim();
 
                         if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
-                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
+                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'earl:failed', 'message': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
                         }
                         else {
                           var options = { 'subjectURI': '_:ldn' }
                           var codeAccept = (acceptValue == '') ? 'No <code>Accept</code>' : '<code>Accept: ' + acceptValue + '</code>';
                           serializeData(data, contentType, 'application/ld+json', options).then(
                             function(i){
-                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'PASS', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
+                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'earl:passed', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
                             },
                             function(reason){
-                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
+                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'earl:failed', 'message': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
                             }
                           );
                         }
                       }
                       else {
-                        resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'FAIL', 'message': anchor + ': HTTP status ' + this.status });
+                        resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'code': 'earl:failed', 'message': anchor + ': HTTP status ' + this.status });
                       }
                     }
                   };
@@ -442,15 +442,15 @@ console.log(s.iri().toString());
                   var notificationState = [];
                   var notificationStateJSONLD = [];
                   var notificationStateRDFSource = [];
-                  var codeJSONLD = 'PASS';
-                  var codeRDFSource = 'PASS';
+                  var codeJSONLD = 'earl:passed';
+                  var codeRDFSource = 'earl:passed';
                   results.forEach(function(r){
                     if(r['Accept'] == 'application/ld+json'){
-                      if (r.code == 'FAIL') { codeJSONLD = 'FAIL'; }
+                      if (r.code == 'earl:failed') { codeJSONLD = 'earl:failed'; }
                       notificationStateJSONLD.push(r.message);
                     }
                     else {
-                      if (r.code == 'FAIL') { codeRDFSource = 'FAIL'; }
+                      if (r.code == 'earl:failed') { codeRDFSource = 'earl:failed'; }
                       notificationStateRDFSource.push(r.message);
                     }
                     notificationState.push(r.message);
@@ -469,20 +469,20 @@ console.log(s.iri().toString());
                 });
             }
             else {
-              testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'NA', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+              testResults['receiver']['checkGetResponseLDPContains'] = { 'code': 'earl:inapplicable', 'message': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
               return Promise.resolve(testResults);
             }
           },
           function(reason){
 console.log(reason);
-            testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+            testResults['receiver']['checkGet'] = { 'code': 'earl:failed', 'message': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
             return Promise.resolve(testResults);
           });
       }
     },
     function(reason){
 // console.log(reason);
-      testResults['receiver']['checkGet'] = { 'code': 'FAIL', 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      testResults['receiver']['checkGet'] = { 'code': 'earl:failed', 'message': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(testResults);
     });
 }
@@ -502,21 +502,21 @@ function checkPost(req){
 // console.log(response);
       // POST requests are supported, with and without profiles
       var status = '<code>HTTP ' + response.xhr.status + '</code>';
-      testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': status };
-      testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'PASS', 'message': '' };
+      testResults['receiver']['checkPost'] = { 'code': 'earl:passed', 'message': status };
+      testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'earl:passed', 'message': '' };
 
       // If 201 or 202
       if(response.xhr.status == 201 || response.xhr.status == 202) {
         // If 'reject' was ticked, creating was wrong, fail
         if('test-receiver-reject' in req.body){
-          testResults['receiver']['checkPostResponseCreated'] = { 'code' : 'FAIL', 'message' : 'Payload did NOT meet constraints, but the receiver indicated success (' + status + ')' };
-          testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'FAIL', 'message': '' };
+          testResults['receiver']['checkPostResponseCreated'] = { 'code' : 'earl:failed', 'message' : 'Payload did NOT meet constraints, but the receiver indicated success (' + status + ')' };
+          testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'earl:failed', 'message': '' };
           return Promise.resolve(testResults);
 
         // Otherwise, pass
         }
         else{
-          testResults['receiver']['checkPostResponseCreated'] = { 'code': 'PASS', 'message': status };
+          testResults['receiver']['checkPostResponseCreated'] = { 'code': 'earl:passed', 'message': status };
 
           // If 201, check Location header
           if(response.xhr.status == 201){
@@ -536,24 +536,24 @@ function checkPost(req){
                 //Maybe use checkPostResponseLocationRetrieveable
                 function(i){
 // console.log(i);
-                  testResults['receiver']['checkPostResponseLocation'] = { 'code': 'PASS', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
+                  testResults['receiver']['checkPostResponseLocation'] = { 'code': 'earl:passed', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
                   return Promise.resolve(testResults);
                 },
                 function(j){
 // console.log(j);
-                  testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
+                  testResults['receiver']['checkPostResponseLocation'] = { 'code': 'earl:failed', 'message': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
                   return Promise.resolve(testResults);
                 });
             }
             else {
-              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'FAIL', 'message': '<code>Location</code> header not found.' };
+              testResults['receiver']['checkPostResponseLocation'] = { 'code': 'earl:failed', 'message': '<code>Location</code> header not found.' };
               return Promise.resolve(testResults);
             }
           }
         }
       }
       else {
-        testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
+        testResults['receiver']['checkPost'] = { 'code': 'earl:failed', 'message': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
         return Promise.resolve(testResults);
       }
     },
@@ -562,32 +562,32 @@ function checkPost(req){
       var status = '<code>HTTP ' + reason.xhr.status + '</code>';
       var responseText = (reason.xhr.responseText.length > 0 ) ? ', <q>' + reason.xhr.responseText + '</q>' : '';
 
-      testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': status + responseText };
+      testResults['receiver']['checkPost'] = { 'code': 'earl:failed', 'message': status + responseText };
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': 'Deliberately rejected (' + status + ')' };
-            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'PASS', 'message': 'Payload successfully filtered out (' + status + ')' };
+            testResults['receiver']['checkPost'] = { 'code': 'earl:passed', 'message': 'Deliberately rejected (' + status + ')' };
+            testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'code': 'earl:passed', 'message': 'Payload successfully filtered out (' + status + ')' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
-            testResults['receiver']['checkPostResponseCreated'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            testResults['receiver']['checkPostResponseCreated'] = { 'code': 'earl:failed', 'message': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
         case 405:
-          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
+          testResults['receiver']['checkPost'] = { 'code': 'earl:failed', 'message': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
         case 415:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'code': 'PASS', 'message': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
+            testResults['receiver']['checkPost'] = { 'code': 'earl:passed', 'message': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
           }
           else {
-            testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
+            testResults['receiver']['checkPost'] = { 'code': 'earl:failed', 'message': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
           }
-          testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'NA', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
+          testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'code': 'earl:inapplicable', 'message': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          testResults['receiver']['checkPost'] = { 'code': 'FAIL', 'message': status + responseText};
+          testResults['receiver']['checkPost'] = { 'code': 'earl:failed', 'message': status + responseText};
           break;
       }
 
@@ -595,7 +595,16 @@ function checkPost(req){
     });
 }
 
-
+function getEarlOutcomeCode(outcome){
+  var s = outcome;
+  switch(outcome) {
+    default: s = outcome; break;
+    case 'earl:passed': s = '✔'; break;
+    case 'earl:failed': s = '✗'; break;
+    case 'earl:inapplicable': s = '-'; break;
+  }
+  return s;
+}
 
 function getTestReportHTML(test, implementation){
   var s = [];
@@ -605,17 +614,12 @@ function getTestReportHTML(test, implementation){
     var testResult = '';
 
     if(typeof test[id] == 'undefined'){
-      test[id] = { 'code': 'NA', 'message': '' };
+      test[id] = { 'code': 'earl:inapplicable', 'message': '' };
     }
 
-    switch(test[id]['code']){
-      default: testResult = test[id]['code']; break;
-      case 'PASS': testResult = '✔'; break;
-      case 'FAIL': testResult = '✗'; break;
-      case 'NA': testResult = '-'; break;
-    }
+    testResult = getEarlOutcomeCode(test[id]['code']);
 
-    s.push('<tr id="test-' + id + '"><td class="test-result test-' + test[id]['code'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['message'] + '</td></tr>');
+    s.push('<tr id="test-' + id + '"><td class="test-result ' + test[id]['code'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['message'] + '</td></tr>');
   });
 
   return s.join("\n");
@@ -663,7 +667,7 @@ function getTestReceiverHTML(request, results){
                     <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
                         <h2 property="schema:name">Receiver</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="test-PASS">pass</span>/<span class="test-FAIL">fail</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get a <span class="test-NA">not applicable</span> response if you don't implement them, rather than a fail.</p>
+                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="earl:passed">passed</span>/<span class="earl:failed">failed</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get an <span class="earl:inapplicable">inapplicable</span> response if you don't implement them, rather than a fail.</p>
                             <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
                             <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
                             <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
@@ -765,12 +769,6 @@ function createReceiverTestReport(req, res, next){
   Object.keys(test['results']).forEach(function(i){
     datasetSeeAlso.push('d:' + i);
 
-    var earlResult = "inapplicable";
-    if(test['results'][i]['code'] == "PASS"){
-      earlResult = "passed";
-    }else if(test['results'][i]['code'] == "FAIL"){
-      earlResult = "failed";
-    }
     // TODO: for things that say 'check manually' should be earl:untested or earl:canttell
 
     var observation = `d:${i}
@@ -781,7 +779,7 @@ function createReceiverTestReport(req, res, next){
   earl:result d:${i}-result .\n`;
 
     observation += `d:${i}-result
-  earl:outcome earl:${earlResult}`;
+  earl:outcome ${test['results'][i]['code']}`;
     if(test['results'][i]['message'] != '') {
       observation = observation + `;
   earl:info """${test['results'][i]['message']}"""^^rdf:HTML`;
@@ -948,21 +946,13 @@ function showSummary(req, res, next){
                 var projectName = implementationUri;
               }
               var resultGraph = g.child(observationGraph.earlresult)
-              if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#inapplicable"){
-                var outcome = "na";
-              }else if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#passed"){
-                var outcome = "p";
-              }else if(resultGraph.earloutcome == "https://www.w3.org/ns/earl#failed"){
-                var outcome = "f";
-              }else{
-                var outcome = resultGraph.earloutcome;
-              }
+              var outcome = resultGraph.earloutcome.split('#')[1];
 
               if(typeof results[implementationUri] === 'undefined'){
                 results[implementationUri] = [];
               }
               results[implementationUri]["name"] = projectName;
-              results[implementationUri][observationGraph.earltest] = outcome; 
+              results[implementationUri][observationGraph.earltest] = 'earl:'+outcome;
 
             });
 
@@ -1020,9 +1010,9 @@ function getReportsHTML(data){
 
     Object.keys(data).forEach(function(result){
       trs = trs + '<tr>';
-      trs = trs + '  <td><a href="' + result + '">' + data[result]['name'] + '</a></td>';
+      trs = trs + '  <th><a href="' + result + '">' + data[result]['name'] + '</a></th>';
       Object.keys(ldnTests['receiver']).forEach(function(test){
-        trs = trs + '  <td class="' + data[result]['https://linkedresearch.org/ldn/tests/#' + test] + '"></td>';
+        trs = trs + '  <td class="test-result ' + data[result]['https://linkedresearch.org/ldn/tests/#' + test] + '">'+getEarlOutcomeCode(data[result]['https://linkedresearch.org/ldn/tests/#' + test])+'</td>';
       });
       trs = trs + '</tr>';
     });
@@ -1034,15 +1024,6 @@ function getReportsHTML(data){
         <title>LDN Test Reports</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
-        <style>
-          table td, th, tr { border: 1px solid silver; }
-          tr:nth-of-type(2) td {
-            max-width: 2em; overflow: hidden;
-          }
-          .na { background-color: #ccc; }
-          .p { background-color: green; }
-          .f { background-color: red; }
-        </style>
     </head>
 
     <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: http://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
@@ -1051,7 +1032,8 @@ function getReportsHTML(data){
                 <h1 property="schema:name">LDN Test Reports</h1>
 
                 <div id="content">
-                  <table>               
+                  <table id="ldn-test-receiver-summary">
+                    <caption>Receiver summary</caption>
 ${trs}
                   </table>
                 </div>
