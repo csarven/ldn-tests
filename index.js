@@ -1275,27 +1275,27 @@ function getTestConsumerHTML() {
                                             <input type="text" name="test-consumer-inbox-expanded" value="" />
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted/announce">Notification <a href="inbox-compacted/announce">announce</a></label>
-                                          <textarea name="note" cols="80" rows="2"></textarea>
+                                          <label for="inbox-compacted/announce">Contents of the <samp>announce</samp> notifications discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="inbox-compacted/announce" cols="80" rows="2"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted/changelog">Notification <a href="changelog">changelog</a></label>
-                                          <textarea name="note" cols="80" rows="2"></textarea>
+                                          <label for="inbox-compacted/changelog">Contents of the <samp>changelog</samp> notifications discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="inbox-compacted/changelog" cols="80" rows="2"></textarea>
                                         </li>
                                         <li>
-                                          <label for="note">Notification <a href="inbox-compacted/citation">citation</a></label>
+                                          <label for="inbox-compacted/note">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
                                           <textarea name="inbox-compacted/citation" cols="80" rows="2"></textarea>
                                         </li>
                                         <li>
-                                          <label for="note">Notification <a href="inbox-compacted/announce">assessing</a></label>
+                                          <label for="inbox-expanded/assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
                                           <textarea name="inbox-expanded/assessing" cols="80" rows="2"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded/comment">Notification <a href="inbox-compacted/announce">comment</a></label>
+                                          <label for="inbox-expanded/comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
                                           <textarea name="inbox-expanded/comment" cols="80" rows="2"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded/rsvp">Notification <a href="inbox-compacted/announce">rsvp</a></label>
+                                          <label for="inbox-expanded/rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
                                           <textarea name="inbox-expanded/rsvp" cols="80" rows="2"></textarea>
                                         </li>
 
