@@ -1265,12 +1265,12 @@ function getTestConsumerHTML() {
                                             <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" />
                                         </li>
                                         <li>
-                                            <p>URLs of the notifications in <a href="inbox-compacted/">inbox-compacted/</a> (JSON-LD compacted):</p>
+                                            <p>URLs of the notifications in <a href="discover-inbox-link-header">target/</a>'s Inbox (JSON-LD compacted):</p>
                                             <label for="test-consumer-inbox-compacted">URLs</label>
                                             <input type="text" name="test-consumer-inbox-compacted" value="" />
                                         </li>
                                         <li>
-                                            <p>URLs of the notifications in <a href="inbox-expanded/">inbox-expanded/</a> (JSON-LD expanded):</p>
+                                            <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target/</a>'s Inbox (JSON-LD expanded):</p>
                                             <label for="test-consumer-inbox-expanded">URLs</label>
                                             <input type="text" name="test-consumer-inbox-expanded" value="" />
                                         </li>
