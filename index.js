@@ -1251,7 +1251,7 @@ function getTestConsumerHTML() {
                             </dl>
 
                             <form action="send-report" class="form-tests" id="test-consumer-report" method="post">
-                                <fieldset>
+                                <fieldset id="test-consumer">
                                     <legend>Test Consumer</legend>
                                     <ul>
                                         <li>
@@ -1276,33 +1276,33 @@ function getTestConsumerHTML() {
                                         </li>
                                         <li>
                                           <label for="inbox-compacted/announce">Contents of the <samp>announce</samp> notifications discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted/announce" cols="80" rows="2"></textarea>
+                                          <textarea name="inbox-compacted/announce" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
                                           <label for="inbox-compacted/changelog">Contents of the <samp>changelog</samp> notifications discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted/changelog" cols="80" rows="2"></textarea>
+                                          <textarea name="inbox-compacted/changelog" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
                                           <label for="inbox-compacted/note">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted/citation" cols="80" rows="2"></textarea>
+                                          <textarea name="inbox-compacted/citation" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
                                           <label for="inbox-expanded/assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded/assessing" cols="80" rows="2"></textarea>
+                                          <textarea name="inbox-expanded/assessing" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
                                           <label for="inbox-expanded/comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded/comment" cols="80" rows="2"></textarea>
+                                          <textarea name="inbox-expanded/comment" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
                                           <label for="inbox-expanded/rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded/rsvp" cols="80" rows="2"></textarea>
+                                          <textarea name="inbox-expanded/rsvp" cols="80" rows="3"></textarea>
                                         </li>
 
                                     </ul>
                                 </fieldset>
 
-                                <fieldset>
+                                <fieldset id="ldn-consumer-report">
                                     <legend>LDN Consumer Report</legend>
                                     <ul>
                                       <li>

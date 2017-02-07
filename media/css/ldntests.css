@@ -402,6 +402,12 @@ counter-increment:precode;
 dokieli/basic.css should probably be generalised enough to handle most of this.
 So we don't have to keep this URL around
  */
+form p { margin:1em 0 0 0; }
+form p:first-child { margin-top:0; }
+fieldset + fieldset {
+margin-top:2em;
+}
+
 .form-tests label {
 width: 18%;
 text-align: right;
@@ -416,6 +422,21 @@ width:65%;
 text-align:left;
 vertical-align: middle;
 }
+#test-consumer label {
+width:auto;
+padding-left:0;
+}
+#test-consumer li {
+margin-top:1em;
+}
+#test-consumer li:first-child {
+margin-top:0;
+}
+
+#test-consumer textarea {
+width:calc(100% - 0.5em);
+}
+
 .form-tests [type="submit"] {
 margin-left:16.5%;
 }
