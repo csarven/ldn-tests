@@ -6,7 +6,7 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/media', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/', '/inbox-expanded/', '/receiver', '/send-report', '/summary']});
+mayktso.init({'config': config, 'omitRoutes': ['/media', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/receiver', '/send-report', '/summary']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/receiver').all(testReceiver);
@@ -25,7 +25,7 @@ mayktso.app.route('/inbox-expanded/').all(function(req, res, next){
 // mayktso.app.route('/notification-compact/').all(notificationCompact);
 // mayktso.app.route('/notification-expanded/').all(notificationExpanded);
 
-//console.log(mayktso.app._router.stack);
+// console.log(mayktso.app._router.stack);
 
 var getResource = mayktso.getResource;
 var getResourceHead = mayktso.getResourceHead;
