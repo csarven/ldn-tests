@@ -425,6 +425,7 @@ vertical-align: middle;
 #test-consumer label {
 width:auto;
 padding-left:0;
+text-align:left;
 }
 #test-consumer li {
 margin-top:1em;
