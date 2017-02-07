@@ -16,11 +16,11 @@ mayktso.app.route('/summary').all(showSummary);
 mayktso.app.route('/consumer').all(testConsumer);
 mayktso.app.route('/discover-inbox-link-header').all(discoverTargetInbox);
 mayktso.app.route('/discover-inbox-rdf-body').all(discoverTargetInbox);
-mayktso.app.route('/inbox-compacted/').all(function(res, req, next){
-  mayktso.handleResource(res, req, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#compacted' }});
+mayktso.app.route('/inbox-compacted/').all(function(req, res, next){
+  mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#compacted' }});
 });
-mayktso.app.route('/inbox-expanded/').all(function(res, req, next){
-  mayktso.handleResource(res, req, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ldp#expanded' }});
+mayktso.app.route('/inbox-expanded/').all(function(req, res, next){
+  mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }});
 });
 // mayktso.app.route('/notification-compact/').all(notificationCompact);
 // mayktso.app.route('/notification-expanded/').all(notificationExpanded);
@@ -1265,12 +1265,12 @@ function getTestConsumerHTML() {
                                             <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" />
                                         </li>
                                         <li>
-                                            <p>URLs of the notifications in <a href="discover-inbox-link-header">target/</a>'s Inbox (JSON-LD compacted):</p>
+                                            <p>URLs of the notifications in <a href="discover-inbox-link-header">target</a>'s Inbox (JSON-LD compacted):</p>
                                             <label for="test-consumer-inbox-compacted">URLs</label>
                                             <input type="text" name="test-consumer-inbox-compacted" value="" />
                                         </li>
                                         <li>
-                                            <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target/</a>'s Inbox (JSON-LD expanded):</p>
+                                            <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target</a>'s Inbox (JSON-LD expanded):</p>
                                             <label for="test-consumer-inbox-expanded">URLs</label>
                                             <input type="text" name="test-consumer-inbox-expanded" value="" />
                                         </li>
