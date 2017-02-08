@@ -1243,9 +1243,9 @@ function testConsumer(req, res, next){
         // '1': checkDiscoverInboxLinkHeader
         // ,'2': checkDiscoverInboxRDFBody
         // ,'3': checkDiscoverNotificationJSONLDCompacted
+        // ,'4': checkDiscoverNotificationJSONLDExpanded
         // ,
-        '4': checkDiscoverNotificationJSONLDExpanded
-        // ,'5': checkNotificationAnnounce
+        '5': checkNotificationAnnounce
         // ,'6': checkNotificationChangelog
         // ,'7': checkNotificationCitation
         // ,'8': checkNotificationAssessing
@@ -1256,13 +1256,13 @@ function testConsumer(req, res, next){
       if(  /*req.body['test-consumer-discover-inbox-link-header']
         && req.body['test-consumer-discover-inbox-rdf-body']
         && req.body['test-consumer-inbox-compacted']
-        && */req.body['test-consumer-inbox-expanded']/*
-        && req.body['inbox-compacted-announce']
-        && req.body['inbox-compacted-changelog']
-        && req.body['inbox-compacted-citation']
-        && req.body['inbox-compacted-assessing']
-        && req.body['inbox-compacted-comment']
-        && req.body['inbox-compacted-rsvp']*/) {
+        && req.body['test-consumer-inbox-expanded']
+        && */req.body['test-inbox-compacted-announce']/*
+        && req.body['test-inbox-compacted-changelog']
+        && req.body['test-inbox-compacted-citation']
+        && req.body['test-inbox-expanded-assessing']
+        && req.body['test-inbox-expanded-comment']
+        && req.body['test-inbox-expanded-rsvp']*/) {
         Object.keys(initTest).forEach(function(id) {
           testConsumerPromises.push(initTest[id](req));
         });
@@ -1452,6 +1452,37 @@ function checkDiscoverNotificationJSONLDExpanded(req){
 }
 
 
+function checkNotificationAnnounce(req){
+  var testResults = { 'consumer': {} };
+  var data = req.body['test-inbox-compacted-announce'].trim();
+  var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
+  var subject = inbox+'announce';
+  var property = vocab['rdftype']['@id'];
+  var object = 'http://www.w3.org/ns/activitystreams#Announce';
+  var options = {
+    'contentType': 'application/ld+json',
+    'subjectURI': subject
+  }
+
+  return getGraphFromData(data, options).then(
+    function(g){
+      var matchedStatements = g.match(subject, property, object).toArray();
+      if(matchedStatements.length == 1) {
+        testResults['consumer']['checkNotificationAnnounce'] = { 'code': 'earl:passed', 'message': '' };
+      }
+      else {
+        testResults['consumer']['checkNotificationAnnounce'] = { 'code': 'earl:passed', 'message': 'Tested pattern not found.' }
+      }
+      return Promise.resolve(testResults);
+    },
+    function(reason){
+      testResults['consumer']['checkNotificationAnnounce'] = { 'code': 'earl:failed', 'message': 'Unable to parse the JSON-LD.' };
+      return Promise.resolve(testResults);
+    }
+  );
+}
+
+
 function getTestConsumerHTML(request, results){
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -1515,28 +1546,28 @@ function getTestConsumerHTML(request, results){
                                             <input type="text" name="test-consumer-inbox-expanded" value="" placeholder="Separated by a space" />
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted-announce" cols="80" rows="3"></textarea>
+                                          <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="test-inbox-compacted-announce" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted-changelog" cols="80" rows="3"></textarea>
+                                          <label for="test-inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="test-inbox-compacted-changelog" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted-note">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted-citation" cols="80" rows="3"></textarea>
+                                          <label for="test-inbox-compacted-citation">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="test-inbox-compacted-citation" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded-assessing" cols="80" rows="3"></textarea>
+                                          <label for="test-inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <textarea name="test-inbox-expanded-assessing" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded-comment" cols="80" rows="3"></textarea>
+                                          <label for="test-inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <textarea name="test-inbox-expanded-comment" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded-rsvp" cols="80" rows="3"></textarea>
+                                          <label for="test-inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <textarea name="test-inbox-expanded-rsvp" cols="80" rows="3"></textarea>
                                         </li>
 
                                     </ul>
