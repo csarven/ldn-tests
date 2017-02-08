@@ -58,7 +58,38 @@ var ldnTestsVocab = {
 Object.assign(vocab, ldnTestsVocab);
 
 var ldnTests = {
-  'sender': {},
+  'consumer': {
+    'checkDiscoverInboxLinkHeader': {
+      'description': 'Inbox discovery via <code>Link</code> header.'
+    },
+    'checkDiscoverInboxRDFBody': {
+      'description': 'Inbox discovery via RDF body.'
+    },
+    'checkDiscoverNotificationJSONLDCompacted': {
+      'description': 'Notification discovery from Inbox using JSON-LD compacted form.'
+    },
+    'checkDiscoverNotificationJSONLDExpanded': {
+      'description': 'Notification discovery from Inbox using JSON-LD expanded form.'
+    },
+    'checkNotificationAnnounce': {
+      'description': 'Contents of the announce notifications.'
+    },
+    'checkNotificationChangelog': {
+      'description': 'Contents of the changelog notifications.'
+    },
+    'checkNotificationCitation': {
+      'description': 'Contents of the citation notifications.'
+    },
+    'checkNotificationAssessing': {
+      'description': 'Contents of the assessing notifications.'
+    },
+    'checkNotificationComment': {
+      'description': 'Contents of the comment notifications.'
+    },
+    'checkNotificationRSVP': {
+      'description': 'Contents of the rsvp notificationsy.'
+    }
+  },
   'receiver': {
     'checkHead': {
       'description': 'Accepts <code>HEAD</code> requests.'
@@ -114,9 +145,7 @@ var ldnTests = {
     'extraCheckGetResponseLDPConstrainedBy': {
       'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.'
     }
-  },
-
-  'consumer': {}
+  }
 }
 
 function testReceiver(req, res, next){
