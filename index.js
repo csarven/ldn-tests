@@ -41,6 +41,7 @@ var RDFstore = mayktso.RDFstore;
 var parseLinkHeader = mayktso.parseLinkHeader;
 var parseProfileLinkRelation = mayktso.parseProfileLinkRelation;
 var getBaseURL = mayktso.getBaseURL;
+var getExternalBaseURL = mayktso.getExternalBaseURL;
 var XMLHttpRequest = mayktso.XMLHttpRequest;
 var discoverInbox = mayktso.discoverInbox;
 var getInboxNotifications = mayktso.getInboxNotifications;
@@ -1239,19 +1240,19 @@ function testConsumer(req, res, next){
     case 'POST':
       var testConsumerPromises = [];
       var initTest = {
-        '1': 'checkDiscoverInboxLinkHeader',
-        '2': 'checkDiscoverInboxRDFBody',
-        '3': 'checkDiscoverNotificationJSONLDCompacted',
-        '4': 'checkDiscoverNotificationJSONLDExpanded',
-        '5': 'checkNotificationAnnounce',
-        '6': 'checkNotificationChangelog',
-        '7': 'checkNotificationCitation',
-        '8': 'checkNotificationAssessing',
-        '9': 'checkNotificationComment',
-        '10':'checkNotificationRSVP'
+        '1': checkDiscoverInboxLinkHeader
+        // ,'2': checkDiscoverInboxRDFBody
+        // ,'3': checkDiscoverNotificationJSONLDCompacted
+        // ,'4': checkDiscoverNotificationJSONLDExpanded
+        // ,'5': checkNotificationAnnounce
+        // ,'6': checkNotificationChangelog
+        // ,'7': checkNotificationCitation
+        // ,'8': checkNotificationAssessing
+        // ,'9': checkNotificationComment
+        // ,'10':checkNotificationRSVP
       };
 
-      if(  req.body['test-consumer-discover-inbox-link-header']
+      if(  req.body['test-consumer-discover-inbox-link-header']/*
         && req.body['test-consumer-discover-inbox-rdf-body']
         && req.body['test-consumer-inbox-compacted']
         && req.body['test-consumer-inbox-expanded']
@@ -1260,21 +1261,21 @@ function testConsumer(req, res, next){
         && req.body['inbox-compacted-citation']
         && req.body['inbox-compacted-assessing']
         && req.body['inbox-compacted-comment']
-        && req.body['inbox-compacted-rsvp']) {
+        && req.body['inbox-compacted-rsvp']*/) {
         Object.keys(initTest).forEach(function(id) {
           testConsumerPromises.push(initTest[id](req));
         });
 
         Promise.all(testConsumerPromises)
           .then((results) => {
-// console.dir(results);
+console.dir(results);
             var resultsData = {};
             results.forEach(function(r){
               Object.assign(resultsData, r['consumer']);
             });
 // console.dir(resultsData);
 
-            var reportHTML = getTestReportHTML(resultsData);
+            var reportHTML = getTestReportHTML(resultsData, 'consumer');
             var test = {'url': 'TODO: ' };
             test['results'] = resultsData;
 
@@ -1349,6 +1350,31 @@ ${reportHTML}
       break;
   }
 }
+
+// '1': 'checkDiscoverInboxLinkHeader',
+// '2': 'checkDiscoverInboxRDFBody',
+// '3': 'checkDiscoverNotificationJSONLDCompacted',
+// '4': 'checkDiscoverNotificationJSONLDExpanded',
+// '5': 'checkNotificationAnnounce',
+// '6': 'checkNotificationChangelog',
+// '7': 'checkNotificationCitation',
+// '8': 'checkNotificationAssessing',
+// '9': 'checkNotificationComment',
+// '10':'checkNotificationRSVP'
+function checkDiscoverInboxLinkHeader(req){
+  var testResults = { 'consumer': {} };
+  var value = req.body['test-consumer-discover-inbox-link-header'];
+  var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
+
+  if(value.length > 0 && value.trim() == inbox){
+    testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'code': 'earl:passed', 'message': '' };
+  }
+  else {
+    testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'code': 'earl:failed', 'message': 'Check the Inbox URL again. Make sure to only include the URL.' };
+  }
+  return Promise.resolve(testResults);
+}
+
 
 function getTestConsumerHTML(request, results){
   return `<!DOCTYPE html>
