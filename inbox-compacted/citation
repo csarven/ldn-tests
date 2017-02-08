@@ -3,4 +3,3 @@
   "@id": "http://example.net/note#foo",
   "citation": { "@id": "http://example.org/article#results" }
 }
-
