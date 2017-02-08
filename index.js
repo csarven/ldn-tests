@@ -1237,6 +1237,14 @@ function testConsumer(req, res, next){
       break;
 
     case 'POST':
+      }
+      break;
+
+    default:
+      res.status(405);
+      res.set('Allow', 'GET, POST');
+      res.end();
+      return next();
       break;
   }
 }
