@@ -1451,32 +1451,37 @@ function checkDiscoverNotificationJSONLDExpanded(req){
   return Promise.resolve(testResults);
 }
 
-
 function checkNotificationAnnounce(req){
-  var testResults = { 'consumer': {} };
-  var data = req.body['test-inbox-compacted-announce'].trim();
-  var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
-  var subject = inbox+'announce';
-  var property = vocab['rdftype']['@id'];
-  var object = 'http://www.w3.org/ns/activitystreams#Announce';
   var options = {
+    'test': 'checkNotificationAnnounce',
+    'data': req.body['test-inbox-compacted-announce'].trim(),
+    'subject': getExternalBaseURL(req.getUrl()) + 'inbox-compacted/announce',
+    'property': vocab['rdftype']['@id'],
+    'object': 'http://www.w3.org/ns/activitystreams#Announce'
+  };
+  return checkNotification(req, options);
+}
+
+function checkNotification(req, options){
+  var testResults = { 'consumer': {} };
+  var o = {
     'contentType': 'application/ld+json',
-    'subjectURI': subject
+    'subjectURI': options.subject
   }
 
-  return getGraphFromData(data, options).then(
+  return getGraphFromData(options.data, o).then(
     function(g){
-      var matchedStatements = g.match(subject, property, object).toArray();
+      var matchedStatements = g.match(options.subject, options.property, options.object).toArray();
       if(matchedStatements.length == 1) {
-        testResults['consumer']['checkNotificationAnnounce'] = { 'code': 'earl:passed', 'message': '' };
+        testResults['consumer'][options.test] = { 'code': 'earl:passed', 'message': '' };
       }
       else {
-        testResults['consumer']['checkNotificationAnnounce'] = { 'code': 'earl:passed', 'message': 'Tested pattern not found.' }
+        testResults['consumer'][options.test] = { 'code': 'earl:fail', 'message': 'Tested pattern not found.' };
       }
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['consumer']['checkNotificationAnnounce'] = { 'code': 'earl:failed', 'message': 'Unable to parse the JSON-LD.' };
+      testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Unable to parse the JSON-LD.' };
       return Promise.resolve(testResults);
     }
   );
