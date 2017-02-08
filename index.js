@@ -1242,9 +1242,9 @@ function testConsumer(req, res, next){
       var initTest = {
         // '1': checkDiscoverInboxLinkHeader
         // ,'2': checkDiscoverInboxRDFBody
+        // ,'3': checkDiscoverNotificationJSONLDCompacted
         // ,
-        '3': checkDiscoverNotificationJSONLDCompacted
-        // ,'4': checkDiscoverNotificationJSONLDExpanded
+        '4': checkDiscoverNotificationJSONLDExpanded
         // ,'5': checkNotificationAnnounce
         // ,'6': checkNotificationChangelog
         // ,'7': checkNotificationCitation
@@ -1254,10 +1254,9 @@ function testConsumer(req, res, next){
       };
 
       if(  /*req.body['test-consumer-discover-inbox-link-header']
-        && req.body['test-consumer-discover-inbox-rdf-body']*/
-        // &&
-        req.body['test-consumer-inbox-compacted']/*
-        && req.body['test-consumer-inbox-expanded']
+        && req.body['test-consumer-discover-inbox-rdf-body']
+        && req.body['test-consumer-inbox-compacted']
+        && */req.body['test-consumer-inbox-expanded']/*
         && req.body['inbox-compacted-announce']
         && req.body['inbox-compacted-changelog']
         && req.body['inbox-compacted-citation']
@@ -1416,6 +1415,37 @@ function checkDiscoverNotificationJSONLDCompacted(req){
     }
     else {
       testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'code': 'earl:failed', 'message': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
+    }
+  }
+  return Promise.resolve(testResults);
+}
+
+
+function checkDiscoverNotificationJSONLDExpanded(req){
+  var testResults = { 'consumer': {} };
+  var value = req.body['test-consumer-inbox-expanded'].trim().split(' ');
+  var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
+  var notifications = [inbox+'assessing', inbox+'comment', inbox+'rsvp'];
+
+  testResults['consumer']['checkDiscoverNotificationJSONLDExpanded'] = { 'code': 'earl:failed', 'message': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
+
+  var message, found = 0;
+  if(value.length == 3){
+    var check = true;
+    value.forEach(function(i){
+      if(notifications.indexOf(i) < 0){
+        check = false;
+      }
+      else {
+        found++;
+      }
+    });
+
+    if(check) {
+      testResults['consumer']['checkDiscoverNotificationJSONLDExpanded'] = { 'code': 'earl:passed', 'message': '' };
+    }
+    else {
+      testResults['consumer']['checkDiscoverNotificationJSONLDExpanded'] = { 'code': 'earl:failed', 'message': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
     }
   }
   return Promise.resolve(testResults);
