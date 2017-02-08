@@ -1338,6 +1338,7 @@ ${reportHTML}
             res.end();
             return next();
           });
+        }
       break;
 
     default:
