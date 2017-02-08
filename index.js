@@ -1240,9 +1240,10 @@ function testConsumer(req, res, next){
     case 'POST':
       var testConsumerPromises = [];
       var initTest = {
-        '1': checkDiscoverInboxLinkHeader
-        ,'2': checkDiscoverInboxRDFBody
-        // ,'3': checkDiscoverNotificationJSONLDCompacted
+        // '1': checkDiscoverInboxLinkHeader
+        // ,'2': checkDiscoverInboxRDFBody
+        // ,
+        '3': checkDiscoverNotificationJSONLDCompacted
         // ,'4': checkDiscoverNotificationJSONLDExpanded
         // ,'5': checkNotificationAnnounce
         // ,'6': checkNotificationChangelog
@@ -1252,9 +1253,10 @@ function testConsumer(req, res, next){
         // ,'10':checkNotificationRSVP
       };
 
-      if(  req.body['test-consumer-discover-inbox-link-header']
-        && req.body['test-consumer-discover-inbox-rdf-body']/*
-        && req.body['test-consumer-inbox-compacted']
+      if(  /*req.body['test-consumer-discover-inbox-link-header']
+        && req.body['test-consumer-discover-inbox-rdf-body']*/
+        // &&
+        req.body['test-consumer-inbox-compacted']/*
         && req.body['test-consumer-inbox-expanded']
         && req.body['inbox-compacted-announce']
         && req.body['inbox-compacted-changelog']
@@ -1363,10 +1365,10 @@ ${reportHTML}
 // '10':'checkNotificationRSVP'
 function checkDiscoverInboxLinkHeader(req){
   var testResults = { 'consumer': {} };
-  var value = req.body['test-consumer-discover-inbox-link-header'];
+  var value = req.body['test-consumer-discover-inbox-link-header'].trim();
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
 
-  if(value.length > 0 && value.trim() == inbox){
+  if(value.length > 0 && value == inbox){
     testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'code': 'earl:passed', 'message': '' };
   }
   else {
@@ -1377,14 +1379,44 @@ function checkDiscoverInboxLinkHeader(req){
 
 function checkDiscoverInboxRDFBody(req){
   var testResults = { 'consumer': {} };
-  var value = req.body['test-consumer-discover-inbox-rdf-body'];
+  var value = req.body['test-consumer-discover-inbox-rdf-body'].trim();
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
 
-  if(value.length > 0 && value.trim() == inbox){
+  if(value.length > 0 && value == inbox){
     testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'code': 'earl:passed', 'message': '' };
   }
   else {
     testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'code': 'earl:failed', 'message': 'Check the Inbox URL again. Make sure to only include the URL.' };
+  }
+  return Promise.resolve(testResults);
+}
+
+function checkDiscoverNotificationJSONLDCompacted(req){
+  var testResults = { 'consumer': {} };
+  var value = req.body['test-consumer-inbox-compacted'].trim().split(' ');
+  var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
+  var notifications = [inbox+'announce', inbox+'changelog', inbox+'citation'];
+
+  testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'code': 'earl:failed', 'message': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
+
+  var message, found = 0;
+  if(value.length == 3){
+    var check = true;
+    value.forEach(function(i){
+      if(notifications.indexOf(i) < 0){
+        check = false;
+      }
+      else {
+        found++;
+      }
+    });
+
+    if(check) {
+      testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'code': 'earl:passed', 'message': '' };
+    }
+    else {
+      testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'code': 'earl:failed', 'message': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
+    }
   }
   return Promise.resolve(testResults);
 }
@@ -1435,22 +1467,22 @@ function getTestConsumerHTML(request, results){
                                         <li>
                                             <p>URL of the Inbox from <a href="discover-inbox-link-header">discover-inbox-link-header</a> (in header):</p>
                                             <label for="test-consumer-discover-inbox-link-header">URL</label>
-                                            <input type="text" name="test-consumer-discover-inbox-link-header" value="" />
+                                            <input type="text" name="test-consumer-discover-inbox-link-header" value="" placeholder="Include only the URL" />
                                         </li>
                                         <li>
                                             <p>URL of the Inbox from <a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a> (in RDF body):</p>
                                             <label for="test-consumer-discover-inbox-rdf-body">URL</label>
-                                            <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" />
+                                            <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" placeholder="Include only the URL" />
                                         </li>
                                         <li>
                                             <p>URLs of the notifications in <a href="discover-inbox-link-header">target</a>'s Inbox (JSON-LD compacted):</p>
                                             <label for="test-consumer-inbox-compacted">URLs</label>
-                                            <input type="text" name="test-consumer-inbox-compacted" value="" />
+                                            <input type="text" name="test-consumer-inbox-compacted" value="" placeholder="Separated by a space" />
                                         </li>
                                         <li>
                                             <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target</a>'s Inbox (JSON-LD expanded):</p>
                                             <label for="test-consumer-inbox-expanded">URLs</label>
-                                            <input type="text" name="test-consumer-inbox-expanded" value="" />
+                                            <input type="text" name="test-consumer-inbox-expanded" value="" placeholder="Separated by a space" />
                                         </li>
                                         <li>
                                           <label for="inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
