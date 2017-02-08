@@ -1237,7 +1237,107 @@ function testConsumer(req, res, next){
       break;
 
     case 'POST':
-      }
+      var testConsumerPromises = [];
+      var initTest = {
+        '1': 'checkDiscoverInboxLinkHeader',
+        '2': 'checkDiscoverInboxRDFBody',
+        '3': 'checkDiscoverNotificationJSONLDCompacted',
+        '4': 'checkDiscoverNotificationJSONLDExpanded',
+        '5': 'checkNotificationAnnounce',
+        '6': 'checkNotificationChangelog',
+        '7': 'checkNotificationCitation',
+        '8': 'checkNotificationAssessing',
+        '9': 'checkNotificationComment',
+        '10':'checkNotificationRSVP'
+      };
+
+      if(  req.body['test-consumer-discover-inbox-link-header']
+        && req.body['test-consumer-discover-inbox-rdf-body']
+        && req.body['test-consumer-inbox-compacted']
+        && req.body['test-consumer-inbox-expanded']
+        && req.body['inbox-compacted-announce']
+        && req.body['inbox-compacted-changelog']
+        && req.body['inbox-compacted-citation']
+        && req.body['inbox-compacted-assessing']
+        && req.body['inbox-compacted-comment']
+        && req.body['inbox-compacted-rsvp']) {
+        Object.keys(initTest).forEach(function(id) {
+          testConsumerPromises.push(initTest[id](req));
+        });
+
+        Promise.all(testConsumerPromises)
+          .then((results) => {
+// console.dir(results);
+            var resultsData = {};
+            results.forEach(function(r){
+              Object.assign(resultsData, r['consumer']);
+            });
+// console.dir(resultsData);
+
+            var reportHTML = getTestReportHTML(resultsData);
+            var test = {'url': 'TODO: ' };
+            test['results'] = resultsData;
+
+            resultsData['test-consumer-report-html'] = `
+    <div id="test-consumer-response">
+      <table id="test-consumer-report">
+        <caption>Test results for consumer implementation</a></caption>
+        <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
+        <tfoot><tr><td colspan="4">
+          <dl>
+            <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
+            <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
+            <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
+          </dl>
+        </td></tr></tfoot>
+        <tbody>
+${reportHTML}
+        </tbody>
+      </table>
+      <form action="send-report" class="form-tests" id="test-consumer-report" method="post">
+        <fieldset>
+          <legend>LDN Consumer Report</legend>
+          <ul>
+            <li>
+              <label for="implementation">Implementation</label>
+              <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
+            </li>
+            <li>
+              <label for="name">Implementation name</label>
+              <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
+            </li>
+            <li>
+              <label for="maintainer">Maintainer</label>
+              <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
+            </li>
+            <li>
+              <label for="note">Note</label>
+              <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
+            </li>
+          </ul>
+
+          <input type="hidden" name="test-consumer-report-value" value="${btoa(JSON.stringify(test))}" />
+          <input type="submit" value="Send Report" />
+        </fieldset>
+      </form>
+    </div>`;
+
+            var data = getTestConsumerHTML(req.body, resultsData);
+// console.log(data);
+
+            res.set('Content-Type', 'text/html;charset=utf-8');
+            res.set('Allow', 'GET, POST');
+            res.status(200);
+            res.send(data);
+            res.end();
+            return next();
+          })
+          .catch((e) => {
+            console.log('--- catch ---');
+            console.log(e);
+            res.end();
+            return next();
+          });
       break;
 
     default:
