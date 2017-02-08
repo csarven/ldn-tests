@@ -1241,7 +1241,7 @@ function testConsumer(req, res, next){
       var testConsumerPromises = [];
       var initTest = {
         '1': checkDiscoverInboxLinkHeader
-        // ,'2': checkDiscoverInboxRDFBody
+        ,'2': checkDiscoverInboxRDFBody
         // ,'3': checkDiscoverNotificationJSONLDCompacted
         // ,'4': checkDiscoverNotificationJSONLDExpanded
         // ,'5': checkNotificationAnnounce
@@ -1252,8 +1252,8 @@ function testConsumer(req, res, next){
         // ,'10':checkNotificationRSVP
       };
 
-      if(  req.body['test-consumer-discover-inbox-link-header']/*
-        && req.body['test-consumer-discover-inbox-rdf-body']
+      if(  req.body['test-consumer-discover-inbox-link-header']
+        && req.body['test-consumer-discover-inbox-rdf-body']/*
         && req.body['test-consumer-inbox-compacted']
         && req.body['test-consumer-inbox-expanded']
         && req.body['inbox-compacted-announce']
@@ -1371,6 +1371,20 @@ function checkDiscoverInboxLinkHeader(req){
   }
   else {
     testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'code': 'earl:failed', 'message': 'Check the Inbox URL again. Make sure to only include the URL.' };
+  }
+  return Promise.resolve(testResults);
+}
+
+function checkDiscoverInboxRDFBody(req){
+  var testResults = { 'consumer': {} };
+  var value = req.body['test-consumer-discover-inbox-rdf-body'];
+  var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
+
+  if(value.length > 0 && value.trim() == inbox){
+    testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'code': 'earl:passed', 'message': '' };
+  }
+  else {
+    testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'code': 'earl:failed', 'message': 'Check the Inbox URL again. Make sure to only include the URL.' };
   }
   return Promise.resolve(testResults);
 }
