@@ -1249,7 +1249,7 @@ function testConsumer(req, res, next){
   }
 }
 
-function getTestConsumerHTML() {
+function getTestConsumerHTML(request, results){
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -1265,7 +1265,7 @@ function getTestConsumerHTML() {
                 <h1 property="schema:name">LDN Tests for Consumers</h1>
 
                 <div id="content">
-                    <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
+                    <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
                         <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
                             <p>Run your consumer software against these tests, then submit the report below.</p>
@@ -1287,7 +1287,7 @@ function getTestConsumerHTML() {
                                 </dd>
                             </dl>
 
-                            <form action="send-report" class="form-tests" id="test-consumer-report" method="post">
+                            <form action="" class="form-tests" id="test-consumer-report" method="post">
                                 <fieldset id="test-consumer">
                                     <legend>Test Consumer</legend>
                                     <ul>
@@ -1312,56 +1312,35 @@ function getTestConsumerHTML() {
                                             <input type="text" name="test-consumer-inbox-expanded" value="" />
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted/announce">Contents of the <samp>announce</samp> notifications discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted/announce" cols="80" rows="3"></textarea>
+                                          <label for="inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="inbox-compacted-announce" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted/changelog">Contents of the <samp>changelog</samp> notifications discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted/changelog" cols="80" rows="3"></textarea>
+                                          <label for="inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="inbox-compacted-changelog" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-compacted/note">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
-                                          <textarea name="inbox-compacted/citation" cols="80" rows="3"></textarea>
+                                          <label for="inbox-compacted-note">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <textarea name="inbox-compacted-citation" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded/assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded/assessing" cols="80" rows="3"></textarea>
+                                          <label for="inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <textarea name="inbox-expanded-assessing" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded/comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded/comment" cols="80" rows="3"></textarea>
+                                          <label for="inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <textarea name="inbox-expanded-comment" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="inbox-expanded/rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
-                                          <textarea name="inbox-expanded/rsvp" cols="80" rows="3"></textarea>
+                                          <label for="inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <textarea name="inbox-expanded-rsvp" cols="80" rows="3"></textarea>
                                         </li>
 
                                     </ul>
+                                    <input type="hidden" name="test-implementation" value="consumer" />
+                                    <input type="submit" value="Submit" />
                                 </fieldset>
-
-                                <fieldset id="ldn-consumer-report">
-                                    <legend>LDN Consumer Report</legend>
-                                    <ul>
-                                      <li>
-                                        <label for="implementation">Implementation</label>
-                                        <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
-                                      </li>
-                                      <li>
-                                        <label for="name">Implementation name</label>
-                                        <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
-                                      </li>
-                                      <li>
-                                        <label for="maintainer">Maintainer</label>
-                                        <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
-                                      </li>
-                                      <li>
-                                        <label for="note">Note</label>
-                                        <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
-                                      </li>
-                                    </ul>
-
-                                    <input type="submit" value="Send Report" />
-                                </fieldset>
+${(results && 'test-consumer-report-html' in results) ? results['test-consumer-report-html'] : ''}
                             </form>
                         </div>
                     </section>
