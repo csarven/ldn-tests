@@ -1493,6 +1493,12 @@ function checkNotification(req, options){
     'subjectURI': options.subject
   }
 console.log(options)
+  try { JSON.parse(data) }
+  catch(error) {
+    testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Malformed JSON-LD.' };
+    return Promise.resolve(testResults);
+  }
+
   return getGraphFromData(options.data, o).then(
     function(g){
 console.log(g.toString());
@@ -1506,7 +1512,7 @@ console.log(g.toString());
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Unable to parse the JSON-LD.' };
+      testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Unable to parse as JSON-LD.' };
       return Promise.resolve(testResults);
     }
   );
