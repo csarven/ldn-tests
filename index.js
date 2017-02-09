@@ -1244,9 +1244,9 @@ function testConsumer(req, res, next){
         // ,'2': checkDiscoverInboxRDFBody
         // ,'3': checkDiscoverNotificationJSONLDCompacted
         // ,'4': checkDiscoverNotificationJSONLDExpanded
+        // ,'5': checkNotificationAnnounce
         // ,
-        '5': checkNotificationAnnounce
-        // ,'6': checkNotificationChangelog
+        '6': checkNotificationChangelog
         // ,'7': checkNotificationCitation
         // ,'8': checkNotificationAssessing
         // ,'9': checkNotificationComment
@@ -1257,8 +1257,8 @@ function testConsumer(req, res, next){
         && req.body['test-consumer-discover-inbox-rdf-body']
         && req.body['test-consumer-inbox-compacted']
         && req.body['test-consumer-inbox-expanded']
-        && */req.body['test-inbox-compacted-announce']/*
-        && req.body['test-inbox-compacted-changelog']
+        && req.body['test-inbox-compacted-announce']
+        && */req.body['test-inbox-compacted-changelog']/*
         && req.body['test-inbox-compacted-citation']
         && req.body['test-inbox-expanded-assessing']
         && req.body['test-inbox-expanded-comment']
@@ -1462,6 +1462,17 @@ function checkNotificationAnnounce(req){
   return checkNotification(req, options);
 }
 
+function checkNotificationChangelog(req){
+  var options = {
+    'test': 'checkNotificationChangelog',
+    'data': req.body['test-inbox-compacted-changelog'].trim(),
+    'subject': 'http://example.org/activity/804c4e7efaa828e146b4ada1c805617ffbc79dc7',
+    'property': vocab['rdftype']['@id'],
+    'object': 'http://www.w3.org/ns/prov#Activity'
+  };
+  return checkNotification(req, options);
+}
+
 function checkNotification(req, options){
   var testResults = { 'consumer': {} };
   var o = {
@@ -1471,12 +1482,13 @@ function checkNotification(req, options){
 
   return getGraphFromData(options.data, o).then(
     function(g){
+console.log(g.toString());
       var matchedStatements = g.match(options.subject, options.property, options.object).toArray();
       if(matchedStatements.length == 1) {
         testResults['consumer'][options.test] = { 'code': 'earl:passed', 'message': '' };
       }
       else {
-        testResults['consumer'][options.test] = { 'code': 'earl:fail', 'message': 'Tested pattern not found.' };
+        testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Tested pattern not found.' };
       }
       return Promise.resolve(testResults);
     },
