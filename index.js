@@ -1245,9 +1245,9 @@ function testConsumer(req, res, next){
         // ,'3': checkDiscoverNotificationJSONLDCompacted
         // ,'4': checkDiscoverNotificationJSONLDExpanded
         // ,'5': checkNotificationAnnounce
+        // ,'6': checkNotificationChangelog
         // ,
-        '6': checkNotificationChangelog
-        // ,'7': checkNotificationCitation
+        '7': checkNotificationCitation
         // ,'8': checkNotificationAssessing
         // ,'9': checkNotificationComment
         // ,'10':checkNotificationRSVP
@@ -1258,8 +1258,8 @@ function testConsumer(req, res, next){
         && req.body['test-consumer-inbox-compacted']
         && req.body['test-consumer-inbox-expanded']
         && req.body['test-inbox-compacted-announce']
-        && */req.body['test-inbox-compacted-changelog']/*
-        && req.body['test-inbox-compacted-citation']
+        && req.body['test-inbox-compacted-changelog']
+        && */req.body['test-inbox-compacted-citation']/*
         && req.body['test-inbox-expanded-assessing']
         && req.body['test-inbox-expanded-comment']
         && req.body['test-inbox-expanded-rsvp']*/) {
@@ -1352,16 +1352,7 @@ ${reportHTML}
   }
 }
 
-// '1': 'checkDiscoverInboxLinkHeader',
-// '2': 'checkDiscoverInboxRDFBody',
-// '3': 'checkDiscoverNotificationJSONLDCompacted',
-// '4': 'checkDiscoverNotificationJSONLDExpanded',
-// '5': 'checkNotificationAnnounce',
-// '6': 'checkNotificationChangelog',
-// '7': 'checkNotificationCitation',
-// '8': 'checkNotificationAssessing',
-// '9': 'checkNotificationComment',
-// '10':'checkNotificationRSVP'
+
 function checkDiscoverInboxLinkHeader(req){
   var testResults = { 'consumer': {} };
   var value = req.body['test-consumer-discover-inbox-link-header'].trim();
@@ -1473,13 +1464,24 @@ function checkNotificationChangelog(req){
   return checkNotification(req, options);
 }
 
+function checkNotificationCitation(req){
+  var options = {
+    'test': 'checkNotificationCitation',
+    'data': req.body['test-inbox-compacted-citation'].trim(),
+    'subject': 'http://example.net/note#foo',
+    'property': 'http://schema.org/citation',
+    'object': 'http://example.org/article#results'
+  };
+  return checkNotification(req, options);
+}
+
 function checkNotification(req, options){
   var testResults = { 'consumer': {} };
   var o = {
     'contentType': 'application/ld+json',
     'subjectURI': options.subject
   }
-
+console.log(options)
   return getGraphFromData(options.data, o).then(
     function(g){
 console.log(g.toString());
