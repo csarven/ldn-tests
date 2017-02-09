@@ -204,6 +204,7 @@ function testReceiver(req, res, next){
 
             var reportHTML = getTestReportHTML(resultsData);
             var test = {'url': req.body['test-receiver-url'] };
+            test['implementationType'] = 'Receiver';
             test['results'] = resultsData;
 
             resultsData['test-receiver-report-html'] = `
@@ -244,7 +245,7 @@ ${reportHTML}
             </li>
           </ul>
 
-          <input type="hidden" name="test-receiver-report-value" value="${btoa(JSON.stringify(test))}" />
+          <input type="hidden" name="test-report-value" value="${btoa(JSON.stringify(test))}" />
           <input type="submit" value="Send Report" />
         </fieldset>
       </form>
@@ -744,8 +745,8 @@ ${testsList}
 }
 
 
-function createReceiverTestReport(req, res, next){
-  var test = JSON.parse(atob(req.body['test-receiver-report-value']));
+function createTestReport(req, res, next){
+  var test = JSON.parse(atob(req.body['test-report-value']));
   var observations = [];
   var date = new Date();
   var dateTime = date.toISOString();
@@ -777,7 +778,7 @@ function createReceiverTestReport(req, res, next){
   }
 
   var doap = `<${implementation}>
-  a doap:Project, ldn:Receiver;
+  a doap:Project, ldn:${test['implementationType']};
   doap:name """${name}""";
   doap:maintainer <${maintainer}>.`;
 
@@ -840,10 +841,13 @@ console.log(data);
 
 function reportTest(req, res, next){
   if(req.method == 'POST') {
-    var data = '', test = {};
-    if(req.body['test-receiver-report-value'] && req.body['test-receiver-report-value'].length > 0){
-      test = JSON.parse(atob(req.body['test-receiver-report-value']));
-      data = createReceiverTestReport(req, res, next);
+// console.log(req.body['test-report-value']);
+    if(req.body['test-report-value'] && req.body['test-report-value'].length > 0) {
+      var test = JSON.parse(atob(req.body['test-report-value']));
+      var data = createTestReport(req, res, next);
+    }
+    else {
+      //TODO error
     }
 
     var headers = {};
@@ -1253,15 +1257,15 @@ function testConsumer(req, res, next){
       };
 
       if(req.body['test-consumer-discover-inbox-link-header']
-        && req.body['test-consumer-discover-inbox-rdf-body']
-        && req.body['test-consumer-inbox-compacted']
-        && req.body['test-consumer-inbox-expanded']
-        && req.body['test-inbox-compacted-announce']
-        && req.body['test-inbox-compacted-changelog']
-        && req.body['test-inbox-compacted-citation']
-        && req.body['test-inbox-expanded-assessing']
-        && req.body['test-inbox-expanded-comment']
-        && req.body['test-inbox-expanded-rsvp']) {
+        || req.body['test-consumer-discover-inbox-rdf-body']
+        || req.body['test-consumer-inbox-compacted']
+        || req.body['test-consumer-inbox-expanded']
+        || req.body['test-inbox-compacted-announce']
+        || req.body['test-inbox-compacted-changelog']
+        || req.body['test-inbox-compacted-citation']
+        || req.body['test-inbox-expanded-assessing']
+        || req.body['test-inbox-expanded-comment']
+        || req.body['test-inbox-expanded-rsvp']) {
         Object.keys(initTest).forEach(function(id) {
           testConsumerPromises.push(initTest[id](req));
         });
@@ -1277,8 +1281,9 @@ console.dir(results);
 
             var reportHTML = getTestReportHTML(resultsData, 'consumer');
             var test = {'url': 'TODO: ' };
+            test['implementationType'] = 'Consumer';
             test['results'] = resultsData;
-
+// console.log(test);
             resultsData['test-consumer-report-html'] = `
     <div id="test-consumer-response">
       <table id="test-consumer-report">
@@ -1317,7 +1322,7 @@ ${reportHTML}
             </li>
           </ul>
 
-          <input type="hidden" name="test-consumer-report-value" value="${btoa(JSON.stringify(test))}" />
+          <input type="hidden" name="test-report-value" value="${btoa(JSON.stringify(test))}" />
           <input type="submit" value="Send Report" />
         </fieldset>
       </form>
@@ -1630,8 +1635,8 @@ function getTestConsumerHTML(request, results){
                                     <input type="hidden" name="test-implementation" value="consumer" />
                                     <input type="submit" value="Submit" />
                                 </fieldset>
-${(results && 'test-consumer-report-html' in results) ? results['test-consumer-report-html'] : ''}
                             </form>
+${(results && 'test-consumer-report-html' in results) ? results['test-consumer-report-html'] : ''}
                         </div>
                     </section>
                 </div>
