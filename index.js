@@ -1246,9 +1246,9 @@ function testConsumer(req, res, next){
         // ,'4': checkDiscoverNotificationJSONLDExpanded
         // ,'5': checkNotificationAnnounce
         // ,'6': checkNotificationChangelog
+        // ,'7': checkNotificationCitation
         // ,
-        '7': checkNotificationCitation
-        // ,'8': checkNotificationAssessing
+        '8': checkNotificationAssessing
         // ,'9': checkNotificationComment
         // ,'10':checkNotificationRSVP
       };
@@ -1259,8 +1259,8 @@ function testConsumer(req, res, next){
         && req.body['test-consumer-inbox-expanded']
         && req.body['test-inbox-compacted-announce']
         && req.body['test-inbox-compacted-changelog']
-        && */req.body['test-inbox-compacted-citation']/*
-        && req.body['test-inbox-expanded-assessing']
+        && req.body['test-inbox-compacted-citation']
+        && */req.body['test-inbox-expanded-assessing']/*
         && req.body['test-inbox-expanded-comment']
         && req.body['test-inbox-expanded-rsvp']*/) {
         Object.keys(initTest).forEach(function(id) {
@@ -1471,6 +1471,17 @@ function checkNotificationCitation(req){
     'subject': 'http://example.net/note#foo',
     'property': 'http://schema.org/citation',
     'object': 'http://example.org/article#results'
+  };
+  return checkNotification(req, options);
+}
+
+function checkNotificationAssessing(req){
+  var options = {
+    'test': 'checkNotificationAssessing',
+    'data': req.body['test-inbox-expanded-assessing'].trim(),
+    'subject': 'http://example.net/note',
+    'property': 'http://www.w3.org/ns/oa#motivatedBy',
+    'object': 'http://www.w3.org/ns/oa#assessing'
   };
   return checkNotification(req, options);
 }
