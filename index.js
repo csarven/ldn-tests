@@ -1247,9 +1247,9 @@ function testConsumer(req, res, next){
         // ,'5': checkNotificationAnnounce
         // ,'6': checkNotificationChangelog
         // ,'7': checkNotificationCitation
+        // ,'8': checkNotificationAssessing
         // ,
-        '8': checkNotificationAssessing
-        // ,'9': checkNotificationComment
+        '9': checkNotificationComment
         // ,'10':checkNotificationRSVP
       };
 
@@ -1260,8 +1260,8 @@ function testConsumer(req, res, next){
         && req.body['test-inbox-compacted-announce']
         && req.body['test-inbox-compacted-changelog']
         && req.body['test-inbox-compacted-citation']
-        && */req.body['test-inbox-expanded-assessing']/*
-        && req.body['test-inbox-expanded-comment']
+        && req.body['test-inbox-expanded-assessing']
+        && */req.body['test-inbox-expanded-comment']/*
         && req.body['test-inbox-expanded-rsvp']*/) {
         Object.keys(initTest).forEach(function(id) {
           testConsumerPromises.push(initTest[id](req));
@@ -1486,6 +1486,17 @@ function checkNotificationAssessing(req){
   return checkNotification(req, options);
 }
 
+function checkNotificationComment(req){
+  var options = {
+    'test': 'checkNotificationComment',
+    'data': req.body['test-inbox-expanded-comment'].trim(),
+    'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/comment',
+    'property': 'http://rdfs.org/sioc/ns#reply_of',
+    'object': 'http://example.org/article'
+  };
+  return checkNotification(req, options);
+}
+
 function checkNotification(req, options){
   var testResults = { 'consumer': {} };
   var o = {
@@ -1493,9 +1504,9 @@ function checkNotification(req, options){
     'subjectURI': options.subject
   }
 console.log(options)
-  try { JSON.parse(data) }
+  try { JSON.parse(options.data) }
   catch(error) {
-    testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Malformed JSON-LD.' };
+    testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Malformed JSON.' };
     return Promise.resolve(testResults);
   }
 
