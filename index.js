@@ -1240,20 +1240,19 @@ function testConsumer(req, res, next){
     case 'POST':
       var testConsumerPromises = [];
       var initTest = {
-        // '1': checkDiscoverInboxLinkHeader
-        // ,'2': checkDiscoverInboxRDFBody
-        // ,'3': checkDiscoverNotificationJSONLDCompacted
-        // ,'4': checkDiscoverNotificationJSONLDExpanded
-        // ,'5': checkNotificationAnnounce
-        // ,'6': checkNotificationChangelog
-        // ,'7': checkNotificationCitation
-        // ,'8': checkNotificationAssessing
-        // ,'9': checkNotificationComment
-        // ,
-        '10':checkNotificationRSVP
+         '1': checkDiscoverInboxLinkHeader
+        ,'2': checkDiscoverInboxRDFBody
+        ,'3': checkDiscoverNotificationJSONLDCompacted
+        ,'4': checkDiscoverNotificationJSONLDExpanded
+        ,'5': checkNotificationAnnounce
+        ,'6': checkNotificationChangelog
+        ,'7': checkNotificationCitation
+        ,'8': checkNotificationAssessing
+        ,'9': checkNotificationComment
+        ,'10':checkNotificationRSVP
       };
 
-      if(  /*req.body['test-consumer-discover-inbox-link-header']
+      if(req.body['test-consumer-discover-inbox-link-header']
         && req.body['test-consumer-discover-inbox-rdf-body']
         && req.body['test-consumer-inbox-compacted']
         && req.body['test-consumer-inbox-expanded']
@@ -1262,7 +1261,7 @@ function testConsumer(req, res, next){
         && req.body['test-inbox-compacted-citation']
         && req.body['test-inbox-expanded-assessing']
         && req.body['test-inbox-expanded-comment']
-        && */req.body['test-inbox-expanded-rsvp']) {
+        && req.body['test-inbox-expanded-rsvp']) {
         Object.keys(initTest).forEach(function(id) {
           testConsumerPromises.push(initTest[id](req));
         });
@@ -1514,7 +1513,7 @@ function checkNotification(req, options){
     'contentType': 'application/ld+json',
     'subjectURI': options.subject
   }
-console.log(options)
+
   try { JSON.parse(options.data) }
   catch(error) {
     testResults['consumer'][options.test] = { 'code': 'earl:failed', 'message': 'Malformed JSON.' };
@@ -1523,7 +1522,6 @@ console.log(options)
 
   return getGraphFromData(options.data, o).then(
     function(g){
-console.log(g.toString());
       var matchedStatements = g.match(options.subject, options.property, options.object).toArray();
       if(matchedStatements.length == 1) {
         testResults['consumer'][options.test] = { 'code': 'earl:passed', 'message': '' };
