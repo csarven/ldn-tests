@@ -88,7 +88,7 @@ var ldnTests = {
       'description': 'Contents of the comment notifications.'
     },
     'checkNotificationRSVP': {
-      'description': 'Contents of the rsvp notificationsy.'
+      'description': 'Contents of the rsvp notifications.'
     }
   },
   'receiver': {
