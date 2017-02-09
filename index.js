@@ -1248,9 +1248,9 @@ function testConsumer(req, res, next){
         // ,'6': checkNotificationChangelog
         // ,'7': checkNotificationCitation
         // ,'8': checkNotificationAssessing
+        // ,'9': checkNotificationComment
         // ,
-        '9': checkNotificationComment
-        // ,'10':checkNotificationRSVP
+        '10':checkNotificationRSVP
       };
 
       if(  /*req.body['test-consumer-discover-inbox-link-header']
@@ -1261,8 +1261,8 @@ function testConsumer(req, res, next){
         && req.body['test-inbox-compacted-changelog']
         && req.body['test-inbox-compacted-citation']
         && req.body['test-inbox-expanded-assessing']
-        && */req.body['test-inbox-expanded-comment']/*
-        && req.body['test-inbox-expanded-rsvp']*/) {
+        && req.body['test-inbox-expanded-comment']
+        && */req.body['test-inbox-expanded-rsvp']) {
         Object.keys(initTest).forEach(function(id) {
           testConsumerPromises.push(initTest[id](req));
         });
@@ -1493,6 +1493,17 @@ function checkNotificationComment(req){
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/comment',
     'property': 'http://rdfs.org/sioc/ns#reply_of',
     'object': 'http://example.org/article'
+  };
+  return checkNotification(req, options);
+}
+
+function checkNotificationRSVP(req){
+  var options = {
+    'test': 'checkNotificationRSVP',
+    'data': req.body['test-inbox-expanded-rsvp'].trim(),
+    'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/rsvp',
+    'property': 'http://schema.org/event',
+    'object': 'http://example.org/event'
   };
   return checkNotification(req, options);
 }
