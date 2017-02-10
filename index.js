@@ -1287,7 +1287,7 @@ console.dir(results);
             resultsData['test-consumer-report-html'] = `
     <div id="test-consumer-response">
       <table id="test-consumer-report">
-        <caption>Test results for consumer implementation</a></caption>
+        <caption>Test results for consumer implementation</caption>
         <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
