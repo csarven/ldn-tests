@@ -1359,7 +1359,11 @@ ${reportHTML}
 
 function checkDiscoverInboxLinkHeader(req){
   var testResults = { 'consumer': {} };
-  var value = req.body['test-consumer-discover-inbox-link-header'].trim();
+  testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'code': 'earl:inapplicable', 'message': '' };
+  var value = req.body['test-consumer-discover-inbox-link-header'];
+  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  value = value.trim();
+
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
 
   if(value.length > 0 && value == inbox){
@@ -1373,7 +1377,10 @@ function checkDiscoverInboxLinkHeader(req){
 
 function checkDiscoverInboxRDFBody(req){
   var testResults = { 'consumer': {} };
-  var value = req.body['test-consumer-discover-inbox-rdf-body'].trim();
+  testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'code': 'earl:inapplicable', 'message': '' };
+  var value = req.body['test-consumer-discover-inbox-rdf-body'];
+  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  value = value.trim();
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
 
   if(value.length > 0 && value == inbox){
@@ -1387,7 +1394,10 @@ function checkDiscoverInboxRDFBody(req){
 
 function checkDiscoverNotificationJSONLDCompacted(req){
   var testResults = { 'consumer': {} };
-  var value = req.body['test-consumer-inbox-compacted'].trim().split(' ');
+  testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'code': 'earl:inapplicable', 'message': '' };
+  var value = req.body['test-consumer-inbox-compacted'];
+  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
   var notifications = [inbox+'announce', inbox+'changelog', inbox+'citation'];
 
@@ -1418,7 +1428,10 @@ function checkDiscoverNotificationJSONLDCompacted(req){
 
 function checkDiscoverNotificationJSONLDExpanded(req){
   var testResults = { 'consumer': {} };
-  var value = req.body['test-consumer-inbox-expanded'].trim().split(' ');
+  testResults['consumer']['checkDiscoverNotificationJSONLDExpanded'] = { 'code': 'earl:inapplicable', 'message': '' };
+  var value = req.body['test-consumer-inbox-expanded'];
+  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
   var notifications = [inbox+'assessing', inbox+'comment', inbox+'rsvp'];
 
@@ -1449,7 +1462,7 @@ function checkDiscoverNotificationJSONLDExpanded(req){
 function checkNotificationAnnounce(req){
   var options = {
     'test': 'checkNotificationAnnounce',
-    'data': req.body['test-inbox-compacted-announce'].trim(),
+    'data': req.body['test-inbox-compacted-announce'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-compacted/announce',
     'property': vocab['rdftype']['@id'],
     'object': 'http://www.w3.org/ns/activitystreams#Announce'
@@ -1460,7 +1473,7 @@ function checkNotificationAnnounce(req){
 function checkNotificationChangelog(req){
   var options = {
     'test': 'checkNotificationChangelog',
-    'data': req.body['test-inbox-compacted-changelog'].trim(),
+    'data': req.body['test-inbox-compacted-changelog'],
     'subject': 'http://example.org/activity/804c4e7efaa828e146b4ada1c805617ffbc79dc7',
     'property': vocab['rdftype']['@id'],
     'object': 'http://www.w3.org/ns/prov#Activity'
@@ -1471,7 +1484,7 @@ function checkNotificationChangelog(req){
 function checkNotificationCitation(req){
   var options = {
     'test': 'checkNotificationCitation',
-    'data': req.body['test-inbox-compacted-citation'].trim(),
+    'data': req.body['test-inbox-compacted-citation'],
     'subject': 'http://example.net/note#foo',
     'property': 'http://schema.org/citation',
     'object': 'http://example.org/article#results'
@@ -1482,7 +1495,7 @@ function checkNotificationCitation(req){
 function checkNotificationAssessing(req){
   var options = {
     'test': 'checkNotificationAssessing',
-    'data': req.body['test-inbox-expanded-assessing'].trim(),
+    'data': req.body['test-inbox-expanded-assessing'],
     'subject': 'http://example.net/note',
     'property': 'http://www.w3.org/ns/oa#motivatedBy',
     'object': 'http://www.w3.org/ns/oa#assessing'
@@ -1493,7 +1506,7 @@ function checkNotificationAssessing(req){
 function checkNotificationComment(req){
   var options = {
     'test': 'checkNotificationComment',
-    'data': req.body['test-inbox-expanded-comment'].trim(),
+    'data': req.body['test-inbox-expanded-comment'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/comment',
     'property': 'http://rdfs.org/sioc/ns#reply_of',
     'object': 'http://example.org/article'
@@ -1504,7 +1517,7 @@ function checkNotificationComment(req){
 function checkNotificationRSVP(req){
   var options = {
     'test': 'checkNotificationRSVP',
-    'data': req.body['test-inbox-expanded-rsvp'].trim(),
+    'data': req.body['test-inbox-expanded-rsvp'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/rsvp',
     'property': 'http://schema.org/event',
     'object': 'http://example.org/event'
@@ -1514,6 +1527,10 @@ function checkNotificationRSVP(req){
 
 function checkNotification(req, options){
   var testResults = { 'consumer': {} };
+  testResults['consumer']['checkNotification'] = { 'code': 'earl:inapplicable', 'message': '' };
+  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  value = value.trim();
+
   var o = {
     'contentType': 'application/ld+json',
     'subjectURI': options.subject
