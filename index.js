@@ -150,6 +150,12 @@ var ldnTests = {
   }
 }
 
+
+function testSender(req, res, next){
+
+}
+
+
 function testReceiver(req, res, next){
 // console.log(req.requestedPath);
 // console.log(req);
@@ -208,49 +214,7 @@ function testReceiver(req, res, next){
             test['implementationType'] = 'Receiver';
             test['results'] = resultsData;
 
-            resultsData['test-receiver-report-html'] = `
-    <div id="test-receiver-response">
-      <table id="test-receiver-report">
-        <caption>Test results for <a href="${test['url']}">${test['url']}</a></caption>
-        <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
-        <tfoot><tr><td colspan="4">
-          <dl>
-            <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
-            <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
-            <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
-          </dl>
-        </td></tr></tfoot>
-        <tbody>
-${reportHTML}
-        </tbody>
-      </table>
-      <form action="send-report" class="form-tests" id="test-receiver-report" method="post">
-        <fieldset>
-          <legend>LDN Receiver Report</legend>
-          <ul>
-            <li>
-              <label for="implementation">Implementation</label>
-              <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
-            </li>
-            <li>
-              <label for="name">Implementation name</label>
-              <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
-            </li>
-            <li>
-              <label for="maintainer">Maintainer</label>
-              <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
-            </li>
-            <li>
-              <label for="note">Note</label>
-              <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
-            </li>
-          </ul>
-
-          <input type="hidden" name="test-report-value" value="${btoa(JSON.stringify(test))}" />
-          <input type="submit" value="Send Report" />
-        </fieldset>
-      </form>
-    </div>`;
+            resultsData['test-receiver-report-html'] = testResponse(test, reportHTML);
 
             var data = getTestReceiverHTML(req.body, resultsData);
 // console.log(data);
@@ -655,6 +619,52 @@ function getTestReportHTML(test, implementation){
   });
 
   return s.join("\n");
+}
+
+function testResponse(test, reportHTML){
+return `
+    <div id="test-response">
+      <table id="test-report">
+        <caption>Test report</a></caption>
+        <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
+        <tfoot><tr><td colspan="4">
+          <dl>
+            <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
+            <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
+            <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
+            </dl>
+        </td></tr></tfoot>
+        <tbody>
+    ${reportHTML}
+        </tbody>
+      </table>
+      <form action="send-report" class="form-tests" method="post">
+        <fieldset>
+          <legend>Send LDN ${test['implementationType']} report</legend>
+          <ul>
+          <li>
+            <label for="implementation">Implementation</label>
+            <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
+          </li>
+          <li>
+            <label for="name">Implementation name</label>
+            <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
+          </li>
+          <li>
+            <label for="maintainer">Maintainer</label>
+            <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
+          </li>
+          <li>
+            <label for="note">Note</label>
+            <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
+          </li>
+          </ul>
+
+          <input type="hidden" name="test-report-value" value="${btoa(JSON.stringify(test))}" />
+          <input type="submit" value="Send Report" />
+        </fieldset>
+      </form>
+    </div>`;
 }
 
 function getSelectOptionsHTML(options, selectedOption) {
@@ -1285,49 +1295,7 @@ console.dir(results);
             test['implementationType'] = 'Consumer';
             test['results'] = resultsData;
 // console.log(test);
-            resultsData['test-consumer-report-html'] = `
-    <div id="test-consumer-response">
-      <table id="test-consumer-report">
-        <caption>Test results for consumer implementation</caption>
-        <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
-        <tfoot><tr><td colspan="4">
-          <dl>
-            <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
-            <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
-            <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
-          </dl>
-        </td></tr></tfoot>
-        <tbody>
-${reportHTML}
-        </tbody>
-      </table>
-      <form action="send-report" class="form-tests" id="test-consumer-report" method="post">
-        <fieldset>
-          <legend>LDN Consumer Report</legend>
-          <ul>
-            <li>
-              <label for="implementation">Implementation</label>
-              <input type="text" name="implementation" value="" placeholder="URI of the project/implementation." /> (required)
-            </li>
-            <li>
-              <label for="name">Implementation name</label>
-              <input type="text" name="name" value="" placeholder="Name of the project/implementation." /> (required)
-            </li>
-            <li>
-              <label for="maintainer">Maintainer</label>
-              <input type="text" name="maintainer" value="" placeholder="URI of the maintainer, project leader, or organisation." /> (required)
-            </li>
-            <li>
-              <label for="note">Note</label>
-              <textarea name="note" cols="80" rows="2" placeholder="Enter anything you would like to mention."></textarea>
-            </li>
-          </ul>
-
-          <input type="hidden" name="test-report-value" value="${btoa(JSON.stringify(test))}" />
-          <input type="submit" value="Send Report" />
-        </fieldset>
-      </form>
-    </div>`;
+            resultsData['test-consumer-report-html'] = testResponse(test, reportHTML);
 
             var data = getTestConsumerHTML(req.body, resultsData);
 // console.log(data);
