@@ -6,12 +6,15 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/media', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/receiver', '/send-report', '/summary']});
+mayktso.init({'config': config, 'omitRoutes': ['/media', '/sender', '/receiver', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/send-report', '/summary']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
-mayktso.app.route('/receiver').all(testReceiver);
 mayktso.app.route('/send-report').all(reportTest);
 mayktso.app.route('/summary').all(showSummary);
+
+mayktso.app.route('/sender').all(testSender);
+
+mayktso.app.route('/receiver').all(testReceiver);
 
 mayktso.app.route('/consumer').all(testConsumer);
 mayktso.app.route('/discover-inbox-link-header').all(discoverTargetInbox);
@@ -22,8 +25,6 @@ mayktso.app.route('/inbox-compacted/').all(function(req, res, next){
 mayktso.app.route('/inbox-expanded/').all(function(req, res, next){
   mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }});
 });
-// mayktso.app.route('/notification-compact/').all(notificationCompact);
-// mayktso.app.route('/notification-expanded/').all(notificationExpanded);
 
 // console.log(mayktso.app._router.stack);
 
