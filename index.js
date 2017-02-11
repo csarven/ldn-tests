@@ -6,13 +6,14 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/media', '/sender', '/receiver', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/send-report', '/summary']});
+mayktso.init({'config': config, 'omitRoutes': ['/media', '/sender', '/target/:id', '/receiver', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/send-report', '/summary']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/send-report').all(reportTest);
 mayktso.app.route('/summary').all(showSummary);
 
 mayktso.app.route('/sender').all(testSender);
+mayktso.app.route('/target/:id').all(getTarget);
 
 mayktso.app.route('/receiver').all(testReceiver);
 
@@ -229,6 +230,52 @@ function getTestSenderHTML(req, res){
     </body>
 </html>
 `;
+}
+
+function getTarget(req, res, next){
+  // console.log(req.requestedPath);
+console.log(req);
+console.log(req.getUrl());
+console.log(getBaseURL(req.getUrl()));
+console.log(getExternalBaseURL(req.getUrl()));
+
+    switch(req.method){
+      case 'GET':
+        if(!req.requestedType){
+          res.status(406);
+          res.end();
+          return next();
+        }
+
+        var targetIRI = req.params.id;
+
+        var data = '';
+        // var data = getTargetHTML(req);
+
+        if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+          res.status(304);
+          res.end();
+          break;
+        }
+
+        res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
+        res.set('Content-Type', 'text/html;charset=utf-8');
+        res.set('Content-Length', Buffer.byteLength(data, 'utf-8'));
+        res.set('ETag', etag(data));
+        res.set('Vary', 'Origin');
+        res.set('Allow', 'GET, POST');
+        res.status(200);
+        res.send(data);
+        return next();
+        break;
+
+      default:
+        res.status(405);
+        res.set('Allow', 'GET, POST');
+        res.end();
+        return next();
+        break;
+    }
 }
 
 
