@@ -163,7 +163,7 @@ function testSender(req, res, next){
         return next();
       }
 
-      var data = getTestSenderHTML();
+      var data = getTestSenderHTML(req, res);
 
       if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
         res.status(304);
@@ -196,7 +196,10 @@ function testSender(req, res, next){
 }
 
 
-function getTestSenderHTML(request, results){
+function getTestSenderHTML(req, res){
+  var targetId = uuid.v1();
+  var targetIRI = getExternalBaseURL(req.getUrl()) + 'target/' + targetId;
+
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -213,18 +216,21 @@ function getTestSenderHTML(request, results){
 
                 <div id="content">
                     <section id="senders" inlist="" rel="schema:hasPart" resource="#senders">
-                        <h2 property="schema:name">Consumer</h2>
+                        <h2 property="schema:name">Sender</h2>
                         <div datatype="rdf:HTML" property="schema:description">
+                            <p>Run your sender software to this target:</p>
+                            <p><code><a href="${targetIRI}">${targetIRI}</a></code></p>
                         </div>
                     </section>
                 </div>
             </article>
         </main>
-        ${(results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
+        ${(res && 'test-sender-report-html' in res) ? res['test-sender-report-html'] : ''}
     </body>
 </html>
 `;
 }
+
 
 function testReceiver(req, res, next){
 // console.log(req.requestedPath);
