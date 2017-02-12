@@ -701,7 +701,7 @@ function testResponse(test, reportHTML){
 return `
     <div id="test-response">
       <table id="test-report">
-        <caption>Test report</a></caption>
+        <caption>Test report</caption>
         <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
