@@ -164,7 +164,7 @@ function testSender(req, res, next){
         return next();
       }
 
-      var data = getTestSenderHTML(req, res);
+      var data = getTestSenderHTML(req);
 
       if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
         res.status(304);
@@ -197,7 +197,7 @@ function testSender(req, res, next){
 }
 
 
-function getTestSenderHTML(req, res){
+function getTestSenderHTML(req, results){
   var targetId = uuid.v1();
   var targetIRI = getExternalBaseURL(req.getUrl()) + 'target/' + targetId;
 
@@ -226,7 +226,7 @@ function getTestSenderHTML(req, res){
                 </div>
             </article>
         </main>
-        ${(res && 'test-sender-report-html' in res) ? res['test-sender-report-html'] : ''}
+        ${(results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
     </body>
 </html>
 `;
@@ -244,7 +244,7 @@ function testReceiver(req, res, next){
         return next();
       }
 
-      var data = getTestReceiverHTML();
+      var data = getTestReceiverHTML(req);
 
       if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
         res.status(304);
@@ -1328,7 +1328,7 @@ function testConsumer(req, res, next){
         return next();
       }
 
-      var data = getTestConsumerHTML();
+      var data = getTestConsumerHTML(req);
 
       if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
         res.status(304);
