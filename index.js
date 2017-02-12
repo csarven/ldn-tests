@@ -1201,10 +1201,12 @@ function getTarget(req, res, next){
       break;
      default:
       if(req.originalUrl.startsWith('/target/')){
-        // var targetIRI = req.getUrl();
-        var inboxIRI = req.getRootUrl() + '/' + config.inboxPath;
+        var inboxBaseIRI = req.getRootUrl() + '/' + config.inboxPath;
+        var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
         discoverInboxHTML = `<p>This target resource announces its inbox here:</p>
-                             <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>`;
+                             <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>
+                             <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
+        // var notificationIRI = inboxBaseIRI + req.params.id;
       }
       break;
   }
