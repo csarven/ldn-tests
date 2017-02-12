@@ -292,7 +292,7 @@ function testReceiver(req, res, next){
 
             resultsData['test-receiver-report-html'] = testResponse(test, reportHTML);
 
-            var data = getTestReceiverHTML(req.body, resultsData);
+            var data = getTestReceiverHTML(req, resultsData);
 // console.log(data);
 
             res.set('Content-Type', 'text/html;charset=utf-8');
@@ -758,7 +758,7 @@ function getSelectOptionsHTML(options, selectedOption) {
   return s;
 }
 
-function getTestReceiverHTML(request, results){
+function getTestReceiverHTML(req, results){
   // var selectedOption = (request && request['test-receiver-method']) ? request['test-receiver-method'] : '';
   // var receiverMethodOptionsHTML = getSelectOptionsHTML(['GET', 'HEAD', 'OPTIONS', 'POST'], selectedOption);
   // selectedOption = (request && request['test-receiver-mimetype']) ? request['test-receiver-mimetype'] : '';
@@ -1392,7 +1392,7 @@ console.dir(results);
 // console.log(test);
             resultsData['test-consumer-report-html'] = testResponse(test, reportHTML);
 
-            var data = getTestConsumerHTML(req.body, resultsData);
+            var data = getTestConsumerHTML(req, resultsData);
 // console.log(data);
 
             res.set('Content-Type', 'text/html;charset=utf-8');
@@ -1625,7 +1625,7 @@ function checkNotification(req, options){
 }
 
 
-function getTestConsumerHTML(request, results){
+function getTestConsumerHTML(req, results){
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -1711,7 +1711,6 @@ function getTestConsumerHTML(request, results){
                                           <label for="test-inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
                                           <textarea name="test-inbox-expanded-rsvp" cols="80" rows="3"></textarea>
                                         </li>
-
                                     </ul>
                                     <input type="hidden" name="test-implementation" value="consumer" />
                                     <input type="submit" value="Submit" />
