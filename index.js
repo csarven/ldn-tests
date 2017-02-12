@@ -6,7 +6,7 @@ var atob = require("atob");
 var mayktso = require('mayktso');
 
 var config = mayktso.config();
-mayktso.init({'config': config, 'omitRoutes': ['/media', '/sender', '/target/:id', '/receiver', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/send-report', '/summary']});
+mayktso.init({'config': config, 'omitRoutes': ['/media', '/sender', '/target/:id', '/receiver', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/inbox-sender/$', '/send-report', '/summary']});
 
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/send-report').all(reportTest);
@@ -25,6 +25,9 @@ mayktso.app.route('/inbox-compacted/').all(function(req, res, next){
 });
 mayktso.app.route('/inbox-expanded/').all(function(req, res, next){
   mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }});
+});
+mayktso.app.route('/inbox-sender/').all(function(req, res, next){
+  mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }, storeMeta: true, allowSlug: true });
 });
 
 // console.log(mayktso.app._router.stack);
@@ -1199,7 +1202,7 @@ function getTarget(req, res, next){
     var resultsData = '';
 
     if(req.originalUrl.startsWith('/target/') && req.params.id && req.params.id.length > 0 && !req.params.id.match(/\/?\.\.+\/?/g)){
-      requestedTarget = config.rootPath + '/inbox/' + req.params.id;
+      requestedTarget = config.rootPath + '/inbox-sender/' + req.params.id;
     }
 
     //XXX: This opens /discover-* even though they don't (ever?) exist
@@ -1215,7 +1218,7 @@ function getTarget(req, res, next){
           break;
         default:
           if(req.originalUrl.startsWith('/target/')){
-            var inboxBaseIRI = req.getRootUrl() + '/' + config.inboxPath;
+            var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
             var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
             discoverInboxHTML = `<p>This target resource announces its inbox here:</p>
             <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>
