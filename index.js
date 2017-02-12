@@ -1191,15 +1191,24 @@ function getTarget(req, res, next){
     return next();
   }
 
-  var discoverInboxHTML = '';
-  switch(req.originalUrl) {
-    case '/discover-inbox-link-header':
-      discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
-      break;
-    case '/discover-inbox-rdf-body':
-      discoverInboxHTML = `<p>This target resource announces its <a href="inbox-expanded/" rel="ldp:inbox">Inbox</a> right here.</p>`;
-      break;
-     default:
+  fs.stat(req.requestedPath, function(error, stats) {
+    var discoverInboxHTML = '';
+
+    //XXX: This opens /discover-* even though they don't (ever?) exist
+    fs.readFile(req.requestedPath, 'utf8', function(error, data){
+      if (error) {
+        switch(req.originalUrl) {
+          case '/discover-inbox-link-header':
+            discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
+            break;
+          case '/discover-inbox-rdf-body':
+            discoverInboxHTML = `<p>This target resource announces its <a href="inbox-expanded/" rel="ldp:inbox">Inbox</a> right here.</p>`;
+            break;
+          default:
+            break;
+        }
+      }
+
       if(req.originalUrl.startsWith('/target/')){
         var inboxBaseIRI = req.getRootUrl() + '/' + config.inboxPath;
         var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
@@ -1208,9 +1217,14 @@ function getTarget(req, res, next){
                              <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
         // var notificationIRI = inboxBaseIRI + req.params.id;
       }
-      break;
-  }
-  var data = `<!DOCTYPE html>
+
+      // XXX: Not useful at the moment
+      // if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+      //   res.status(304);
+      //   res.end();
+      // }
+
+      var data = `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
@@ -1238,83 +1252,80 @@ ${discoverInboxHTML}
 </html>
 `;
 
-  if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
-    res.status(304);
-    res.end();
-  }
+      var fromContentType = 'text/html';
+      var toContentType = req.requestedType;
 
-  var fromContentType = 'text/html';
-  var toContentType = req.requestedType;
-
-  var baseURL = getBaseURL(req.getUrl());
-  var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
-  var basePath = config.basePath.endsWith('/') ? config.basePath : '';
-  // var inboxURL = base + basePath + config.inboxPath;
-  var sendHeaders = function(outputData, contentType) {
-    var linkRelations = ['<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"'];
-    if(req.originalUrl == '/discover-inbox-link-header'){
-      linkRelations.push('<' + base + basePath + 'inbox-compacted/>; rel="http://www.w3.org/ns/ldp#inbox"');
-    }
-    if(req.originalUrl.startsWith('/target/')){
-      linkRelations.push('<' + inboxIRI + '>; rel="http://www.w3.org/ns/ldp#inbox"');
-    }
-    res.set('Link', linkRelations);
-    res.set('Content-Type', contentType +';charset=utf-8');
-    res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-    res.set('ETag', etag(outputData));
-    // res.set('Last-Modified', stats.mtime);
-    res.set('Vary', 'Origin');
-    res.set('Allow', 'GET, HEAD, OPTIONS');
-  }
-
-  if(req.accepts(['text/html', 'application/xhtml+xml'])){
-    sendHeaders(data, 'text/html');
-    res.status(200);
-    res.send(data);
-    return next();
-  }
-  else {
-    var options = { 'subjectURI': base };
-    serializeData(data, fromContentType, toContentType, options).then(
-      function(transformedData){
-        switch(toContentType) {
-          case 'application/ld+json':
-            var x = JSON.parse(transformedData);
-            x[0]["@context"] = ["http://www.w3.org/ns/ldp"];
-            transformedData = JSON.stringify(x);
-            break;
-          default:
-            break;
+      var baseURL = getBaseURL(req.getUrl());
+      var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
+      var basePath = config.basePath.endsWith('/') ? config.basePath : '';
+      // var inboxURL = base + basePath + config.inboxPath;
+      var sendHeaders = function(outputData, contentType) {
+        var linkRelations = ['<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"'];
+        if(req.originalUrl == '/discover-inbox-link-header'){
+          linkRelations.push('<' + base + basePath + 'inbox-compacted/>; rel="http://www.w3.org/ns/ldp#inbox"');
         }
-
-        var outputData = (fromContentType != toContentType) ? transformedData : data;
-// console.log(outputData);
-        sendHeaders(outputData, req.requestedType);
-
-        switch(req.method) {
-          case 'GET': default:
-            res.status(200);
-            res.send(outputData);
-            break;
-          case 'HEAD':
-            res.status(200);
-            res.send();
-            break;
-          case 'OPTIONS':
-            res.status(204);
-            break;
+        if(req.originalUrl.startsWith('/target/')){
+          linkRelations.push('<' + inboxIRI + '>; rel="http://www.w3.org/ns/ldp#inbox"');
         }
+        res.set('Link', linkRelations);
+        res.set('Content-Type', contentType +';charset=utf-8');
+        res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
+        res.set('ETag', etag(outputData));
+        // res.set('Last-Modified', stats.mtime);
+        res.set('Vary', 'Origin');
+        res.set('Allow', 'GET, HEAD, OPTIONS');
+      }
 
-        res.end();
-        return next();
-      },
-      function(reason){
-        res.status(500);
-        res.end();
+      if(req.accepts(['text/html', 'application/xhtml+xml'])){
+        sendHeaders(data, 'text/html');
+        res.status(200);
+        res.send(data);
         return next();
       }
-    );
-  }
+      else {
+        var options = { 'subjectURI': base };
+        serializeData(data, fromContentType, toContentType, options).then(
+          function(transformedData){
+            switch(toContentType) {
+              case 'application/ld+json':
+                var x = JSON.parse(transformedData);
+                x[0]["@context"] = ["http://www.w3.org/ns/ldp"];
+                transformedData = JSON.stringify(x);
+                break;
+              default:
+                break;
+            }
+
+            var outputData = (fromContentType != toContentType) ? transformedData : data;
+    // console.log(outputData);
+            sendHeaders(outputData, req.requestedType);
+
+            switch(req.method) {
+              case 'GET': default:
+                res.status(200);
+                res.send(outputData);
+                break;
+              case 'HEAD':
+                res.status(200);
+                res.send();
+                break;
+              case 'OPTIONS':
+                res.status(204);
+                break;
+            }
+
+            res.end();
+            return next();
+          },
+          function(reason){
+            res.status(500);
+            res.end();
+            return next();
+          }
+        );
+      }
+    });
+  });
 }
 
 
