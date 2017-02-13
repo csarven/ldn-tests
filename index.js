@@ -1,4 +1,5 @@
 var fs = require('fs');
+var async = require('async');
 var etag = require('etag');
 var uuid = require('node-uuid');
 var btoa = require("btoa");
@@ -37,6 +38,7 @@ var getResourceHead = mayktso.getResourceHead;
 var getResourceOptions = mayktso.getResourceOptions;
 var postResource = mayktso.postResource;
 var htmlEntities = mayktso.htmlEntities;
+var preSafe = mayktso.preSafe;
 var vocab = mayktso.vocab;
 var getGraph = mayktso.getGraph;
 var getGraphFromData = mayktso.getGraphFromData;
@@ -1119,7 +1121,6 @@ function showSummary(req, res, next){
 }
 
 function getReportsHTML(data){
-
     var rTestsCount = Object.keys(ldnTests['receiver']).length;
     var cTestsCount = Object.keys(ldnTests['consumer']).length;
     var sTestsCount = Object.keys(ldnTests['sender']).length;
@@ -1169,8 +1170,6 @@ ${trs}
 }
 
 
-
-
 function getTarget(req, res, next){
 // console.log(req.getUrl());
 // console.log(req.originalUrl);
@@ -1194,57 +1193,76 @@ function getTarget(req, res, next){
     return next();
   }
 
-  fs.stat(req.requestedPath, function(error, stats) {
+  //XXX: We don't care about the error
+  // if(error) {}
+  var discoverInboxHTML = '';
+  var requestedTarget = req.requestedPath;
+  var resultsData = '';
+
+  if(req.originalUrl.startsWith('/target/') && req.params.id && req.params.id.length > 0 && !req.params.id.match(/\/?\.\.+\/?/g)){
+    requestedTarget = config.rootPath + '/inbox-sender/' + req.params.id;
+  }
+
+  var files = [requestedTarget, requestedTarget+'.json'];
+  //XXX: This opens /discover-* even though they don't (ever?) exist
+  async.map(files, fs.readFile, function(error, buffers){
+    var data = buffers[0].toString();
+    var metaData = buffers[1].toString();
+    console.log(data);
+    console.log(metaData);
     //XXX: We don't care about the error
-    // if(error) {}
-    var discoverInboxHTML = '';
-    var requestedTarget = config.rootPath + req.originalUrl;
-    var resultsData = '';
+    // if (error) {}
+    switch(req.originalUrl) {
+      case '/discover-inbox-link-header':
+        discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
+        break;
+      case '/discover-inbox-rdf-body':
+        discoverInboxHTML = `<p>This target resource announces its <a href="inbox-expanded/" rel="ldp:inbox">Inbox</a> right here.</p>`;
+        break;
+      default:
+        if(req.originalUrl.startsWith('/target/')){
+          var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
+          var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
+          discoverInboxHTML = `<p>This target resource announces its inbox here:</p>
+          <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>
+          <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
+          if(typeof data !== 'undefined') {
+            var notificationIRI = inboxBaseIRI + req.params.id;
 
-    if(req.originalUrl.startsWith('/target/') && req.params.id && req.params.id.length > 0 && !req.params.id.match(/\/?\.\.+\/?/g)){
-      requestedTarget = config.rootPath + '/inbox-sender/' + req.params.id;
-    }
-
-    //XXX: This opens /discover-* even though they don't (ever?) exist
-    fs.readFile(requestedTarget, 'utf8', function(error, data){
-      //XXX: We don't care about the error
-      // if (error) {}
-      switch(req.originalUrl) {
-        case '/discover-inbox-link-header':
-          discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
-          break;
-        case '/discover-inbox-rdf-body':
-          discoverInboxHTML = `<p>This target resource announces its <a href="inbox-expanded/" rel="ldp:inbox">Inbox</a> right here.</p>`;
-          break;
-        default:
-          if(req.originalUrl.startsWith('/target/')){
-            var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
-            var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
-            discoverInboxHTML = `<p>This target resource announces its inbox here:</p>
-            <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>
-            <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
-            // var notificationIRI = inboxBaseIRI + req.params.id;
-            if(typeof data !== 'undefined') {
-              resultsData = `
-                    <section>
-                        <h2>Request body</h2>
+// console.log(requestedTarget + '.json');
+console.log(JSON.stringify(JSON.parse(metaData).req));
+            resultsData = `
+                    <section id="test-result">
+                        <h2>Request</h2>
                         <div>
+                            <p>Request:</p>
+                            <pre>
+${preSafe(JSON.stringify(JSON.parse(metaData).req))}
+                            </pre>
+
+                            <p>Response:</p>
+                            <pre>
+${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}
+                            </pre>
+
+                            <p>Created <code><a href="${notificationIRI}"></a></code>:</p>
                             <pre>
 ${data}
                             </pre>
                         </div>
                     </section>`;
-            }
+//${(results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
           }
-          break;
-      }
-      // XXX: Not useful at the moment
-      // if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
-      //   res.status(304);
-      //   res.end();
-      // }
+        }
+        break;
+    }
+    // XXX: Not useful at the moment
+    // if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
+    //   res.status(304);
+    //   res.end();
+    // }
 
-      var outputData = `<!DOCTYPE html>
+    var outputData = `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
@@ -1273,79 +1291,78 @@ ${(typeof resultsData !== 'undefined' && resultsData.length > 0) ? resultsData :
 </html>
 `;
 
-      var fromContentType = 'text/html';
-      var toContentType = req.requestedType;
+    var fromContentType = 'text/html';
+    var toContentType = req.requestedType;
 
-      var baseURL = getBaseURL(req.getUrl());
-      var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
-      var basePath = config.basePath.endsWith('/') ? config.basePath : '';
+    var baseURL = getBaseURL(req.getUrl());
+    var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
+    var basePath = config.basePath.endsWith('/') ? config.basePath : '';
 
-      var sendHeaders = function(outputData, contentType) {
-        var linkRelations = ['<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"'];
-        if(req.originalUrl == '/discover-inbox-link-header'){
-          linkRelations.push('<' + base + basePath + 'inbox-compacted/>; rel="http://www.w3.org/ns/ldp#inbox"');
-        }
-        if(req.originalUrl.startsWith('/target/')){
-          linkRelations.push('<' + inboxIRI + '>; rel="http://www.w3.org/ns/ldp#inbox"');
-        }
-        res.set('Link', linkRelations);
-        res.set('Content-Type', contentType +';charset=utf-8');
-        res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-        res.set('ETag', etag(outputData));
-        // res.set('Last-Modified', stats.mtime);
-        res.set('Vary', 'Origin');
-        res.set('Allow', 'GET, HEAD, OPTIONS');
+    var sendHeaders = function(outputData, contentType) {
+      var linkRelations = ['<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"'];
+      if(req.originalUrl == '/discover-inbox-link-header'){
+        linkRelations.push('<' + base + basePath + 'inbox-compacted/>; rel="http://www.w3.org/ns/ldp#inbox"');
       }
-
-      if(req.accepts(['text/html', 'application/xhtml+xml'])){
-        sendHeaders(outputData, 'text/html');
-        res.status(200);
-        res.send(outputData);
-        return next();
+      if(req.originalUrl.startsWith('/target/')){
+        linkRelations.push('<' + inboxIRI + '>; rel="http://www.w3.org/ns/ldp#inbox"');
       }
-      else {
-        var options = { 'subjectURI': base };
-        serializeData(outputData, fromContentType, toContentType, options).then(
-          function(transformedData){
-            switch(toContentType) {
-              case 'application/ld+json':
-                var x = JSON.parse(transformedData);
-                x[0]["@context"] = ["http://www.w3.org/ns/ldp"];
-                transformedData = JSON.stringify(x);
-                break;
-              default:
-                break;
-            }
+      res.set('Link', linkRelations);
+      res.set('Content-Type', contentType +';charset=utf-8');
+      res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
+      res.set('ETag', etag(outputData));
+      // res.set('Last-Modified', stats.mtime);
+      res.set('Vary', 'Origin');
+      res.set('Allow', 'GET, HEAD, OPTIONS');
+    }
 
-            outputData = (fromContentType != toContentType) ? transformedData : outputData;
-// console.log(outputData);
-            sendHeaders(outputData, req.requestedType);
-
-            switch(req.method) {
-              case 'GET': default:
-                res.status(200);
-                res.send(outputData);
-                break;
-              case 'HEAD':
-                res.status(200);
-                res.send();
-                break;
-              case 'OPTIONS':
-                res.status(204);
-                break;
-            }
-
-            res.end();
-            return next();
-          },
-          function(reason){
-            res.status(500);
-            res.end();
-            return next();
+    if(req.accepts(['text/html', 'application/xhtml+xml'])){
+      sendHeaders(outputData, 'text/html');
+      res.status(200);
+      res.send(outputData);
+      return next();
+    }
+    else {
+      var options = { 'subjectURI': base };
+      serializeData(outputData, fromContentType, toContentType, options).then(
+        function(transformedData){
+          switch(toContentType) {
+            case 'application/ld+json':
+              var x = JSON.parse(transformedData);
+              x[0]["@context"] = ["http://www.w3.org/ns/ldp"];
+              transformedData = JSON.stringify(x);
+              break;
+            default:
+              break;
           }
-        );
-      }
-    });
+
+          outputData = (fromContentType != toContentType) ? transformedData : outputData;
+// console.log(outputData);
+          sendHeaders(outputData, req.requestedType);
+
+          switch(req.method) {
+            case 'GET': default:
+              res.status(200);
+              res.send(outputData);
+              break;
+            case 'HEAD':
+              res.status(200);
+              res.send();
+              break;
+            case 'OPTIONS':
+              res.status(204);
+              break;
+          }
+
+          res.end();
+          return next();
+        },
+        function(reason){
+          res.status(500);
+          res.end();
+          return next();
+        }
+      );
+    }
   });
 }
 
