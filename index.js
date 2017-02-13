@@ -1234,16 +1234,13 @@ function getTarget(req, res, next){
                         <h2>Request</h2>
                         <div>
                             <p>Request:</p>
-                            <pre>
-${preSafe(JSON.stringify(JSON.parse(metaData).req))}</pre>
+                            <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req))}</pre>
 
                             <p>Response:</p>
-                            <pre>
-${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}</pre>
+                            <pre>${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}</pre>
 
-                            <p>Created <code><a href="${notificationIRI}"></a></code>:</p>
-                            <pre>
-${data}</pre>
+                            <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
+                            <pre>${data}</pre>
                         </div>
                     </section>`;
 //${(results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
