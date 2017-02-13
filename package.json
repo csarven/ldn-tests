@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/csarven/ldn-tests",
   "dependencies": {
+    "async": "^2.1.4",
     "atob": "^2.0.3",
     "btoa": "^1.1.2",
     "etag": "^1.7.0",
