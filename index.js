@@ -1206,8 +1206,8 @@ function getTarget(req, res, next){
   var files = [requestedTarget, requestedTarget+'.json'];
   //XXX: This opens /discover-* even though they don't (ever?) exist
   async.map(files, fs.readFile, function(error, buffers){
-    var data = buffers[0].toString();
-    var metaData = buffers[1].toString();
+    var data = (typeof buffers[0] !== 'undefined') ? buffers[0].toString() : undefined;
+    var metaData = (typeof buffers[1] !== 'undefined') ? buffers[1].toString() : undefined;
     // console.log(data);
     // console.log(metaData);
     switch(req.originalUrl) {
