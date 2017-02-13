@@ -1208,10 +1208,8 @@ function getTarget(req, res, next){
   async.map(files, fs.readFile, function(error, buffers){
     var data = buffers[0].toString();
     var metaData = buffers[1].toString();
-    console.log(data);
-    console.log(metaData);
-    //XXX: We don't care about the error
-    // if (error) {}
+    // console.log(data);
+    // console.log(metaData);
     switch(req.originalUrl) {
       case '/discover-inbox-link-header':
         discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
@@ -1230,7 +1228,7 @@ function getTarget(req, res, next){
             var notificationIRI = inboxBaseIRI + req.params.id;
 
 // console.log(requestedTarget + '.json');
-console.log(JSON.stringify(JSON.parse(metaData).req));
+// console.log(JSON.stringify(JSON.parse(metaData).req));
             resultsData = `
                     <section id="test-result">
                         <h2>Request</h2>
