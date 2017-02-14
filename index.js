@@ -1275,20 +1275,20 @@ ${testResponse(req, test, reportHTML)}
                     <section id="test-request-response-data">
                         <h2>Request and Response</h2>
                         <div>`;
-                        if (typeof metaData !== 'undefined'){
-                          reqresData += `
+            if (typeof metaData !== 'undefined'){
+              reqresData += `
                           <p>Request:</p>
-                          <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req))}</pre>
+                          <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req.headers))}</pre>
 
                           <p>Response:</p>
                           <pre>${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}</pre>`;
-                        }
-                        if (typeof data !== 'undefined'){
-                          reqresData += `
+            }
+            if (typeof data !== 'undefined'){
+              reqresData += `
                             <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
                             <pre>${data}</pre>`;
-                        }
-                        reqresData += `
+            }
+            reqresData += `
                         </div>
                     </section>`;
           }
