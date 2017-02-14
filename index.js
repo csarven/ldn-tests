@@ -1213,7 +1213,7 @@ function getTarget(req, res, next){
   // if(error) {}
   var discoverInboxHTML = '';
   var requestedTarget = req.requestedPath;
-  var resultsData = '';
+  var reqresData = '';
 
   if(req.originalUrl.startsWith('/target/') && req.params.id && req.params.id.length > 0 && !req.params.id.match(/\/?\.\.+\/?/g)){
     requestedTarget = config.rootPath + '/inbox-sender/' + req.params.id;
@@ -1247,7 +1247,7 @@ function getTarget(req, res, next){
 // console.log(JSON.stringify(JSON.parse(metaData).req));
 
             //TODO: relocate this
-            resultsData = `
+            reqresData = `
                     <section id="test-result">
                         <h2>Request</h2>
                         <div>
@@ -1292,7 +1292,7 @@ function getTarget(req, res, next){
 ${discoverInboxHTML}
                         </div>
                     </section>
-${(typeof resultsData !== 'undefined' && resultsData.length > 0) ? resultsData : ''}
+${(typeof reqresData !== 'undefined' && reqresData.length > 0) ? reqresData : ''}
 ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
                 </div>
             </article>
