@@ -1245,6 +1245,8 @@ function getTarget(req, res, next){
 
 // console.log(requestedTarget + '.json');
 // console.log(JSON.stringify(JSON.parse(metaData).req));
+
+            //TODO: relocate this
             resultsData = `
                     <section id="test-result">
                         <h2>Request</h2>
@@ -1292,6 +1294,7 @@ ${discoverInboxHTML}
                         </div>
                     </section>
 ${(typeof resultsData !== 'undefined' && resultsData.length > 0) ? resultsData : ''}
+${(typeof results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
                 </div>
             </article>
         </main>
