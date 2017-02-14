@@ -292,7 +292,7 @@ function testReceiver(req, res, next){
             });
 // console.dir(resultsData);
 
-            var reportHTML = getTestReportHTML(resultsData);
+            var reportHTML = getTestReportHTML(resultsData, 'receiver');
             var test = {'url': req.body['test-receiver-url'] };
             test['implementationType'] = 'Receiver';
             test['results'] = resultsData;
