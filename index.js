@@ -1248,8 +1248,8 @@ function getTarget(req, res, next){
 
             //TODO: relocate this
             reqresData = `
-                    <section id="test-result">
-                        <h2>Request</h2>
+                    <section id="test-request-response-data">
+                        <h2>Request and Response</h2>
                         <div>
                             <p>Request:</p>
                             <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req))}</pre>
