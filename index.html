@@ -7,7 +7,7 @@
         <link href="media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
 
-    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: https://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <body about="" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# owl: http://www.w3.org/2002/07/owl# xsd: http://www.w3.org/2001/XMLSchema# dcterms: http://purl.org/dc/terms/ dctypes: http://purl.org/dc/dcmitype/ foaf: http://xmlns.com/foaf/0.1/ v: http://www.w3.org/2006/vcard/ns# pimspace: http://www.w3.org/ns/pim/space# cc: https://creativecommons.org/ns# skos: http://www.w3.org/2004/02/skos/core# prov: http://www.w3.org/ns/prov# qb: http://purl.org/linked-data/cube# schema: https://schema.org/ rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# cal: http://www.w3.org/2002/12/cal/ical# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# org: http://www.w3.org/ns/org# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ sioc: http://rdfs.org/sioc/ns# doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ oa: http://www.w3.org/ns/oa# as: http://www.w3.org/ns/activitystreams# ldp: http://www.w3.org/ns/ldp# solid: http://www.w3.org/ns/solid/terms# earl: https://www.w3.org/ns/earl#" typeof="schema:CreativeWork sioc:Post prov:Entity">
         <main>
             <article about="" typeof="schema:Article">
                 <h1 property="schema:name">Linked Data Notifications (LDN) Tests</h1>
@@ -15,6 +15,8 @@
                 <dl id="document-identifier">
                     <dt>Latest published version:</dt>
                     <dd><a href="https://www.w3.org/TR/ldn/" rel="doap:implements">https://www.w3.org/TR/ldn/</a></dd>
+                    <dt>Latest editor's draft:</dt>
+                    <dd><a href="https://linkedresearch.org/ldn/">https://linkedresearch.org/ldn/</a></dd>
                 </dl>
 
                 <dl id="document-status">
@@ -38,26 +40,19 @@
                             <p id="sender"><strong>Senders</strong>:</p>
                             <p>If you have implemented a sender, use these tests to make sure it conforms to the spec.</p>
                             <ul>
-                                <li>(discovery tests)</li>
-                                <li>(sending tests)</li>
+                                <li><a href="sender">All receiver tests</a>.</li>
+                            </ul>
+
+                            <p id="receiver"><strong>Receiver</strong>:</p>
+                            <p>If you have implemented a receiver, use this to make sure it conforms to the spec.</p>
+                            <ul>
+                              <li><a href="receiver">All receiver tests</a>.</li>
                             </ul>
 
                             <p id="consumer"><strong>Consumers</strong>:</p>
                             <p>If you have implemented a consumer, use these tests to make sure it conforms to the spec.</p>
                             <ul>
-                                <li>(discovery tests)</li>
-                                <li>(consuming tests)</li>
-                            </ul>
-                            <!-- <p id="discovery"><strong>Discovery</strong>:</p>
-                            <ul>
-                                <li><q>make an HTTP <code>HEAD</code> or <code>GET</code> request on the target URL, and use the <code>Link</code> header with a <code>rel</code> value of <code>http://www.w3.org/ns/ldp#inbox</code></q> [<a href="https://www.w3.org/TR/ldn/#discovery-http-headers">discovery-http-header</a>]</li>
-                                <li><q>make an HTTP <code>GET</code> request on the target URL to retrieve an RDF representation [<cite><a class="bibref" href="#bib-rdf11-concepts">RDF 1.1</a></cite>], whose encoded RDF graph contains a relation of type <code>http://www.w3.org/ns/ldp#inbox</code>. The subject of that relation is target and the object is the Inbox.</q> [<a href="https://www.w3.org/TR/ldn/#discovery-resource-description">discovery-resource-description</a>]</li>
-                            </ul> -->
-
-                            <p id="receiver"><strong>Receiver</strong>:</p>
-                            <p>If you have implemented a receiver, use this to make sure it conforms to the spec.</p>
-                            <ul>
-                                <li><a href="receiver">All receiver tests</a>.</li>
+                                <li><a href="consumer">All receiver tests</a>.</li>
                             </ul>
                         </div>
                     </section>
