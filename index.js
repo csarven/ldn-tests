@@ -1220,8 +1220,10 @@ function getTarget(req, res, next){
   }
 
   var files = [requestedTarget, requestedTarget+'.json'];
-  //XXX: This opens /discover-* even though they don't (ever?) exist
+// console.log(files);
+  //XXX: This tries to open /discover-* even though they don't (ever?) exist
   async.map(files, fs.readFile, function(error, buffers){
+// console.log(buffers);
     var data = (typeof buffers[0] !== 'undefined') ? buffers[0].toString() : undefined;
     var metaData = (typeof buffers[1] !== 'undefined') ? buffers[1].toString() : undefined;
     // console.log(data);
@@ -1240,7 +1242,7 @@ function getTarget(req, res, next){
           discoverInboxHTML = `<p>This target resource announces its inbox here:</p>
           <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>
           <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
-          if(typeof data !== 'undefined') {
+          if(typeof data !== 'undefined' || typeof metaData !== 'undefined') {
             var notificationIRI = inboxBaseIRI + req.params.id;
 
 // console.log(requestedTarget + '.json');
@@ -1250,15 +1252,21 @@ function getTarget(req, res, next){
             reqresData = `
                     <section id="test-request-response-data">
                         <h2>Request and Response</h2>
-                        <div>
-                            <p>Request:</p>
-                            <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req))}</pre>
+                        <div>`;
+                        if (typeof metaData !== 'undefined'){
+                          reqresData += `
+                          <p>Request:</p>
+                          <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req))}</pre>
 
-                            <p>Response:</p>
-                            <pre>${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}</pre>
-
+                          <p>Response:</p>
+                          <pre>${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}</pre>`;
+                        }
+                        if (typeof data !== 'undefined'){
+                          reqresData += `
                             <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
-                            <pre>${data}</pre>
+                            <pre>${data}</pre>`;
+                        }
+                        reqresData += `
                         </div>
                     </section>`;
           }
