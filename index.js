@@ -247,7 +247,6 @@ function getTestSenderHTML(req, results){
                 </div>
             </article>
         </main>
-        ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
     </body>
 </html>
 `;
@@ -311,7 +310,7 @@ function testReceiver(req, res, next){
             test['implementationType'] = 'Receiver';
             test['results'] = resultsData;
 
-            resultsData['test-receiver-report-html'] = testResponse(test, reportHTML);
+            resultsData['test-receiver-report-html'] = testResponse(req, test, reportHTML);
 
             var data = getTestReceiverHTML(req, resultsData);
 // console.log(data);
@@ -718,8 +717,9 @@ function getTestReportHTML(test, implementation){
   return s.join("\n");
 }
 
-function testResponse(test, reportHTML){
-return `
+function testResponse(req, test, reportHTML){
+  var sendReportURL = req.getRootUrl() + '/send-report';
+  return `
     <div id="test-response">
       <table id="test-report">
         <caption>Test report</caption>
@@ -735,7 +735,7 @@ return `
     ${reportHTML}
         </tbody>
       </table>
-      <form action="send-report" class="form-tests" method="post">
+      <form action="${sendReportURL}" class="form-tests" method="post">
         <fieldset>
           <legend>Send LDN ${test['implementationType']} report</legend>
           <ul>
@@ -1249,6 +1249,27 @@ function getTarget(req, res, next){
 // console.log(requestedTarget + '.json');
 // console.log(JSON.stringify(JSON.parse(metaData).req));
 
+            var results= {};
+            results['checkDiscoverInbox'] = { 'code': 'earl:passed', 'message': '' }
+            results['checkPost'] = { 'code': 'earl:passed', 'message': '' }
+            results['checkPostContentTypeJSONLD'] = { 'code': 'earl:passed', 'message': '' }
+            results['checkPostRequestBodyJSONLD'] = { 'code': 'earl:passed', 'message': '' }
+
+            var reportHTML = getTestReportHTML(results, 'sender');
+            var test = {'url': 'TODO: ' };
+            test['implementationType'] = 'Sender';
+            test['results'] = results;
+
+            results['test-sender-report-html'] = `
+                    <section id="test-sender">
+                        <h2>Sender</h2>
+                        <div>
+${testResponse(req, test, reportHTML)}
+                        </div>
+                    </section>`;
+
+// console.log(results);
+// console.log(test);
             //TODO: relocate this
             reqresData = `
                     <section id="test-request-response-data">
@@ -1448,7 +1469,7 @@ function testConsumer(req, res, next){
 
         Promise.all(testConsumerPromises)
           .then((results) => {
-console.dir(results);
+// console.dir(results);
             var resultsData = {};
             results.forEach(function(r){
               Object.assign(resultsData, r['consumer']);
@@ -1460,7 +1481,7 @@ console.dir(results);
             test['implementationType'] = 'Consumer';
             test['results'] = resultsData;
 // console.log(test);
-            resultsData['test-consumer-report-html'] = testResponse(test, reportHTML);
+            resultsData['test-consumer-report-html'] = testResponse(req, test, reportHTML);
 
             var data = getTestConsumerHTML(req, resultsData);
 // console.log(data);
