@@ -68,6 +68,20 @@ var ldnTestsVocab = {
 Object.assign(vocab, ldnTestsVocab);
 
 var ldnTests = {
+  'sender': {
+    'checkDiscoverInbox': {
+      'description': 'Inbox discovery.'
+    },
+    'checkPost': {
+      'description': 'Makes <code>POST</code> requests.'
+    },
+    'checkPostContentTypeJSONLD': {
+      'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code>.'
+    },
+    'checkPostRequestBodyJSONLD': {
+      'description': '<code>POST</code> payload is JSON-LD.'
+    }
+  },
   'consumer': {
     'checkDiscoverInboxLinkHeader': {
       'description': 'Inbox discovery via <code>Link</code> header.'
