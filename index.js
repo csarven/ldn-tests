@@ -247,7 +247,7 @@ function getTestSenderHTML(req, results){
                 </div>
             </article>
         </main>
-        ${(results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
+        ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
     </body>
 </html>
 `;
@@ -835,7 +835,7 @@ function getTestReceiverHTML(req, results){
                                     <input type="submit" value="Submit" />
                                 </fieldset>
                             </form>
-${(results && 'test-receiver-report-html' in results) ? results['test-receiver-report-html'] : ''}
+${(typeof results !== 'undefined' && 'test-receiver-report-html' in results) ? results['test-receiver-report-html'] : ''}
                         </div>
                     </section>
                     <section id="tests" inlist="" rel="schema:hasPart" resource="#tests">
@@ -1261,7 +1261,6 @@ function getTarget(req, res, next){
                             <pre>${data}</pre>
                         </div>
                     </section>`;
-//${(results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
           }
         }
         break;
@@ -1294,7 +1293,7 @@ ${discoverInboxHTML}
                         </div>
                     </section>
 ${(typeof resultsData !== 'undefined' && resultsData.length > 0) ? resultsData : ''}
-${(typeof results && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
+${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
                 </div>
             </article>
         </main>
@@ -1778,7 +1777,7 @@ function getTestConsumerHTML(req, results){
                                     <input type="submit" value="Submit" />
                                 </fieldset>
                             </form>
-${(results && 'test-consumer-report-html' in results) ? results['test-consumer-report-html'] : ''}
+${(typeof results !== 'undefined' && 'test-consumer-report-html' in results) ? results['test-consumer-report-html'] : ''}
                         </div>
                     </section>
                 </div>
