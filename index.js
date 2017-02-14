@@ -1736,6 +1736,7 @@ function getTestConsumerHTML(req, results){
                         <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
                             <p>Run your consumer software against these tests, then submit the report below.</p>
+<!--
                             <dl>
                                 <dt>Tests</dt>
                                 <dd>
@@ -1753,7 +1754,7 @@ function getTestConsumerHTML(req, results){
                                     </ul>
                                 </dd>
                             </dl>
-
+-->
                             <form action="" class="form-tests" id="test-consumer-report" method="post">
                                 <fieldset id="test-consumer">
                                     <legend>Test Consumer</legend>
