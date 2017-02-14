@@ -476,3 +476,10 @@ tfoot dt, tfoot dd { display:inline; }
 #ldn-test-receiver-summary tr:nth-of-type(2) td {
   max-width: 2em; overflow: hidden;
 }
+
+#test-request-response-data dt {
+font-weight: bold;
+}
+#test-request-response-data dd {
+margin:0;
+}
