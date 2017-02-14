@@ -1276,12 +1276,21 @@ ${testResponse(req, test, reportHTML)}
                         <h2>Request and Response</h2>
                         <div>`;
             if (typeof metaData !== 'undefined'){
-              reqresData += `
-                          <p>Request:</p>
-                          <pre>${preSafe(JSON.stringify(JSON.parse(metaData).req.headers))}</pre>
+              metaData = JSON.parse(metaData);
+              var requestHeaders = [];
+              requestHeaders.push(metaData.req.method + ' ' + metaData.req.url + ' HTTP/' + metaData.req.httpVersion);
+              Object.keys(metaData.req.headers).forEach(function(i){
+                requestHeaders.push(i.replace(/\b\w/g, l => l.toUpperCase()) + ': ' + metaData.req.headers[i]);
+              });
 
-                          <p>Response:</p>
-                          <pre>${preSafe(JSON.stringify(JSON.parse(metaData).res.headers)).slice(1, -1)}</pre>`;
+              reqresData += `
+                          <dl>
+                            <dt>Request</dt>
+                            <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
+
+                            <dt>Response</dt>
+                            <dd><pre>${preSafe(JSON.stringify(metaData.res.headers)).slice(1, -1)}</pre></dd>
+                          </dl>`;
             }
             if (typeof data !== 'undefined'){
               reqresData += `
