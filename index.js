@@ -1222,6 +1222,7 @@ function getTarget(req, res, next){
   var files = [requestedTarget, requestedTarget+'.json'];
 // console.log(files);
   //XXX: This tries to open /discover-* even though they don't (ever?) exist
+  //FIXME: If data doesn't exist and metaData exists, both are not in buffer. Why?
   async.map(files, fs.readFile, function(error, buffers){
 // console.log(buffers);
     var data = (typeof buffers[0] !== 'undefined') ? buffers[0].toString() : undefined;
