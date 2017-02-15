@@ -1240,8 +1240,8 @@ function getTarget(req, res, next){
 // console.log(fileContents);
     var data = (fileContents[0]) ? fileContents[0] : undefined;
     var metaData = (fileContents[1]) ? JSON.parse(fileContents[1]) : undefined;
-    console.log(data);
-    console.log(metaData);
+// console.log(data);
+// console.log(metaData);
     switch(req.originalUrl) {
       case '/discover-inbox-link-header':
         discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
@@ -1277,7 +1277,7 @@ function getTarget(req, res, next){
               }
 
               switch(parseInt(metaData.res.statusCode)){
-                case 200: case 202:
+                case 201: case 202:
                   results['checkPostRequestBodyJSONLD'] = { 'code': 'earl:passed', 'message': '' }
                   break;
                 case 400:
