@@ -8,6 +8,8 @@ var mayktso = require('mayktso');
 var config = mayktso.config();
 mayktso.init({'config': config, 'omitRoutes': ['/media', '/sender', '/target/:id', '/receiver', '/consumer', '/discover-inbox-rdf-body', '/discover-inbox-link-header', '/inbox-compacted/$', '/inbox-expanded/$', '/inbox-sender/$', '/send-report', '/summary']});
 
+if(!fs.existsSync('inbox-sender')) { fs.mkdirSync('inbox-sender') }
+
 mayktso.app.use('/media', mayktso.express.static(__dirname + '/media'));
 mayktso.app.route('/send-report').all(reportTest);
 mayktso.app.route('/summary').all(showSummary);
@@ -41,7 +43,6 @@ var preSafe = mayktso.preSafe;
 var vocab = mayktso.vocab;
 var prefixes = mayktso.prefixes;
 var prefixesRDFa = mayktso.prefixesRDFa;
-var fileExists = mayktso.fileExists;
 var getGraph = mayktso.getGraph;
 var getGraphFromData = mayktso.getGraphFromData;
 var serializeData = mayktso.serializeData;
