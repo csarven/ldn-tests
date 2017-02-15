@@ -1239,9 +1239,9 @@ function getTarget(req, res, next){
   });
 // console.log(fileContents);
     var data = (fileContents[0]) ? fileContents[0] : undefined;
-    var metaData = (fileContents[1]) ? fileContents[1] : undefined;
-    // console.log(data);
-    // console.log(metaData);
+    var metaData = (fileContents[1]) ? JSON.parse(fileContents[1]) : undefined;
+    console.log(data);
+    console.log(metaData);
     switch(req.originalUrl) {
       case '/discover-inbox-link-header':
         discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
@@ -1262,24 +1262,42 @@ function getTarget(req, res, next){
 // console.log(requestedTarget + '.json');
 // console.log(JSON.stringify(JSON.parse(metaData).req));
 
-            var results= {};
-            results['checkDiscoverInbox'] = { 'code': 'earl:passed', 'message': '' }
-            results['checkPost'] = { 'code': 'earl:passed', 'message': '' }
-            results['checkPostContentTypeJSONLD'] = { 'code': 'earl:passed', 'message': '' }
-            results['checkPostRequestBodyJSONLD'] = { 'code': 'earl:passed', 'message': '' }
+            if (typeof metaData !== 'undefined'){
+              var results= {};
+              results['checkDiscoverInbox'] = { 'code': 'earl:passed', 'message': '' }
+              results['checkPost'] = { 'code': 'earl:passed', 'message': '' }
+              results['checkPostContentTypeJSONLD'] = { 'code': 'earl:inapplicable', 'message': '' }
+              results['checkPostRequestBodyJSONLD'] = { 'code': 'earl:inapplicable', 'message': '' }
 
-            var reportHTML = getTestReportHTML(results, 'sender');
-            var test = {'url': 'TODO: ' };
-            test['implementationType'] = 'Sender';
-            test['results'] = results;
+              if(metaData.req.headers["content-type"] == 'application/ld+json') {
+                results['checkPostContentTypeJSONLD'] = { 'code': 'earl:passed', 'message': '' }
+              }
+              else {
+                results['checkPostContentTypeJSONLD'] = { 'code': 'earl:failed', 'message': '<code>Content-Type' + metaData.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+              }
 
-            results['test-sender-report-html'] = `
-                    <section id="test-sender">
-                        <h2>Sender</h2>
-                        <div>
+              switch(parseInt(metaData.res.statusCode)){
+                case 200: case 202:
+                  results['checkPostRequestBodyJSONLD'] = { 'code': 'earl:passed', 'message': '' }
+                  break;
+                case 400:
+                  results['checkPostRequestBodyJSONLD'] = { 'code': 'earl:failed', 'message': 'Send valid JSON-LD payload.' }
+                  break;
+              }
+
+              var reportHTML = getTestReportHTML(results, 'sender');
+              var test = {'url': 'TODO: ' };
+              test['implementationType'] = 'Sender';
+              test['results'] = results;
+
+              results['test-sender-report-html'] = `
+                  <section id="test-sender">
+                      <h2>Sender report</h2>
+                      <div>
 ${testResponse(req, test, reportHTML)}
-                        </div>
-                    </section>`;
+                      </div>
+                  </section>`;
+            }
 
 // console.log(results);
 // console.log(test);
@@ -1289,7 +1307,6 @@ ${testResponse(req, test, reportHTML)}
                         <h2>Request and Response</h2>
                         <div>`;
             if (typeof metaData !== 'undefined'){
-              metaData = JSON.parse(metaData);
               var requestHeaders = [];
               requestHeaders.push(metaData.req.method + ' ' + metaData.req.url + ' HTTP/' + metaData.req.httpVersion);
               Object.keys(metaData.req.headers).forEach(function(i){
