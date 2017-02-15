@@ -1273,7 +1273,7 @@ function getTarget(req, res, next){
                 results['checkPostContentTypeJSONLD'] = { 'code': 'earl:passed', 'message': '' }
               }
               else {
-                results['checkPostContentTypeJSONLD'] = { 'code': 'earl:failed', 'message': '<code>Content-Type' + metaData.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['checkPostContentTypeJSONLD'] = { 'code': 'earl:failed', 'message': '<code>Content-Type: ' + metaData.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaData.res.statusCode)){
