@@ -1,5 +1,4 @@
 var fs = require('fs');
-var async = require('async');
 var etag = require('etag');
 var uuid = require('node-uuid');
 var btoa = require("btoa");
@@ -42,6 +41,7 @@ var preSafe = mayktso.preSafe;
 var vocab = mayktso.vocab;
 var prefixes = mayktso.prefixes;
 var prefixesRDFa = mayktso.prefixesRDFa;
+var fileExists = mayktso.fileExists;
 var getGraph = mayktso.getGraph;
 var getGraphFromData = mayktso.getGraphFromData;
 var serializeData = mayktso.serializeData;
@@ -1223,10 +1223,23 @@ function getTarget(req, res, next){
 // console.log(files);
   //XXX: This tries to open /discover-* even though they don't (ever?) exist
   //FIXME: If data doesn't exist and metaData exists, both are not in buffer. Why?
-  async.map(files, fs.readFile, function(error, buffers){
-// console.log(buffers);
-    var data = (typeof buffers[0] !== 'undefined') ? buffers[0].toString() : undefined;
-    var metaData = (typeof buffers[1] !== 'undefined') ? buffers[1].toString() : undefined;
+
+  // let readFileContents = files.map((file) => {
+  //   return fsp.readFile(file, 'utf8')
+  //     .catch(err => {
+  //       return null
+  //     })
+  // })
+  let fileContents = files.map((file) => {
+    try {
+      return fs.readFileSync(file, 'utf8')
+    } catch (error) {
+      return null
+    }
+  });
+// console.log(fileContents);
+    var data = (fileContents[0]) ? fileContents[0] : undefined;
+    var metaData = (fileContents[1]) ? fileContents[1] : undefined;
     // console.log(data);
     // console.log(metaData);
     switch(req.originalUrl) {
@@ -1412,7 +1425,6 @@ ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? res
         }
       );
     }
-  });
 }
 
 
