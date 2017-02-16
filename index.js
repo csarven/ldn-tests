@@ -1075,6 +1075,7 @@ function showSummary(req, res, next){
         .then(
         function(s){//s is an array of SimpleRDF promises
 ///Just for debugging
+// console.log(s);
           var results = [];
           s.forEach(function(g){
             var observationUris = g.rdfsseeAlso;
@@ -1098,10 +1099,10 @@ function showSummary(req, res, next){
               results[implementationUri][observationGraph.earltest] = 'earl:'+outcome;
 
             });
-
           });
-          console.log(results);
-          var data = getReportsHTML(results);
+
+console.log(results);
+          var data = getReportsHTML(req, res, next, results);
 
           if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
             res.status(304);
@@ -1137,7 +1138,7 @@ function showSummary(req, res, next){
   }
 }
 
-function getReportsHTML(data){
+function getReportsHTML(req, res, next, data){
     var rTestsCount = Object.keys(ldnTests['receiver']).length;
     var cTestsCount = Object.keys(ldnTests['consumer']).length;
     var sTestsCount = Object.keys(ldnTests['sender']).length;
