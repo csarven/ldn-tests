@@ -1004,24 +1004,23 @@ function createTestReport(req, res, next){
 
     var earlInfo = '';
     if(test['results'][i]['message'] != '') {
-      earlInfo = `
-            <td property="earl:result" resource="#${i}-result">
-              <span datatype="rdf:HTML" property="earl:info">${test['results'][i]['message']}</span>
-            </td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${i}"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['message']}</span></td>`;
     }
     else {
-      earlInfo = `
-            <td></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${i}"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
     }
+
+    // <td property="earl:mode" resource="${test['results'][i]['mode']}">${test['results'][i]['mode'].substr(0, test['results'][i]['mode'].indexOf(':'))}</td>
+
 
     observations.push(`
         <tr about="#${i}" typeof="qb:Observation earl:Assertion">
             <td property="qb:dataSet" resource=""></td>
-            <td property="earl:subject" resource="${implementation}"></td>
+            <td property="earl:subject" resource="${implementation}">${name}</td>
             <td property="earl:test" resource="ldnTests:${i}">${i}</td>
-            <td property="earl:result" resource="#${i}-result">
-              <span property="earl:outcome" resource="${test['results'][i]['code']}">${getEarlOutcomeCode(test['results'][i]['code'])}</span>
-            </td>${earlInfo}
+            <td></td>
+            <td property="earl:result" resource="#result-${i}"><span property="earl:outcome" resource="${test['results'][i]['code']}">${getEarlOutcomeCode(test['results'][i]['code'])}</span></td>
+            ${earlInfo}
         </tr>`);
   });
   observations = observations.join('');
@@ -1037,7 +1036,7 @@ function createTestReport(req, res, next){
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
 
-  <body about="" prefix="${prefixesRDFa} sdmx:http://purl.org/linked-data/sdmx# sdmx-dimension: http://purl.org/linked-data/sdmx/2009/dimension# sdmx-measure: http://purl.org/linked-data/sdmx/2009/measure# ldn: https://www.w3.ogr/TR/ldn/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+  <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.ogr/TR/ldn/# ldnTests: https://linkedresearch.org/ldn/tests/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
               <h1 property="schema:name">Report</h1>
@@ -1062,17 +1061,18 @@ ${dataset}
                       <div>
 <table>
     <caption></caption>
-    <thead>
+    <thead about="#data-structure-structure" typeof="qb:DataStructureDefinition">
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>DataSet</th>
+            <th rel="qb:component" resource="#component-dimension-subject" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:subject" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test subject">Subject</span></span></th>
+            <th rel="qb:component" resource="#component-dimension-test" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:test" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test criterion">Test</span></span></th>
+            <th rel="qb:component" resource="#component-dimension-mode" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:mode" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Describes how a test was carried out">Mode</span></span></th>
+            <th rel="qb:component" resource="#component-measure-outcome" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:measure" resource="earl:outcome" typeof="qb:MeasureProperty"><span property="skos:prefLabel" title="Outcome of performing the test">Outcome</span></span></th>
+            <th rel="qb:component" resource="#component-measure-info" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:measure" resource="earl:info" typeof="qb:MeasureProperty"><span property="skos:prefLabel" title="Additional warnings or error messages in a human-readable form">Info</span></span></th>
         </tr>
     </thead>
     <tfoot>
-        <tr><td about="" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
+        <tr><td about="" colspan="6" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
     </tfoot>
     <tbody>
 ${observations}
