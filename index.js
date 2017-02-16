@@ -854,7 +854,7 @@ ${testsList}
 }
 
 
-function createTestReport(req, res, next){
+function createTestReportTurtle(req, res, next){
   var test = JSON.parse(atob(req.body['test-report-value']));
   var observations = [];
   var date = new Date();
@@ -948,6 +948,148 @@ console.log(data);
 }
 
 
+function createTestReport(req, res, next){
+  var test = JSON.parse(atob(req.body['test-report-value']));
+  var observations = [];
+  var date = new Date();
+  var dateTime = date.toISOString();
+
+  var implementation = '';
+  var maintainer = '';
+  if(req.body['implementation'] && req.body['implementation'].length > 0 && req.body['implementation'].startsWith('http') && req.body['maintainer'] && req.body['maintainer'].length > 0 && req.body['maintainer'].startsWith('http')) {
+    implementation = req.body['implementation'].trim();
+    maintainer = req.body['maintainer'].trim();
+    name = req.body['name'].trim();
+  }
+  else {
+    res.status(400);
+    res.end();
+    return next();
+  }
+
+  test['id'] = uuid.v1();
+
+  var doap = `<dl about="${implementation}" typeof="doap:Project ldn:${test['implementationType']}">
+    <dt>Project</dt>
+    <dd property="doap:name"><a href="${implementation}">${name}</a></dd>
+    <dt>Implementation type</dt>
+    <dd><a href="https://www.w3.org/TR/ldn/#${test['implementationType']}">${test['implementationType']}</a></dd>
+    <dt>Maintainer</dt>
+    <dd><a href="${maintainer}" property="doap:maintainer">${maintainer}</a></dd>
+</dl>`;
+
+
+  var datasetNote = '';
+  if(req.body['note'] && req.body['note'].trim().length > 0){
+    datasetNote = `
+    <dt>Note</dt>
+    <dd datatype="rdf:HTML" property="as:summary">${req.body['note'].trim()}</dd>`;
+  }
+
+
+  var dataset = `<dl about="" typeof="qb:DataSet as:Object">
+    <dt>Identifier</dt>
+    <dd property="dcterms:identifier">${test['id']}</dd>
+    <dt>Published</dt>
+    <dd><time datetime="${dateTime}" datatype="xsd:dateTime" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
+    <dt>Creator</dt>
+    <dd><a href="${maintainer}" property="as:creator">${maintainer}</a></dd>${datasetNote}
+</dl>`;
+
+
+  var datasetSeeAlso = [];
+  Object.keys(test['results']).forEach(function(i){
+    datasetSeeAlso.push('<meta resource="#' + i + '" />');
+    // TODO: for things that say 'check manually' should be earl:untested or earl:canttell
+
+    var earlInfo = '';
+    if(test['results'][i]['message'] != '') {
+      earlInfo = `
+            <td property="earl:result" resource="#${i}-result">
+              <span datatype="rdf:HTML" property="earl:info">${test['results'][i]['message']}</span>
+            </td>`;
+    }
+    else {
+      earlInfo = `
+            <td></td>`;
+    }
+
+    observations.push(`
+        <tr about="#${i}" typeof="qb:Observation earl:Assertion">
+            <td property="qb:dataSet" resource=""></td>
+            <td property="earl:subject" resource="${implementation}"></td>
+            <td property="earl:test" resource="ldnTests:${i}">${i}</td>
+            <td property="earl:result" resource="#${i}-result">
+              <span property="earl:outcome" resource="${test['results'][i]['code']}">${getEarlOutcomeCode(test['results'][i]['code'])}</span>
+            </td>${earlInfo}
+        </tr>`);
+  });
+  observations = observations.join('');
+
+  datasetSeeAlso = datasetSeeAlso.join('');
+
+  return `<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+      <meta charset="utf-8" />
+      <title>Report</title>
+      <meta content="width=device-width, initial-scale=1" name="viewport" />
+      <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+  </head>
+
+  <body about="" prefix="${prefixesRDFa} sdmx:http://purl.org/linked-data/sdmx# sdmx-dimension: http://purl.org/linked-data/sdmx/2009/dimension# sdmx-measure: http://purl.org/linked-data/sdmx/2009/measure# ldn: https://www.w3.ogr/TR/ldn/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+      <main>
+          <article about="" typeof="schema:Article qb:DataSet as:Object">
+              <h1 property="schema:name">Report</h1>
+
+              <div id="content">
+                  <section>
+                      <h2>Description of a project</h2>
+                      <div>
+${doap}
+                      </div>
+                  </section>
+
+                  <section>
+                      <h2>Dataset</h2>
+                      <div>
+${dataset}
+                      </div>
+                  </section>
+
+                  <section>
+                      <h2>Test results</h2>
+                      <div>
+<table>
+    <caption></caption>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr><td about="" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
+    </tfoot>
+    <tbody>
+${observations}
+    </tbody>
+</table>
+                      </div>
+                  </section>
+              </div>
+          </article>
+      </main>
+  </body>
+</html>
+`;
+}
+
+
+
 function reportTest(req, res, next){
   if(req.method == 'POST') {
 // console.log(req.body['test-report-value']);
@@ -960,7 +1102,7 @@ function reportTest(req, res, next){
     }
 
     var headers = {};
-    headers['Content-Type'] = 'text/turtle;charset=utf-8';
+    headers['Content-Type'] = 'text/html;charset=utf-8';
 
     var baseURL = getBaseURL(req.getUrl());
     var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
