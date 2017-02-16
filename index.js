@@ -1659,7 +1659,7 @@ function checkNotificationAnnounce(req){
     'data': req.body['test-inbox-compacted-announce'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-compacted/announce',
     'property': vocab['rdftype']['@id'],
-    'object': 'http://www.w3.org/ns/activitystreams#Announce'
+    'object': 'https://www.w3.org/ns/activitystreams#Announce'
   };
   return checkNotification(req, options);
 }
