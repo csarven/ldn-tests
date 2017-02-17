@@ -431,7 +431,7 @@ function checkGet(req){
   return getResource(url, headers).then(
     function(response){
 // console.log(response);
-      testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Check manually.' };
+      testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Check manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
@@ -725,6 +725,7 @@ function getEarlOutcomeCode(outcome){
     case 'earl:passed': s = '✔'; break;
     case 'earl:failed': s = '✗'; break;
     case 'earl:inapplicable': s = '-'; break;
+    case 'earl:cantTell': s = '?'; break;
   }
   return s;
 }
@@ -759,6 +760,7 @@ function testResponse(req, test, reportHTML){
           <dl>
             <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
             <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
+            <dt class="earl:cantTell"><abbr title="Cannot tell">-</abbr></dt><dd>Cannot tell</dd>
             <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
             </dl>
         </td></tr></tfoot>
@@ -837,9 +839,12 @@ function getTestReceiverHTML(req, results){
                     <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
                         <h2 property="schema:name">Receiver</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="earl:passed">passed</span>/<span class="earl:failed">failed</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get an <span class="earl:inapplicable">inapplicable</span> response if you don't implement them, rather than a fail.</p>
+                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them. It returns a <span class="earl:passed">passed</span>/<span class="earl:failed">failed</span> response for individual requirements of the LDN spec. It also tests some optional features; you'll get an <span class="earl:inapplicable">inapplicable</span> response if you don't implement them, rather than a fail. Some of the test outcomes will require manual checking, hence they'll be marked with <span class="earl:cantTell">cannot tell</span>.</p>
+
                             <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
+
                             <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
+
                             <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 
                             <form action="" class="form-tests" id="test-receiver" method="post">
@@ -1029,7 +1034,6 @@ function createTestReport(req, res, next){
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
     datasetSeeAlso.push('<meta resource="#' + i + '" />');
-    // TODO: for things that say 'check manually' should be earl:untested or earl:canttell
 
     var earlInfo = '';
     if(test['results'][i]['earl:info'] != '') {
