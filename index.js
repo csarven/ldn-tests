@@ -1773,7 +1773,7 @@ function checkDiscoverNotificationJSONLDCompacted(req){
   var testResults = { 'consumer': {} };
   testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-compacted'];
-  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
   var notifications = [inbox+'announce', inbox+'changelog', inbox+'citation'];
@@ -1904,9 +1904,9 @@ function checkNotificationRSVP(req){
 
 function checkNotification(req, options){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['checkNotification'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
-  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
-  value = value.trim();
+  testResults['consumer']['checkNotification'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  if(options.data.length == 0){ return Promise.resolve(testResults); }
+  options.data = options.data.trim();
 
   var o = {
     'contentType': 'application/ld+json',
