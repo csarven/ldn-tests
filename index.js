@@ -731,6 +731,17 @@ function getEarlOutcomeCode(outcome){
   return s;
 }
 
+function getEarlOutcomeHTML(){
+return `
+<dl>
+    <dt class="earl:passed"><abbr title="Passed">${getEarlOutcomeCode('earl:passed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#passed">Passed</a></dd>
+    <dt class="earl:failed"><abbr title="Failed">${getEarlOutcomeCode('earl:failed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#failed">Failed</a></dd>
+    <dt class="earl:cantTell"><abbr title="Cannot tell">${getEarlOutcomeCode('earl:cantTell')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#cantTell">Cannot tell</a></dd>
+    <dt class="earl:inapplicable"><abbr title="Inapplicable">${getEarlOutcomeCode('earl:inapplicable')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#inapplicable">Inapplicable</a></dd>
+    <dt class="earl:untested"><abbr title="Untested">${getEarlOutcomeCode('earl:untested')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#untested">Untested</a></dd>
+</dl>`;
+}
+
 function getTestReportHTML(test, implementation){
   var s = [];
   implementation = implementation || 'receiver';
@@ -758,13 +769,7 @@ function testResponse(req, test, reportHTML){
         <caption>Test report</caption>
         <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
-          <dl>
-            <dt class="earl:passed"><abbr title="Passed">${getEarlOutcomeCode('earl:passed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#passed">Passed</a></dd>
-            <dt class="earl:failed"><abbr title="Failed">${getEarlOutcomeCode('earl:failed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#failed">Failed</a></dd>
-            <dt class="earl:cantTell"><abbr title="Cannot tell">${getEarlOutcomeCode('earl:cantTell')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#cantTell">Cannot tell</a></dd>
-            <dt class="earl:inapplicable"><abbr title="Inapplicable">${getEarlOutcomeCode('earl:inapplicable')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#inapplicable">Inapplicable</a></dd>
-            <dt class="earl:untested"><abbr title="Untested">${getEarlOutcomeCode('earl:untested')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#untested">Untested</a></dd>
-            </dl>
+${getEarlOutcomeHTML()}
         </td></tr></tfoot>
         <tbody>
     ${reportHTML}
