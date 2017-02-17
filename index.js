@@ -1893,7 +1893,7 @@ function checkNotificationRSVP(req){
 
 function checkNotification(req, options){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['checkNotification'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer'][options.test] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   if(options.data.length == 0){ return Promise.resolve(testResults); }
   options.data = options.data.trim();
 
