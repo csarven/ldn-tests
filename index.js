@@ -338,7 +338,7 @@ function testReceiver(req, res, next){
 
             var reportHTML = getTestReportHTML(resultsData, 'receiver');
             var test = {'url': req.body['test-receiver-url'] };
-            test['implementationType'] = 'Receiver';
+            test['implementationType'] = 'receiver';
             test['results'] = resultsData;
 
             resultsData['test-receiver-report-html'] = testResponse(req, test, reportHTML);
@@ -1039,7 +1039,7 @@ function createTestReport(req, res, next){
       earlInfo = `<td property="earl:result" resource="#result-${i}"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
     }
 
-    var earlMode = ldnTests[test['implementationType'].toLowerCase()][i]['earl:mode'];
+    var earlMode = ldnTests[test['implementationType']][i]['earl:mode'];
     var earlModeText = earlMode.substr(earlMode.indexOf(':') + 1);
 
     observations.push(`
@@ -1460,7 +1460,7 @@ function getTarget(req, res, next){
 
               var reportHTML = getTestReportHTML(results, 'sender');
               var test = {'url': 'TODO: ' };
-              test['implementationType'] = 'Sender';
+              test['implementationType'] = 'sender';
               test['results'] = results;
 
               results['test-sender-report-html'] = `
@@ -1689,7 +1689,7 @@ function testConsumer(req, res, next){
 
             var reportHTML = getTestReportHTML(resultsData, 'consumer');
             var test = {'url': 'TODO: ' };
-            test['implementationType'] = 'Consumer';
+            test['implementationType'] = 'consumer';
             test['results'] = resultsData;
 // console.log(test);
             resultsData['test-consumer-report-html'] = testResponse(req, test, reportHTML);
