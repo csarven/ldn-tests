@@ -37,23 +37,12 @@
                         <div datatype="rdf:HTML" property="schema:description">
                             <p>This is the test suite for Linked Data Notifications. It is a work in progress. Once your implementation has passed the relevant tests, you can submit an <a href="https://github.com/w3c/ldn/implementations">implementation report</a> to help enable this specification progress to recommendation. Running the tests will generate a checklist, filled in where possible, to indicate which tests are passed, and thus which features you have implemented according to the spec.</p>
 
-                            <p id="sender"><strong>Senders</strong>:</p>
-                            <p>If you have implemented a sender, use these tests to make sure it conforms to the spec.</p>
-                            <ul>
-                                <li><a href="sender">All sender tests</a>.</li>
-                            </ul>
+                            <p>Each implementation tests and reports are located here: <a href="sender">sender</a>, <a href="receiver">receiver</a>, <a href="consumer">consumer</a>.</p>
 
-                            <p id="receiver"><strong>Receiver</strong>:</p>
-                            <p>If you have implemented a receiver, use this to make sure it conforms to the spec.</p>
-                            <ul>
-                              <li><a href="receiver">All receiver tests</a>.</li>
-                            </ul>
-
-                            <p id="consumer"><strong>Consumers</strong>:</p>
-                            <p>If you have implemented a consumer, use these tests to make sure it conforms to the spec.</p>
-                            <ul>
-                                <li><a href="consumer">All consumer tests</a>.</li>
-                            </ul>
+                            <dl>
+                                <dt>Test outcomes</dt>
+                                <dd>It returns a <a href="https://www.w3.org/TR/EARL10-Schema/#passed" class="earl:passed">passed</a>/<a href="https://www.w3.org/TR/EARL10-Schema/#failed" class="earl:failed">failed</a> response for individual requirements of the LDN spec. It also tests some optional features; you will get an <a href="https://www.w3.org/TR/EARL10-Schema/#inapplicable" class="earl:inapplicable">inapplicable</a> response if you do not implement them, rather than a fail. Some of the test outcomes will require manual checking, hence they will be marked with <a href="https://www.w3.org/TR/EARL10-Schema/#cantTell" class="earl:cantTell">cannot tell</a>. If a test was skipped or no value provided, it will be marked as <a href="https://www.w3.org/TR/EARL10-Schema/#untested" class="earl:untested">untested</a>.</dd>
+                            </dl>
                         </div>
                     </section>
                 </div>
