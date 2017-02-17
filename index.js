@@ -271,6 +271,8 @@ function getTestSenderHTML(req, results){
                     <section id="senders" inlist="" rel="schema:hasPart" resource="#senders">
                         <h2 property="schema:name">Sender</h2>
                         <div datatype="rdf:HTML" property="schema:description">
+                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
+
                             <p>Run your sender software to this target:</p>
                             <p><code><a href="${targetIRI}">${targetIRI}</a></code></p>
                         </div>
@@ -1946,6 +1948,8 @@ function getTestConsumerHTML(req, results){
                     <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
                         <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
+                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
+
                             <p>Run your consumer software against these tests, then submit the report below.</p>
 <!--
                             <dl>
