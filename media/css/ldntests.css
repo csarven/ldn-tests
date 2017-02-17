@@ -456,11 +456,11 @@ font-style:normal;
 em.rfc2119 { color: #900; }
 code { color: #c83500; }
 
-[class~="earl:passed"] { background-color: #0f0; }
-[class~="earl:failed"] { background-color: #f00; }
-[class~="earl:inapplicable"] { background-color: #eee; }
-[class~="earl:cantTell"] { background-color: #ff0; }
-[class~="earl:untested"] { background-color: #0ff; }
+[class~="earl:passed"],[resource~="earl:passed"] { background-color: #0f0; }
+[class~="earl:failed"],[resource~="earl:failed"] { background-color: #f00; }
+[class~="earl:inapplicable"],[resource~="earl:inapplicable"] { background-color: #eee; }
+[class~="earl:cantTell"],[resource~="earl:cantTell"] { background-color: #ff0; }
+[class~="earl:untested"],[resource~="earl:untested"] { background-color: #0ff; }
 
 table { border-collapse: collapse; }
 caption { font-weight:bold; }
