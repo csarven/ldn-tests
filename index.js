@@ -724,8 +724,9 @@ function getEarlOutcomeCode(outcome){
     default: s = outcome; break;
     case 'earl:passed': s = '✔'; break;
     case 'earl:failed': s = '✗'; break;
-    case 'earl:inapplicable': s = '-'; break;
     case 'earl:cantTell': s = '?'; break;
+    case 'earl:inapplicable': s = '-'; break;
+    case 'earl:untested': s = '○'; break;
   }
   return s;
 }
@@ -758,10 +759,11 @@ function testResponse(req, test, reportHTML){
         <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
         <tfoot><tr><td colspan="4">
           <dl>
-            <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
-            <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
-            <dt class="earl:cantTell"><abbr title="Cannot tell">?</abbr></dt><dd>Cannot tell</dd>
-            <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
+            <dt class="earl:passed"><abbr title="Passed">${getEarlOutcomeCode('earl:passed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#passed">Passed</a></dd>
+            <dt class="earl:failed"><abbr title="Failed">${getEarlOutcomeCode('earl:failed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#failed">Failed</a></dd>
+            <dt class="earl:cantTell"><abbr title="Cannot tell">${getEarlOutcomeCode('earl:cantTell')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#cantTell">Cannot tell</a></dd>
+            <dt class="earl:inapplicable"><abbr title="Inapplicable">${getEarlOutcomeCode('earl:inapplicable')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#inapplicable">Inapplicable</a></dd>
+            <dt class="earl:untested"><abbr title="Untested">${getEarlOutcomeCode('earl:untested')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#untested">Untested</a></dd>
             </dl>
         </td></tr></tfoot>
         <tbody>
@@ -1444,7 +1446,7 @@ function getTarget(req, res, next){
               results['checkDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
               results['checkPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
               results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
-              results['checkPostRequestBodyJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
+              results['checkPostRequestBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
               if(metaData.req.headers["content-type"] == 'application/ld+json') {
                 results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
