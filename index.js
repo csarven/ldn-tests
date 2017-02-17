@@ -1737,14 +1737,13 @@ function testConsumer(req, res, next){
 
 function checkDiscoverInboxLinkHeader(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
+  testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-discover-inbox-link-header'];
-  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim();
-
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
 
-  if(value.length > 0 && value == inbox){
+  if(value == inbox){
     testResults['consumer']['checkDiscoverInboxLinkHeader'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
   }
   else {
@@ -1755,9 +1754,9 @@ function checkDiscoverInboxLinkHeader(req){
 
 function checkDiscoverInboxRDFBody(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
+  testResults['consumer']['checkDiscoverInboxRDFBody'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-discover-inbox-rdf-body'];
-  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim();
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
 
@@ -1772,7 +1771,7 @@ function checkDiscoverInboxRDFBody(req){
 
 function checkDiscoverNotificationJSONLDCompacted(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
+  testResults['consumer']['checkDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-compacted'];
   if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
@@ -1806,9 +1805,9 @@ function checkDiscoverNotificationJSONLDCompacted(req){
 
 function checkDiscoverNotificationJSONLDExpanded(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['checkDiscoverNotificationJSONLDExpanded'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
+  testResults['consumer']['checkDiscoverNotificationJSONLDExpanded'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-expanded'];
-  if(typeof value === 'undefined'){ return Promise.resolve(testResults); }
+  if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
   var notifications = [inbox+'assessing', inbox+'comment', inbox+'rsvp'];
