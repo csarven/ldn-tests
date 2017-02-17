@@ -71,104 +71,134 @@ Object.assign(vocab, ldnTestsVocab);
 var ldnTests = {
   'sender': {
     'checkDiscoverInbox': {
-      'description': 'Inbox discovery.'
+      'description': 'Inbox discovery.',
+      'earl:mode': 'earl:automatic'
     },
     'checkPost': {
-      'description': 'Makes <code>POST</code> requests.'
+      'description': 'Makes <code>POST</code> requests.',
+      'earl:mode': 'earl:automatic'
     },
     'checkPostContentTypeJSONLD': {
-      'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code>.'
+      'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code>.',
+      'earl:mode': 'earl:automatic'
     },
     'checkPostRequestBodyJSONLD': {
-      'description': '<code>POST</code> payload is JSON-LD.'
+      'description': '<code>POST</code> payload is JSON-LD.',
+      'earl:mode': 'earl:automatic'
     }
   },
   'consumer': {
     'checkDiscoverInboxLinkHeader': {
-      'description': 'Inbox discovery via <code>Link</code> header.'
+      'description': 'Inbox discovery via <code>Link</code> header.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkDiscoverInboxRDFBody': {
-      'description': 'Inbox discovery via RDF body.'
+      'description': 'Inbox discovery via RDF body.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkDiscoverNotificationJSONLDCompacted': {
-      'description': 'Notification discovery from Inbox using JSON-LD compacted form.'
+      'description': 'Notification discovery from Inbox using JSON-LD compacted form.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkDiscoverNotificationJSONLDExpanded': {
-      'description': 'Notification discovery from Inbox using JSON-LD expanded form.'
+      'description': 'Notification discovery from Inbox using JSON-LD expanded form.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkNotificationAnnounce': {
-      'description': 'Contents of the announce notifications.'
+      'description': 'Contents of the announce notifications.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkNotificationChangelog': {
-      'description': 'Contents of the changelog notifications.'
+      'description': 'Contents of the changelog notifications.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkNotificationCitation': {
-      'description': 'Contents of the citation notifications.'
+      'description': 'Contents of the citation notifications.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkNotificationAssessing': {
-      'description': 'Contents of the assessing notifications.'
+      'description': 'Contents of the assessing notifications.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkNotificationComment': {
-      'description': 'Contents of the comment notifications.'
+      'description': 'Contents of the comment notifications.',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkNotificationRSVP': {
-      'description': 'Contents of the rsvp notifications.'
+      'description': 'Contents of the rsvp notifications.',
+      'earl:mode': 'earl:semiAuto'
     }
   },
   'receiver': {
     'checkHead': {
-      'description': 'Accepts <code>HEAD</code> requests.'
+      'description': 'Accepts <code>HEAD</code> requests.',
+      'earl:mode': 'earl:automatic'
     },
 
     'checkOptions': {
-      'description': 'Accepts <code>OPTIONS</code> requests.'
+      'description': 'Accepts <code>OPTIONS</code> requests.',
+      'earl:mode': 'earl:automatic'
     },
     'checkOptionsAcceptPost': {
-      'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.'
+      'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
+      'earl:mode': 'earl:automatic'
     },
     'checkOptionsAcceptPostContainsJSONLD': {
-      'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.'
+      'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
+      'earl:mode': 'earl:automatic'
     },
 
     'checkPost': {
-      'description': 'Accepts <code>POST</code> requests.'
+      'description': 'Accepts <code>POST</code> requests.',
+      'earl:mode': 'earl:automatic'
     },
     'checkPostResponseCreated': {
-      'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.'
+      'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.',
+      'earl:mode': 'earl:automatic'
     },
     'checkPostResponseLocation': {
-      'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.'
+      'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.',
+      'earl:mode': 'earl:automatic'
     },
     'checkPostResponseProfileLinkRelationAccepted': {
-      'description': 'Succeeds when the content type includes a <code>profile</code> parameter.'
+      'description': 'Succeeds when the content type includes a <code>profile</code> parameter.',
+      'earl:mode': 'earl:automatic'
     },
     // 'checkPostResponseBody': {
-    //   'description': 'TODO: Read the body'
+    //   'description': 'TODO: Read the body'... I don't remember what this was for and if it is already covered.
     // },
     'checkPostResponseConstraintsUnmet': {
-      'description': 'Fails to process notifications if implementation-specific constraints are not met.'
+      'description': 'Fails to process notifications if implementation-specific constraints are not met.',
+      'earl:mode': 'earl:automatic'
     },
 
     'checkGet': {
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
+      'earl:mode': 'earl:automatic'
     },
     'checkGetResponseLDPContains': {
-      'description': 'Lists notification URIs with <code>ldp:contains</code>.'
+      'description': 'Lists notification URIs with <code>ldp:contains</code>.',
+      'earl:mode': 'earl:automatic'
     },
     'checkGetResponseNotificationsLimited': {
-      'description': 'Restricts list of notification URIs (eg. according to access control).'
+      'description': 'Restricts list of notification URIs (eg. according to access control).',
+      'earl:mode': 'earl:semiAuto'
     },
     'checkGetResponseNotificationsJSONLD': {
-      'description': 'Notifications are available as JSON-LD.'
+      'description': 'Notifications are available as JSON-LD.',
+      'earl:mode': 'earl:automatic'
     },
     'checkGetResponseNotificationsRDFSource': {
-      'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.'
+      'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.',
+      'earl:mode': 'earl:automatic'
     },
     'extraCheckGetResponseLDPContainer': {
-      'description': 'Inbox has type <code>ldp:Container</code>.'
+      'description': 'Inbox has type <code>ldp:Container</code>.',
+      'earl:mode': 'earl:automatic'
     },
     'extraCheckGetResponseLDPConstrainedBy': {
-      'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.'
+      'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.',
+      'earl:mode': 'earl:automatic'
     }
   }
 }
