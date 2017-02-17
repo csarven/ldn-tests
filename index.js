@@ -1112,6 +1112,7 @@ ${dataset}
         </tr>
     </thead>
     <tfoot>
+        <tr><td colspan="6">${getEarlOutcomeHTML()}</td></tr>
         <tr><td about="" colspan="6" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
     </tfoot>
     <tbody>
