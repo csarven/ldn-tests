@@ -1026,6 +1026,8 @@ function createTestReport(req, res, next){
     <dd><a href="${maintainer}" property="as:creator">${maintainer}</a></dd>${datasetNote}
 </dl>`;
 
+console.log('1029')
+console.log(ldnTests[test['implementationType'].toLowerCase()]);
 
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
@@ -1040,15 +1042,15 @@ function createTestReport(req, res, next){
       earlInfo = `<td property="earl:result" resource="#result-${i}"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
     }
 
-    // <td property="earl:mode" resource="${test['results'][i]['mode']}">${test['results'][i]['mode'].substr(0, test['results'][i]['mode'].indexOf(':'))}</td>
-
+    var earlMode = ldnTests[test['implementationType'].toLowerCase()][i]['earl:mode'];
+    var earlModeText = earlMode.substr(earlMode.indexOf(':') + 1);
 
     observations.push(`
         <tr about="#${i}" typeof="qb:Observation earl:Assertion">
             <td property="qb:dataSet" resource=""></td>
             <td property="earl:subject" resource="${implementation}">${name}</td>
             <td property="earl:test" resource="ldnTests:${i}">${i}</td>
-            <td></td>
+            <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
             <td property="earl:result" resource="#result-${i}"><span property="earl:outcome" resource="${test['results'][i]['code']}">${getEarlOutcomeCode(test['results'][i]['code'])}</span></td>
             ${earlInfo}
         </tr>`);
