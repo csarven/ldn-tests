@@ -1676,53 +1676,42 @@ function testConsumer(req, res, next){
         ,'10':checkNotificationRSVP
       };
 
-      if(req.body['test-consumer-discover-inbox-link-header']
-        || req.body['test-consumer-discover-inbox-rdf-body']
-        || req.body['test-consumer-inbox-compacted']
-        || req.body['test-consumer-inbox-expanded']
-        || req.body['test-inbox-compacted-announce']
-        || req.body['test-inbox-compacted-changelog']
-        || req.body['test-inbox-compacted-citation']
-        || req.body['test-inbox-expanded-assessing']
-        || req.body['test-inbox-expanded-comment']
-        || req.body['test-inbox-expanded-rsvp']) {
-        Object.keys(initTest).forEach(function(id) {
-          testConsumerPromises.push(initTest[id](req));
-        });
+      Object.keys(initTest).forEach(function(id) {
+        testConsumerPromises.push(initTest[id](req));
+      });
 
-        Promise.all(testConsumerPromises)
-          .then((results) => {
+      Promise.all(testConsumerPromises)
+        .then((results) => {
 // console.dir(results);
-            var resultsData = {};
-            results.forEach(function(r){
-              Object.assign(resultsData, r['consumer']);
-            });
+          var resultsData = {};
+          results.forEach(function(r){
+            Object.assign(resultsData, r['consumer']);
+          });
 // console.dir(resultsData);
 
-            var reportHTML = getTestReportHTML(resultsData, 'consumer');
-            var test = {'url': 'TODO: ' };
-            test['implementationType'] = 'consumer';
-            test['results'] = resultsData;
+          var reportHTML = getTestReportHTML(resultsData, 'consumer');
+          var test = {'url': 'TODO: ' };
+          test['implementationType'] = 'consumer';
+          test['results'] = resultsData;
 // console.log(test);
-            resultsData['test-consumer-report-html'] = testResponse(req, test, reportHTML);
+          resultsData['test-consumer-report-html'] = testResponse(req, test, reportHTML);
 
-            var data = getTestConsumerHTML(req, resultsData);
+          var data = getTestConsumerHTML(req, resultsData);
 // console.log(data);
 
-            res.set('Content-Type', 'text/html;charset=utf-8');
-            res.set('Allow', 'GET, POST');
-            res.status(200);
-            res.send(data);
-            res.end();
-            return next();
-          })
-          .catch((e) => {
-            console.log('--- catch ---');
-            console.log(e);
-            res.end();
-            return next();
-          });
-        }
+          res.set('Content-Type', 'text/html;charset=utf-8');
+          res.set('Allow', 'GET, POST');
+          res.status(200);
+          res.send(data);
+          res.end();
+          return next();
+        })
+        .catch((e) => {
+          console.log('--- catch ---');
+          console.log(e);
+          res.end();
+          return next();
+        });
       break;
 
     default:
