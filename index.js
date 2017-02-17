@@ -755,7 +755,7 @@ function getTestReportHTML(test, implementation){
 
     testResult = getEarlOutcomeCode(test[id]['earl:outcome']);
 
-    s.push('<tr id="test-' + id + '"><td class="test-result ' + test[id]['earl:outcome'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['earl:info'] + '</td></tr>');
+    s.push('<tr id="test-' + id + '"><td class="' + test[id]['earl:outcome'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['earl:info'] + '</td></tr>');
   });
 
   return s.join("\n");
@@ -1338,7 +1338,7 @@ function getReportsHTML(req, res, next, data){
       trs = trs + '<tr>';
       trs = trs + '  <th><a href="' + result + '">' + data[result]['name'] + '</a></th>';
       Object.keys(ldnTests['receiver']).forEach(function(test){
-        trs = trs + '  <td class="test-result ' + data[result]['https://linkedresearch.org/ldn/tests/#' + test] + '">'+getEarlOutcomeCode(data[result]['https://linkedresearch.org/ldn/tests/#' + test])+'</td>';
+        trs = trs + '  <td class="' + data[result]['https://linkedresearch.org/ldn/tests/#' + test] + '">'+getEarlOutcomeCode(data[result]['https://linkedresearch.org/ldn/tests/#' + test])+'</td>';
       });
       trs = trs + '</tr>';
     });
