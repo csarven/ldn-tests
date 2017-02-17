@@ -760,7 +760,7 @@ function testResponse(req, test, reportHTML){
           <dl>
             <dt class="earl:passed"><abbr title="Passed">✔</abbr></dt><dd>Passed</dd>
             <dt class="earl:failed"><abbr title="Failed">✗</abbr></dt><dd>Failed</dd>
-            <dt class="earl:cantTell"><abbr title="Cannot tell">-</abbr></dt><dd>Cannot tell</dd>
+            <dt class="earl:cantTell"><abbr title="Cannot tell">?</abbr></dt><dd>Cannot tell</dd>
             <dt class="earl:inapplicable"><abbr title="Inapplicable">-</abbr></dt><dd>Inapplicable</dd>
             </dl>
         </td></tr></tfoot>
