@@ -509,7 +509,8 @@ console.log(s.iri().toString());
             });
 
             if(notifications.length > 0) {
-              testResults['receiver']['checkGetResponseLDPContains'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found ' + notifications.length + ' notifications.' };
+              var notificationsNoun = (notifications.length == 1) ? 'notification' : 'notifications';
+              testResults['receiver']['checkGetResponseLDPContains'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found ' + notifications.length + ' ' + notificationsNoun + '.' };
 
               var testAccepts = ['application/ld+json', '*/*', ''];
               var notificationResponses = [];
