@@ -899,100 +899,6 @@ ${testsList}
 }
 
 
-function createTestReportTurtle(req, res, next){
-  var test = JSON.parse(atob(req.body['test-report-value']));
-  var observations = [];
-  var date = new Date();
-  var dateTime = date.toISOString();
-
-  var prefixes = `@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix dcterms: <http://purl.org/dc/terms/>.
-@prefix as: <https://www.w3.org/ns/activitystreams#>.
-@prefix qb: <http://purl.org/linked-data/cube#>.
-@prefix doap: <http://usefulinc.com/ns/doap#>.
-@prefix earl: <http://www.w3.org/ns/earl#>.
-@prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
-@prefix ldn: <https://www.w3.org/TR/ldn/#>.
-@prefix : <>.
-@prefix d: <#>.`;
-
-  var implementation = '';
-  var maintainer = '';
-  if(req.body['implementation'] && req.body['implementation'].length > 0 && req.body['implementation'].startsWith('http') && req.body['maintainer'] && req.body['maintainer'].length > 0 && req.body['maintainer'].startsWith('http')) {
-    implementation = req.body['implementation'].trim();
-    maintainer = req.body['maintainer'].trim();
-    name = req.body['name'].trim();
-  }
-  else {
-    res.status(400);
-    res.end();
-    return next();
-  }
-
-  var doap = `<${implementation}>
-  a doap:Project, ldn:${test['implementationType']};
-  doap:name """${name}""";
-  doap:maintainer <${maintainer}>.`;
-
-  test['id'] = uuid.v1();
-
-  var dataset = `<>
-  a qb:DataSet, as:Object;
-  dcterms:identifier "${test['id']}";
-  as:published "${dateTime}"^^xsd:dateTime;
-  as:creator <${maintainer}>`;
-
-  if(req.body['note'] && req.body['note'].trim().length > 0){
-    dataset = dataset + `;
-  as:summary """${req.body['note'].trim()}"""^^rdf:HTML`;
-  }
-  dataset = dataset + '.';
-
-  var datasetSeeAlso = [];
-  Object.keys(test['results']).forEach(function(i){
-    datasetSeeAlso.push('d:' + i);
-
-    // TODO: for things that say 'check manually' should be earl:untested or earl:canttell
-
-    var observation = `d:${i}
-  a qb:Observation, earl:Assertion;
-  qb:dataSet <>;
-  earl:subject <${implementation}>;
-  earl:test ldnTests:${i};
-  earl:result d:${i}-result .\n`;
-
-    observation += `d:${i}-result
-  earl:outcome ${test['results'][i]['earl:outcome']}`;
-    if(test['results'][i]['earl:info'] != '') {
-      observation = observation + `;
-  earl:info """${test['results'][i]['earl:info']}"""^^rdf:HTML`;
-    }
-
-    observations.push(observation + ' .\n');
-  });
-
-  datasetSeeAlso = `<>
-  rdfs:seeAlso ${datasetSeeAlso.join(', ')}.`
-
-  observations = observations.join('\n');
-
-  var data = `${prefixes}
-
-${doap}
-
-${dataset}
-
-${datasetSeeAlso}
-
-${observations}
-`;
-console.log(data);
-  return data;
-}
-
-
 function createTestReport(req, res, next){
   var test = JSON.parse(atob(req.body['test-report-value']));
   var observations = [];
@@ -1364,7 +1270,7 @@ function getReportsHTML(req, res, next, reports){
 
       testsSummary += `
                           <section id="ldn-report-${testTypeCode}">
-                              <h2>${testTypeCapitalised}</h2>
+                              <h2>${testTypeCapitalised} reports</h2>
                               <div>
                                   <table id="ldn-test-${testTypeCode}-summary">
                                       <caption>${testTypeCapitalised} tests summary</caption>
