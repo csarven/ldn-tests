@@ -1292,11 +1292,12 @@ function showSummary(req, res, next){
               report['tests'][observation.earltest] = 'earl:'+outcome;
             });
 
+            report['report'] = g.iri().toString();
             reports[implementationType] = reports[implementationType] || [];
             reports[implementationType].push(report);
           });
 
-console.log(reports);
+// console.log(reports);
           var data = getReportsHTML(req, res, next, reports);
 
           if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
@@ -1353,7 +1354,7 @@ function getReportsHTML(req, res, next, reports){
       var reportCount = reports[testType].length;
       reports[testType].forEach(function(report){
         tbodyTRs += '<tr>';
-        tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a></td>';
+        tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a> (<a href="' + report['report'] + '">report</a>)</td>';
         tests.forEach(function(test){
           var outcomeCode = report['tests']['https://linkedresearch.org/ldn/tests/#' + test];
           tbodyTRs += '<td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
