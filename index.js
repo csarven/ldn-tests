@@ -1074,7 +1074,7 @@ function createTestReport(req, res, next){
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
       <meta charset="utf-8" />
-      <title>Report</title>
+      <title>Implementation report and test results</title>
       <meta content="width=device-width, initial-scale=1" name="viewport" />
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
@@ -1082,7 +1082,7 @@ function createTestReport(req, res, next){
   <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.ogr/TR/ldn/# ldnTests: https://linkedresearch.org/ldn/tests/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
-              <h1 property="schema:name">Report</h1>
+              <h1 property="schema:name">Implementation report and test results</h1>
 
               <div id="content">
                   <section>
@@ -1093,7 +1093,7 @@ ${doap}
                   </section>
 
                   <section>
-                      <h2>Dataset</h2>
+                      <h2 rel="qb:dataSet" resource="#data-structure-definition">Dataset</h2>
                       <div>
 ${dataset}
                       </div>
@@ -1103,8 +1103,8 @@ ${dataset}
                       <h2>Test results</h2>
                       <div>
 <table>
-    <caption></caption>
-    <thead about="#data-structure-structure" typeof="qb:DataStructureDefinition">
+    <caption>Report</caption>
+    <thead about="#data-structure-definition" typeof="qb:DataStructureDefinition">
         <tr>
             <th>DataSet</th>
             <th rel="qb:component" resource="#component-dimension-subject" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:subject" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test subject">Subject</span></span></th>
