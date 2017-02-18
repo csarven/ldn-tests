@@ -471,20 +471,23 @@ tbody [property~="earl:outcome"] { display:block; }
 
 
 table { border-collapse: collapse; }
-caption { font-weight:bold; }
-td, tbody th {
-border-left: 1px solid #eee;
-border-right: 1px solid #eee;
-border-bottom: 1px solid #ccc;
+caption { font-size:1.1em; font-weight:bold; text-align: left; }
+td, th {
+border: 1px solid #ccc;
+border-left-color: #eee;
+border-right-color: #eee;
 padding:0.25em;
 }
-.test-description { width: 50%; }
-.test-message ul { list-style-position: inside; }
+[rowspan] { vertical-align: bottom; }
+
 tfoot dd:after { content: "\A"; white-space:pre; }
 tfoot dt, tfoot dd { display:inline; }
-tfoot dd { margin-left: 1em }
+tfoot dd { margin-left: 0.5em }
+.test-description { width: 50%; }
+.test-message ul { list-style-position: inside; }
+
 #ldn-test-receiver-summary tr:nth-of-type(2) td {
-  max-width: 2em; overflow: hidden;
+max-width: 2em; overflow: hidden;
 }
 
 #test-request-response-data dt {
