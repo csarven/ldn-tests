@@ -1261,11 +1261,8 @@ function showSummary(req, res, next){
         function(s){//s is an array of SimpleRDF promises
 // console.log(s);
           var report = {};
-          var reports = {
-            'https://www.w3.ogr/TR/ldn/#sender': [],
-            'https://www.w3.ogr/TR/ldn/#receiver': [],
-            'https://www.w3.ogr/TR/ldn/#consumer': []}
-          ;
+          var reports = {};
+
           s.forEach(function(g){
             var implementationURI = '';
             g.graph().forEach(function(t){
@@ -1295,6 +1292,7 @@ function showSummary(req, res, next){
               report['tests'][observation.earltest] = 'earl:'+outcome;
             });
 
+            reports[implementationType] = reports[implementationType] || [];
             reports[implementationType].push(report);
           });
 
@@ -1339,40 +1337,56 @@ function getReportsHTML(req, res, next, reports){
     var testsSummary = '';
     Object.keys(reports).forEach(function(testType){
       var testTypeCode = testType.split('#')[1];
+      var tests = Object.keys(ldnTests[testTypeCode]);
+      var testsCount = tests.length;
       var testTypeCapitalised = testTypeCode[0].toUpperCase() + testTypeCode.slice(1);
-      var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + Object.keys(ldnTests[testTypeCode]).length + '">' + testTypeCapitalised + ' tests</th></tr>';
-
+      var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
       theadTRs += '<tr>';
-      Object.keys(ldnTests[testTypeCode]).forEach(function(test){
+
+
+      tests.forEach(function(test){
         theadTRs += '<th>' + test + '</th>';
       });
       theadTRs += '</tr>';
 
+      var tbodyTRs = '';
+      var reportCount = reports[testType].length;
       reports[testType].forEach(function(report){
-        var tbodyTRs = '<tr>';
-        tbodyTRs += '    <td><a href="' + report['implementation'] + '">' + report['name'] + '</a></td>';
-        Object.keys(ldnTests[testTypeCode]).forEach(function(test){
+        tbodyTRs += '<tr>';
+        tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a></td>';
+        tests.forEach(function(test){
           var outcomeCode = report['tests']['https://linkedresearch.org/ldn/tests/#' + test];
-          tbodyTRs += '    <td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
+          tbodyTRs += '<td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
         });
         tbodyTRs += '</tr>';
-
-        testsSummary += `
-                    <section id="ldn-report-${testType}">
-                        <h2>${testTypeCapitalised}</h2>
-                        <div>
-                            <table id="ldn-test-${testType}-summary">
-                                <caption>${testTypeCapitalised} tests summary</caption>
-                                <thead>
-${theadTRs}
-                                </thead>
-                                <tbody>
-${tbodyTRs}
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>`;
       });
+
+      testsSummary += `
+                          <section id="ldn-report-${testTypeCode}">
+                              <h2>${testTypeCapitalised}</h2>
+                              <div>
+                                  <table id="ldn-test-${testTypeCode}-summary">
+                                      <caption>${testTypeCapitalised} tests summary</caption>
+                                      <thead>
+${theadTRs}
+                                      </thead>
+                                      <tbody>
+${tbodyTRs}
+                                      </tbody>
+                                      <tfoot>
+                                          <tr>
+                                              <td colspan="${testsCount + 1}">
+                                                  <dl>
+                                                      <dt>Number of implementation reports</dt>
+                                                      <dd>${reportCount}</dd>
+                                                  </dl>
+${getEarlOutcomeHTML()}
+                                              </td>
+                                          </tr>
+                                      </tfoot>
+                                  </table>
+                              </div>
+                          </section>`;
     });
 
     return `<!DOCTYPE html>
