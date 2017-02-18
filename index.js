@@ -57,13 +57,14 @@ var discoverInbox = mayktso.discoverInbox;
 var getInboxNotifications = mayktso.getInboxNotifications;
 
 var ldnTestsVocab = {
-  "earlAssertion": { "@id": "https://www.w3.org/ns/earl#Assertion", "@type": "@id" },
-  "earlinfo": { "@id": "https://www.w3.org/ns/earl#info" },
-  "earloutcome": { "@id": "https://www.w3.org/ns/earl#outcome", "@type": "@id" },
-  "earlsubject": { "@id": "https://www.w3.org/ns/earl#subject", "@type": "@id" },
-  "earlresult": { "@id": "https://www.w3.org/ns/earl#result", "@type": "@id" },
-  "earltest": { "@id": "https://www.w3.org/ns/earl#test", "@type": "@id" },
+  "earlAssertion": { "@id": "http://www.w3.org/ns/earl#Assertion", "@type": "@id" },
+  "earlinfo": { "@id": "http://www.w3.org/ns/earl#info" },
+  "earloutcome": { "@id": "http://www.w3.org/ns/earl#outcome", "@type": "@id" },
+  "earlsubject": { "@id": "http://www.w3.org/ns/earl#subject", "@type": "@id" },
+  "earlresult": { "@id": "http://www.w3.org/ns/earl#result", "@type": "@id" },
+  "earltest": { "@id": "http://www.w3.org/ns/earl#test", "@type": "@id" },
   "qbObservation": { "@id": "http://purl.org/linked-data/cube#Observation", "@type": "@id" },
+  "doapProject": { "@id": "http://usefulinc.com/ns/doap#Project" },
   "doapname": { "@id": "http://usefulinc.com/ns/doap#name" }
 }
 Object.assign(vocab, ldnTestsVocab);
@@ -911,7 +912,7 @@ function createTestReportTurtle(req, res, next){
 @prefix as: <https://www.w3.org/ns/activitystreams#>.
 @prefix qb: <http://purl.org/linked-data/cube#>.
 @prefix doap: <http://usefulinc.com/ns/doap#>.
-@prefix earl: <https://www.w3.org/ns/earl#>.
+@prefix earl: <http://www.w3.org/ns/earl#>.
 @prefix ldnTests: <https://linkedresearch.org/ldn/tests/#>.
 @prefix ldn: <https://www.w3.org/TR/ldn/#>.
 @prefix : <>.
@@ -1031,7 +1032,7 @@ function createTestReport(req, res, next){
   }
 
 
-  var dataset = `<dl about="" typeof="qb:DataSet as:Object">
+  var dataset = `<dl>
     <dt>Identifier</dt>
     <dd property="dcterms:identifier">${test['id']}</dd>
     <dt>Published</dt>
@@ -1046,10 +1047,10 @@ function createTestReport(req, res, next){
 
     var earlInfo = '';
     if(test['results'][i]['earl:info'] != '') {
-      earlInfo = `<td property="earl:result" resource="#result-${i}"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['earl:info']}</span></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['earl:info']}</span></td>`;
     }
     else {
-      earlInfo = `<td property="earl:result" resource="#result-${i}"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
     }
 
     var earlMode = ldnTests[test['implementationType']][i]['earl:mode'];
@@ -1061,7 +1062,7 @@ function createTestReport(req, res, next){
             <td property="earl:subject" resource="${implementation}">${name}</td>
             <td property="earl:test" resource="ldnTests:${i}">${i}</td>
             <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
-            <td property="earl:result" resource="#result-${i}"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
+            <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
             ${earlInfo}
         </tr>`);
   });
@@ -1235,7 +1236,6 @@ function showSummary(req, res, next){
 
       discoverInbox(url).then(
         function(inboxes){
-          //get inbox contents
           return getResource(inboxes[0], { 'Accept': 'application/ld+json' }).then(
             function(response){
 // console.log(response)
@@ -1251,7 +1251,7 @@ function showSummary(req, res, next){
 // console.log(notifications)
                   var nData = [];
                   notifications.forEach(function(nURL){
-                    nData.push(SimpleRDF(vocab, nURL, null, RDFstore).get())
+                    nData.push(SimpleRDF(vocab, nURL, null, RDFstore).get());
                   })
                   return Promise.all(nData)
                 });
@@ -1259,35 +1259,47 @@ function showSummary(req, res, next){
         })
         .then(
         function(s){//s is an array of SimpleRDF promises
-///Just for debugging
 // console.log(s);
-          var results = [];
+          var report = {};
+          var reports = {
+            'https://www.w3.ogr/TR/ldn/#sender': [],
+            'https://www.w3.ogr/TR/ldn/#receiver': [],
+            'https://www.w3.ogr/TR/ldn/#consumer': []}
+          ;
           s.forEach(function(g){
-            var observationUris = g.rdfsseeAlso;
-
-            observationUris.forEach(function(observationUri){
-              var observationGraph = g.child(observationUri);
-              var implementationUri = observationGraph.earlsubject;
-              var implementationGraph = g.child(implementationUri);
-              if(implementationGraph.doapname){
-                var projectName = implementationGraph.doapname;
-              }else{
-                var projectName = implementationUri;
+            var implementationURI = '';
+            g.graph().forEach(function(t){
+              if(t.object.nominalValue == vocab['doapProject']['@id']){
+                implementationURI = t.subject.nominalValue;
               }
-              var resultGraph = g.child(observationGraph.earlresult)
-              var outcome = resultGraph.earloutcome.split('#')[1];
-
-              if(typeof results[implementationUri] === 'undefined'){
-                results[implementationUri] = [];
-              }
-              results[implementationUri]["name"] = projectName;
-              results[implementationUri][observationGraph.earltest] = 'earl:'+outcome;
-
             });
+
+            var report = {};
+            var implementation = g.child(implementationURI);
+            report['implementation'] = implementationURI;
+            report['name'] = (implementation.doapname && implementation.doapname.length > 0) ? implementation.doapname : implementationURI;
+
+            var implementationType = '';
+            implementation.rdftype.forEach(function(i){
+              if(i.startsWith('https://www.w3.ogr/TR/ldn/#')){
+                implementationType = i;
+              }
+            });
+
+            report['tests'] = [];
+            g.rdfsseeAlso.forEach(function(observationURI){
+              var observation = g.child(observationURI);
+              var earlresult = observation.earlresult;
+              var outcome = g.child(earlresult).earloutcome.split('#')[1];
+
+              report['tests'][observation.earltest] = 'earl:'+outcome;
+            });
+
+            reports[implementationType].push(report);
           });
 
-console.log(results);
-          var data = getReportsHTML(req, res, next, results);
+console.log(reports);
+          var data = getReportsHTML(req, res, next, reports);
 
           if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
             res.status(304);
@@ -1323,26 +1335,44 @@ console.log(results);
   }
 }
 
-function getReportsHTML(req, res, next, data){
-    var rTestsCount = Object.keys(ldnTests['receiver']).length;
-    var cTestsCount = Object.keys(ldnTests['consumer']).length;
-    var sTestsCount = Object.keys(ldnTests['sender']).length;
-    var implCount = Object.keys(data).length;
+function getReportsHTML(req, res, next, reports){
+    var testsSummary = '';
+    Object.keys(reports).forEach(function(testType){
+      var testTypeCode = testType.split('#')[1];
+      var testTypeCapitalised = testTypeCode[0].toUpperCase() + testTypeCode.slice(1);
+      var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + Object.keys(ldnTests[testTypeCode]).length + '">' + testTypeCapitalised + ' tests</th></tr>';
 
-    var trs = '<tr><th rowspan="2">Implementations</th><th colspan="' + rTestsCount + '">Receiver Tests</th></tr>';
-    trs = trs + '<tr>';
-    Object.keys(ldnTests['receiver']).forEach(function(test){
-      trs = trs + ' <td title="' + test + '">' + test + '</td>';
-    });
-    trs = trs + '</tr>';
-
-    Object.keys(data).forEach(function(result){
-      trs = trs + '<tr>';
-      trs = trs + '  <th><a href="' + result + '">' + data[result]['name'] + '</a></th>';
-      Object.keys(ldnTests['receiver']).forEach(function(test){
-        trs = trs + '  <td class="' + data[result]['https://linkedresearch.org/ldn/tests/#' + test] + '">'+getEarlOutcomeCode(data[result]['https://linkedresearch.org/ldn/tests/#' + test])+'</td>';
+      theadTRs += '<tr>';
+      Object.keys(ldnTests[testTypeCode]).forEach(function(test){
+        theadTRs += '<th>' + test + '</th>';
       });
-      trs = trs + '</tr>';
+      theadTRs += '</tr>';
+
+      reports[testType].forEach(function(report){
+        var tbodyTRs = '<tr>';
+        tbodyTRs += '    <td><a href="' + report['implementation'] + '">' + report['name'] + '</a></td>';
+        Object.keys(ldnTests[testTypeCode]).forEach(function(test){
+          var outcomeCode = report['tests']['https://linkedresearch.org/ldn/tests/#' + test];
+          tbodyTRs += '    <td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
+        });
+        tbodyTRs += '</tr>';
+
+        testsSummary += `
+                    <section id="ldn-report-${testType}">
+                        <h2>${testTypeCapitalised}</h2>
+                        <div>
+                            <table id="ldn-test-${testType}-summary">
+                                <caption>${testTypeCapitalised} tests summary</caption>
+                                <thead>
+${theadTRs}
+                                </thead>
+                                <tbody>
+${tbodyTRs}
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>`;
+      });
     });
 
     return `<!DOCTYPE html>
@@ -1360,10 +1390,7 @@ function getReportsHTML(req, res, next, data){
                 <h1 property="schema:name">LDN Test Reports</h1>
 
                 <div id="content">
-                  <table id="ldn-test-receiver-summary">
-                    <caption>Receiver summary</caption>
-${trs}
-                  </table>
+${testsSummary}
                 </div>
             </article>
         </main>
