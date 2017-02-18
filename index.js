@@ -1897,9 +1897,7 @@ function getTestConsumerHTML(req, results){
                     <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
                         <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
-
-                            <p>Run your consumer software against these tests, then submit the report below.</p>
+                            <p>Run your consumer software against these tests, then submit your results in the form below. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 <!--
                             <dl>
                                 <dt>Tests</dt>
