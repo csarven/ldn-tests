@@ -982,7 +982,7 @@ function createTestReport(req, res, next){
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
 
-  <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.org/TR/ldn/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+  <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
               <h1 property="schema:name">Implementation report and test results</h1>
@@ -1256,7 +1256,7 @@ function getReportsHTML(req, res, next, reports){
       var reportCount = reports[testType].length;
       reports[testType].forEach(function(report){
         tbodyTRs += '<tr>';
-        tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a> (<a href="' + report['report'] + '">report</a>)</td>';
+        tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a> (<a about="" rel="void:subset" href="' + report['report'] + '">report</a>)</td>';
         tests.forEach(function(test){
           var outcomeCode = report['tests']['https://www.w3.org/TR/ldn/#' + test];
           tbodyTRs += '<td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
@@ -1265,9 +1265,9 @@ function getReportsHTML(req, res, next, reports){
       });
 
       testsSummary += `
-                          <section id="ldn-report-${testTypeCode}">
-                              <h2>${testTypeCapitalised} reports</h2>
-                              <div>
+                          <section id="ldn-report-${testTypeCode}" rel="schema:hasPart" resource="#ldn-report-${testTypeCode}">
+                              <h2 property="schema:name">${testTypeCapitalised} reports</h2>
+                              <div datatype="rdf:HTML" property="schema:description">
                                   <table id="ldn-test-${testTypeCode}-summary">
                                       <caption>${testTypeCapitalised} tests summary</caption>
                                       <thead>
@@ -1303,10 +1303,27 @@ ${getEarlOutcomeHTML()}
 
     <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
         <main>
-            <article about="" typeof="schema:Article">
+            <article about="" typeof="schema:Article void:Dataset">
                 <h1 property="schema:name">LDN Test Reports</h1>
 
+                <dl id="document-license">
+                    <dt>License</dt>
+                    <dd><a href="https://creativecommons.org/licenses/by/4.0/" rel="schema:license" title="Creative Commons Attribution 4.0 Unported">CC BY 4.0</a></dd>
+                </dl>
+
                 <div id="content">
+                    <section id="keywords">
+                        <h2>Keywords</h2>
+                        <div>
+                            <ul rel="schema:about">
+                                <li><a href="https://en.wikipedia.org/wiki/Communications_protocol" resource="http://dbpedia.org/resource/Communications_protocol">Communications protocol</a></li>
+                                <li><a href="https://en.wikipedia.org/wiki/Decentralization" resource="http://dbpedia.org/resource/Decentralization">Decentralisation</a></li>
+                                <li><a href="https://en.wikipedia.org/wiki/Linked_data" resource="http://dbpedia.org/resource/Linked_data">Linked Data</a></li>
+                                <li><a href="https://en.wikipedia.org/wiki/Social_web" resource="http://dbpedia.org/resource/Social_web">Social web</a></li>
+                            </ul>
+                        </div>
+                    </section>
+
 ${testsSummary}
                 </div>
             </article>
