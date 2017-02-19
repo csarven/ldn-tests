@@ -1375,10 +1375,10 @@ function getTarget(req, res, next){
   var files = [requestedTarget, requestedTarget+'.json'];
 // console.log(files);
   //XXX: This tries to open /discover-* even though they don't (ever?) exist
-  //FIXME: If data doesn't exist and metaData exists, both are not in buffer. Why?
 
+  //XXX: This also works.
   // let readFileContents = files.map((file) => {
-  //   return fsp.readFile(file, 'utf8')
+  //   return require('fs-promise').readFile(file, 'utf8')
   //     .catch(err => {
   //       return null
   //     })
@@ -1538,7 +1538,7 @@ ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? res
       if(req.originalUrl == '/discover-inbox-link-header'){
         linkRelations.push('<' + base + basePath + 'inbox-compacted/>; rel="http://www.w3.org/ns/ldp#inbox"');
       }
-      if(req.originalUrl.startsWith('/target/')){
+      if(req.originalUrl.startsWith('/target/') && req.query && 'discovery' in req.query && req.query['discovery'] == 'link-header'){
         linkRelations.push('<' + inboxIRI + '>; rel="http://www.w3.org/ns/ldp#inbox"');
       }
       res.set('Link', linkRelations);
