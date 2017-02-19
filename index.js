@@ -963,7 +963,7 @@ function createTestReport(req, res, next){
         <tr about="#${i}" typeof="qb:Observation earl:Assertion">
             <td property="qb:dataSet" resource=""></td>
             <td property="earl:subject" resource="${implementation}">${name}</td>
-            <td property="earl:test" resource="ldnTests:${i}">${i}</td>
+            <td property="earl:test" resource="ldn:${i}">${i}</td>
             <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
             <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
             ${earlInfo}
@@ -982,7 +982,7 @@ function createTestReport(req, res, next){
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
 
-  <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.ogr/TR/ldn/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+  <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.org/TR/ldn/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
               <h1 property="schema:name">Implementation report and test results</h1>
@@ -1180,7 +1180,7 @@ function showSummary(req, res, next){
 
             var implementationType = '';
             implementation.rdftype.forEach(function(i){
-              if(i.startsWith('https://www.w3.ogr/TR/ldn/#')){
+              if(i.startsWith('https://www.w3.org/TR/ldn/#')){
                 implementationType = i;
               }
             });
