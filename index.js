@@ -861,7 +861,7 @@ function getTestReceiverHTML(req, results){
                                     <ul>
                                          <li>
                                             <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="https://linkedresearch.org/ldn/tests/inbox/" value="" />
+                                            <input type="text" name="test-receiver-url" placeholder="http://example.org/inbox/" value="" />
                                         </li>
 
                                         <li>
@@ -982,7 +982,7 @@ function createTestReport(req, res, next){
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
 
-  <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.ogr/TR/ldn/# ldnTests: https://linkedresearch.org/ldn/tests/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
+  <body about="" prefix="${prefixesRDFa} ldn: https://www.w3.ogr/TR/ldn/#" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
               <h1 property="schema:name">Implementation report and test results</h1>
@@ -1063,8 +1063,7 @@ function reportTest(req, res, next){
     // );
 
     //TODO
-      //Check if uuid exists, assign another
-      //In order for ldnTests report submission to count as an LDN sender, it needs to discover the target's inbox. 1) add inbox to /ldn/tests/ 2) use dokieli's getEndpoint() and then send
+    //Check if uuid exists, assign another
     postResource(reportsInbox, test['id'], data, headers['Content-Type']).then(
       function(response){
         var location = response.xhr.getResponseHeader('Location');
@@ -1075,7 +1074,7 @@ function reportTest(req, res, next){
             responseBody = '<p>Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a></p>';
             break;
           case 202:
-            responseBody = '<p>' + response.xhr.responseText + '</p><p><code>HTTP 202</code>: This is probably because the request content length was greater than <code>maxPayloadSize</code> in mayktso.</p>';
+            responseBody = '<p>' + response.xhr.responseText + '</p><p><code>HTTP 202</code>: This is probably because the request content length was greater than <code>maxPayloadSize</code> in <a href="https://github.com/csarven/mayktso">mayktso</a>.</p>';
             break;
           default:
             break;
@@ -1259,7 +1258,7 @@ function getReportsHTML(req, res, next, reports){
         tbodyTRs += '<tr>';
         tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a> (<a href="' + report['report'] + '">report</a>)</td>';
         tests.forEach(function(test){
-          var outcomeCode = report['tests']['https://linkedresearch.org/ldn/tests/#' + test];
+          var outcomeCode = report['tests']['https://www.w3.org/TR/ldn/#' + test];
           tbodyTRs += '<td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
         });
         tbodyTRs += '</tr>';
