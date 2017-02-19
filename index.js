@@ -75,7 +75,7 @@ var ldnTests = {
       'description': 'Inbox discovery.',
       'earl:mode': 'earl:automatic'
     },
-    'checkPost': {
+    'checkPostRequest': {
       'description': 'Makes <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
@@ -83,7 +83,7 @@ var ldnTests = {
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostRequestBodyJSONLD': {
+    'checkPostBodyJSONLD': {
       'description': '<code>POST</code> payload is JSON-LD.',
       'earl:mode': 'earl:automatic'
     }
@@ -131,12 +131,12 @@ var ldnTests = {
     }
   },
   'receiver': {
-    'checkHead': {
+    'checkHeadResponse': {
       'description': 'Accepts <code>HEAD</code> requests.',
       'earl:mode': 'earl:automatic'
     },
 
-    'checkOptions': {
+    'checkOptionsResponse': {
       'description': 'Accepts <code>OPTIONS</code> requests.',
       'earl:mode': 'earl:automatic'
     },
@@ -149,19 +149,19 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
 
-    'checkPost': {
+    'checkPostResponse': {
       'description': 'Accepts <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostResponseCreated': {
+    'checkPostCreated': {
       'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostResponseLocation': {
+    'checkPostLocation': {
       'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostResponseProfileLinkRelationAccepted': {
+    'checkPostLinkProfile': {
       'description': 'Succeeds when the content type includes a <code>profile</code> parameter.',
       'earl:mode': 'earl:automatic'
     },
@@ -173,31 +173,31 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
 
-    'checkGet': {
+    'checkGetResponse': {
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'checkGetResponseLDPContains': {
+    'checkGetLDPContains': {
       'description': 'Lists notification URIs with <code>ldp:contains</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'checkGetResponseNotificationsLimited': {
+    'checkGetNotificationsLimited': {
       'description': 'Restricts list of notification URIs (eg. according to access control).',
       'earl:mode': 'earl:semiAuto'
     },
-    'checkGetResponseNotificationsJSONLD': {
+    'checkGetNotificationsJSONLD': {
       'description': 'Notifications are available as JSON-LD.',
       'earl:mode': 'earl:automatic'
     },
-    'checkGetResponseNotificationsRDFSource': {
+    'checkGetNotificationsRDFSource': {
       'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.',
       'earl:mode': 'earl:automatic'
     },
-    'extraCheckGetResponseLDPContainer': {
+    'checkGetLDPContainer': {
       'description': 'Inbox has type <code>ldp:Container</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'extraCheckGetResponseLDPConstrainedBy': {
+    'checkGetLDPConstrainedBy': {
       'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.',
       'earl:mode': 'earl:automatic'
     }
@@ -319,11 +319,7 @@ function testReceiver(req, res, next){
 
     case 'POST':
       var testReceiverPromises = [];
-      var initTest = { '1': checkOptions, '2': checkHead, '3': checkPost, '4': checkGet };
-      // var initTest = { '1': checkOptions };
-      // var initTest = { '2': checkHead };
-      // var initTest = { '3': checkPost };
-      // var initTest = { '4': checkGet };
+      var initTest = { '1': checkOptionsResponse, '2': checkHeadResponse, '3': checkPostResponse, '4': checkGetResponse };
 
       if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
         Object.keys(initTest).forEach(function(id) {
@@ -375,7 +371,7 @@ function testReceiver(req, res, next){
 }
 
 
-function checkOptions(req){
+function checkOptionsResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
@@ -384,7 +380,7 @@ function checkOptions(req){
   return getResourceOptions(url, headers).then(
     function(response){
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
-        testResults['receiver']['checkOptions'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+        testResults['receiver']['checkOptionsResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
         if(acceptPost){
           testResults['receiver']['checkOptionsAcceptPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
 
@@ -403,52 +399,52 @@ function checkOptions(req){
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['receiver']['checkOptions'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['checkOptionsResponse'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
 
-function checkHead(req){
+function checkHeadResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-// console.log('checkHead: ' + url);
+// console.log('checkHeadResponse: ' + url);
   return getResourceHead(url, headers).then(
     function(response){
-      testResults['receiver']['checkHead'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['receiver']['checkHeadResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['receiver']['checkHead'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['checkHeadResponse'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
 
-function checkGet(req){
+function checkGetResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-// console.log('checkGet: ' + url);
+// console.log('checkGetResponse: ' + url);
   return getResource(url, headers).then(
     function(response){
 // console.log(response);
-      testResults['receiver']['checkGetResponseNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Check manually.' };
+      testResults['receiver']['checkGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Check manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
 // console.log(contentType);
       if(typeof contentType == undefined){
-          testResults['receiver']['checkGet'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+          testResults['receiver']['checkGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
           return Promise.resolve(testResults);
       }
       else if(contentType.split(';')[0].trim() != headers['Accept']) {
-          testResults['receiver']['checkGet'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
+          testResults['receiver']['checkGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
           return Promise.resolve(testResults);
       }
       else {
-        testResults['receiver']['checkGet'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+        testResults['receiver']['checkGetResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
         var options = {
           'contentType': 'application/ld+json',
           'subjectURI': url
@@ -476,7 +472,7 @@ console.log(s.iri().toString());
                 }
               });
 
-              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+              testResults['receiver']['checkGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
             }
             else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
               resourceTypes.forEach(function(url){
@@ -485,10 +481,10 @@ console.log(s.iri().toString());
                 }
               });
 
-              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in body: ' + rdftypes.join(', ') };
+              testResults['receiver']['checkGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in body: ' + rdftypes.join(', ') };
             }
             else {
-              testResults['receiver']['extraCheckGetResponseLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+              testResults['receiver']['checkGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
             }
 
             if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
@@ -497,10 +493,10 @@ console.log(s.iri().toString());
                 constrainedBys.push('<a href="' + url + '">' + url + '</a>');
               });
 
-              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found: ' + constrainedBys.join(', ') };
+              testResults['receiver']['checkGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found: ' + constrainedBys.join(', ') };
             }
             else {
-              testResults['receiver']['extraCheckGetResponseLDPConstrainedBy'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+              testResults['receiver']['checkGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
             }
 
             var notifications = [];
@@ -510,7 +506,7 @@ console.log(s.iri().toString());
 
             if(notifications.length > 0) {
               var notificationsNoun = (notifications.length == 1) ? 'notification' : 'notifications';
-              testResults['receiver']['checkGetResponseLDPContains'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found ' + notifications.length + ' ' + notificationsNoun + '.' };
+              testResults['receiver']['checkGetLDPContains'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found ' + notifications.length + ' ' + notificationsNoun + '.' };
 
               var testAccepts = ['application/ld+json', '*/*', ''];
               var notificationResponses = [];
@@ -585,8 +581,8 @@ console.log(s.iri().toString());
                   notificationStateJSONLD = notificationStateJSONLD.join(', ');
                   notificationStateRDFSource = notificationStateRDFSource.join(', ');
 
-                  testResults['receiver']['checkGetResponseNotificationsJSONLD'] = { 'earl:outcome': codeJSONLD, 'earl:info': notificationStateJSONLD };
-                  testResults['receiver']['checkGetResponseNotificationsRDFSource'] = { 'earl:outcome': codeRDFSource, 'earl:info': notificationStateRDFSource };
+                  testResults['receiver']['checkGetNotificationsJSONLD'] = { 'earl:outcome': codeJSONLD, 'earl:info': notificationStateJSONLD };
+                  testResults['receiver']['checkGetNotificationsRDFSource'] = { 'earl:outcome': codeRDFSource, 'earl:info': notificationStateRDFSource };
 
                   return Promise.resolve(testResults);
                 })
@@ -596,27 +592,27 @@ console.log(s.iri().toString());
                 });
             }
             else {
-              testResults['receiver']['checkGetResponseLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+              testResults['receiver']['checkGetLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
               return Promise.resolve(testResults);
             }
           },
           function(reason){
 console.log(reason);
-            testResults['receiver']['checkGet'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+            testResults['receiver']['checkGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
             return Promise.resolve(testResults);
           });
       }
     },
     function(reason){
 // console.log(reason);
-      testResults['receiver']['checkGet'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      testResults['receiver']['checkGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(testResults);
     });
 }
 
 
 
-function checkPost(req){
+function checkPostResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   var url = req.body['test-receiver-url'];
@@ -629,21 +625,21 @@ function checkPost(req){
 // console.log(response);
       // POST requests are supported, with and without profiles
       var status = '<code>HTTP ' + response.xhr.status + '</code>';
-      testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
-      testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
+      testResults['receiver']['checkPostLinkProfile'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
 
       // If 201 or 202
       if(response.xhr.status == 201 || response.xhr.status == 202) {
         // If 'reject' was ticked, creating was wrong, fail
         if('test-receiver-reject' in req.body){
-          testResults['receiver']['checkPostResponseCreated'] = { 'earl:outcome' : 'earl:failed', 'earl:info' : 'Payload did NOT meet constraints, but the receiver indicated success (' + status + ')' };
+          testResults['receiver']['checkPostCreated'] = { 'earl:outcome' : 'earl:failed', 'earl:info' : 'Payload did not meet constraints, but the receiver indicated success (' + status + ')' };
           testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:failed', 'earl:info': '' };
           return Promise.resolve(testResults);
 
         // Otherwise, pass
         }
         else{
-          testResults['receiver']['checkPostResponseCreated'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
+          testResults['receiver']['checkPostCreated'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
 
           // If 201, check Location header
           if(response.xhr.status == 201){
@@ -660,27 +656,27 @@ function checkPost(req){
               headers['Accept'] = 'application/ld+json';
 
               return getResource(url, headers).then(
-                //Maybe use checkPostResponseLocationRetrieveable
+                //Maybe use checkPostLocationRetrieveable
                 function(i){
 // console.log(i);
-                  testResults['receiver']['checkPostResponseLocation'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
+                  testResults['receiver']['checkPostLocation'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
                   return Promise.resolve(testResults);
                 },
                 function(j){
 // console.log(j);
-                  testResults['receiver']['checkPostResponseLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
+                  testResults['receiver']['checkPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
                   return Promise.resolve(testResults);
                 });
             }
             else {
-              testResults['receiver']['checkPostResponseLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code> header not found.' };
+              testResults['receiver']['checkPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code> header not found.' };
               return Promise.resolve(testResults);
             }
           }
         }
       }
       else {
-        testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
+        testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
         return Promise.resolve(testResults);
       }
     },
@@ -689,32 +685,32 @@ function checkPost(req){
       var status = '<code>HTTP ' + reason.xhr.status + '</code>';
       var responseText = (reason.xhr.responseText.length > 0 ) ? ', <q>' + reason.xhr.responseText + '</q>' : '';
 
-      testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText };
+      testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText };
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Deliberately rejected (' + status + ')' };
+            testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Deliberately rejected (' + status + ')' };
             testResults['receiver']['checkPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Payload successfully filtered out (' + status + ')' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
-            testResults['receiver']['checkPostResponseCreated'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            testResults['receiver']['checkPostCreated'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
         case 405:
-          testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
+          testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
         case 415:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
+            testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
           }
           else {
-            testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
+            testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
           }
-          testResults['receiver']['checkPostResponseProfileLinkRelationAccepted'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
+          testResults['receiver']['checkPostLinkProfile'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          testResults['receiver']['checkPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText};
+          testResults['receiver']['checkPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText};
           break;
       }
 
@@ -1401,9 +1397,9 @@ function getTarget(req, res, next){
             if (typeof metaData !== 'undefined'){
               var results= {};
               results['checkDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-              results['checkPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['checkPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
               results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
-              results['checkPostRequestBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
+              results['checkPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
               if(metaData.req.headers["content-type"] == 'application/ld+json') {
                 results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
@@ -1414,10 +1410,10 @@ function getTarget(req, res, next){
 
               switch(parseInt(metaData.res.statusCode)){
                 case 201: case 202:
-                  results['checkPostRequestBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                  results['checkPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
                   break;
                 case 400:
-                  results['checkPostRequestBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
+                  results['checkPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
                   break;
               }
 
