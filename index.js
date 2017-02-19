@@ -29,7 +29,12 @@ mayktso.app.route('/inbox-expanded/').all(function(req, res, next){
   mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }});
 });
 mayktso.app.route('/inbox-sender/').all(function(req, res, next){
-  mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }, storeMeta: true, allowSlug: true });
+  var fileNameSuffix = '';
+  if(req.query && 'discovery' in req.query && req.query['discovery'].length > 0) {
+    fileNameSuffix = '.' + req.query['discovery'];
+  }
+
+  mayktso.handleResource(req, res, next, { jsonld: { profile: 'http://www.w3.org/ns/json-ld#expanded' }, storeMeta: true, allowSlug: true, fileNameSuffix: fileNameSuffix  });
 });
 
 // console.log(mayktso.app._router.stack);
