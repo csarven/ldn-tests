@@ -1401,9 +1401,13 @@ function getTarget(req, res, next){
         if(req.originalUrl.startsWith('/target/')){
           var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
           var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
-          discoverInboxHTML = `<p>This target resource announces its inbox here:</p>
-          <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>
-          <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
+          discoverInboxHTML += `
+                          <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
+          if(req.query && 'discovery' in req.query && req.query['discovery'] == 'rdf-body') {
+            discoverInboxHTML += `
+                          <p>This target resource announces its inbox here:</p>
+                          <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>`;
+          }
           if(typeof data !== 'undefined' || typeof metaData !== 'undefined') {
             var notificationIRI = inboxBaseIRI + req.params.id;
 
