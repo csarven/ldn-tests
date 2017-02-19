@@ -1550,7 +1550,7 @@ ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? res
       res.set('Allow', 'GET, HEAD, OPTIONS');
     }
 
-    if(req.accepts(['text/html', 'application/xhtml+xml'])){
+    if(req.accepts(['text/html', 'application/xhtml+xml', '*/*'])){
       sendHeaders(outputData, 'text/html');
       res.status(200);
       res.send(outputData);
