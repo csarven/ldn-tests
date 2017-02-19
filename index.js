@@ -1245,10 +1245,8 @@ function getReportsHTML(req, res, next, reports){
       var testTypeCapitalised = testTypeCode[0].toUpperCase() + testTypeCode.slice(1);
       var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
       theadTRs += '<tr>';
-
-
       tests.forEach(function(test){
-        theadTRs += '<th>' + test + '</th>';
+        theadTRs += '<th><a href="https://www.w3.org/TR/ldn/#">' + test + '</a></th>';
       });
       theadTRs += '</tr>';
 
