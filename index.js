@@ -274,8 +274,13 @@ function getTestSenderHTML(req, results){
                         <div datatype="rdf:HTML" property="schema:description">
                             <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 
-                            <p>Run your sender software to this target:</p>
-                            <p><code><a href="${targetIRI}">${targetIRI}</a></code></p>
+                            <p>Run your sender software to both of these targets which advertise their inboxes through <code>Link</code> header and RDF body respectively:</p>
+                            <ul>
+                                <li><code>${targetIRI}?discovery=link-header</code></li>
+                                <li><code>${targetIRI}?discovery=rdf-body</code></li>
+                            </ul>
+
+                            <p>To see the test results and to submit a report go to: <code><a href="${targetIRI}">${targetIRI}</a></code>.</p>
                         </div>
                     </section>
                 </div>
@@ -1401,8 +1406,7 @@ function getTarget(req, res, next){
         if(req.originalUrl.startsWith('/target/')){
           var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
           var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
-          discoverInboxHTML += `
-                          <p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
+          discoverInboxHTML += `<p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
           if(req.query && 'discovery' in req.query && req.query['discovery'] == 'rdf-body') {
             discoverInboxHTML += `
                           <p>This target resource announces its inbox here:</p>
