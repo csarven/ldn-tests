@@ -1111,6 +1111,7 @@ function showSummary(req, res, next){
         return next();
       }
 
+      //XXX: Currently unused.
       var fetchNotifications = function(url){
         // return new Promise(function(resolve, reject) {
           return discoverInbox(url).then(
@@ -1130,6 +1131,7 @@ function showSummary(req, res, next){
         // });
       }
 
+      //TODO: Ideally this would loop through each target (sender, receiver, consumer), find their inboxes and their notifications. Since they use the same inbox, this is only looking up one of them. A nicer/proper/strict way of doing it would be to go through each target, have a unique list of notifications (since in our case each notification URI will be listed 3 times).
       //Discover Inbox
       var baseURL = getBaseURL(req.getUrl());
       var base = baseURL.endsWith('/') ? baseURL : baseURL + '/';
