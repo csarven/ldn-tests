@@ -996,7 +996,7 @@ ${doap}
                   </section>
 
                   <section>
-                      <h2 rel="qb:dataSet" resource="#data-structure-definition">Dataset</h2>
+                      <h2 rel="qb:structure" resource="#data-structure-definition">Dataset</h2>
                       <div>
 ${dataset}
                       </div>
