@@ -77,34 +77,43 @@ Object.assign(vocab, ldnTestsVocab);
 var ldnTests = {
   'sender': {
     'testSenderHeaderDiscovery': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-discovery',
       'description': 'Inbox discovery (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderHeaderPostRequest': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-post-request',
       'description': 'Makes <code>POST</code> requests (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderHeaderPostContentTypeJSONLD': {
+      'uri': 'https://www/w3.org/TR/ldn/#test-sender-header-post-content-type-json-ld',
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderHeaderPostValidJSONLD': {
+      'uri': 'https://www/w3.org/TR/ldn/#test-sender-header-post-valid-json-ld',
       'description': '<code>POST</code> payload is JSON-LD (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
+
     'testSenderBodyDiscovery': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-discovery',
       'description': 'Inbox discovery (RDF body).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderBodyPostRequest': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-post-request',
       'description': 'Makes <code>POST</code> requests (RDF body).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderBodyPostContentTypeJSONLD': {
+      'uri': 'https://www/w3.org/TR/ldn/#test-sender-body-post-content-type-json-ld',
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (RDF body).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderBodyPostBodyJSONLD': {
+      'uri': 'https://www/w3.org/TR/ldn/#test-sender-body-post-valid-json-ld',
       'description': '<code>POST</code> payload is JSON-LD (RDF body).',
       'earl:mode': 'earl:automatic'
     }
