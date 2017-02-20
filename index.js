@@ -120,10 +120,12 @@ var ldnTests = {
   },
   'consumer': {
     'testConsumerHeaderDiscovery': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-header-discovery',
       'description': 'Inbox discovery (<code>Link</code> header).',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerBodyDiscovery': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-body-discovery',
       'description': 'Inbox discovery (RDF body).',
       'earl:mode': 'earl:semiAuto'
     },
