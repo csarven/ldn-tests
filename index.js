@@ -1022,7 +1022,7 @@ function createTestReport(req, res, next){
         <tr about="#${i}" typeof="qb:Observation earl:Assertion">
             <td property="qb:dataSet" resource=""></td>
             <td property="earl:subject" resource="${implementation}">${name}</td>
-            <td property="earl:test" resource="ldn:${i}">${i}</td>
+            <td><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
             <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
             <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
             ${earlInfo}
@@ -1307,7 +1307,7 @@ function getReportsHTML(req, res, next, reports){
       var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
       theadTRs += '<tr>';
       tests.forEach(function(test){
-        theadTRs += '<th><a href="https://www.w3.org/TR/ldn/#">' + test + '</a></th>';
+        theadTRs += '<th><a href="' + ldnTests[testTypeCode][test]['uri'] + '">' + test + '</a></th>';
       });
       theadTRs += '</tr>';
 
