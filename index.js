@@ -140,26 +140,32 @@ var ldnTests = {
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationAnnounce': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-announce',
       'description': 'Contents of the announce notifications.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationChangelog': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-changelog',
       'description': 'Contents of the changelog notifications.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationCitation': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-citation',
       'description': 'Contents of the citation notifications.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationAssessing': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-assessing',
       'description': 'Contents of the assessing notifications.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationComment': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-comment',
       'description': 'Contents of the comment notifications.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationRSVP': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-rsvp',
       'description': 'Contents of the rsvp notifications.',
       'earl:mode': 'earl:semiAuto'
     }
