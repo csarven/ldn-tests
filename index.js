@@ -1020,9 +1020,8 @@ function createTestReport(req, res, next){
 
     observations.push(`
         <tr about="#${i}" typeof="qb:Observation earl:Assertion">
-            <td property="qb:dataSet" resource=""></td>
             <td property="earl:subject" resource="${implementation}">${name}</td>
-            <td><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
+            <td><meta property="qb:dataSet" resource="" /><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
             <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
             <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
             ${earlInfo}
@@ -1068,7 +1067,6 @@ ${dataset}
     <caption>Report</caption>
     <thead about="#data-structure-definition" typeof="qb:DataStructureDefinition">
         <tr>
-            <th>DataSet</th>
             <th rel="qb:component" resource="#component-dimension-subject" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:subject" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test subject">Subject</span></span></th>
             <th rel="qb:component" resource="#component-dimension-test" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:test" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test criterion">Test</span></span></th>
             <th rel="qb:component" resource="#component-dimension-mode" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:mode" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Describes how a test was carried out">Mode</span></span></th>
@@ -1078,7 +1076,7 @@ ${dataset}
     </thead>
     <tfoot>
         <tr><td colspan="6">${getEarlOutcomeHTML()}</td></tr>
-        <tr><td about="" colspan="6" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
+        <tr><td about="" colspan="5" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
     </tfoot>
     <tbody>
 ${observations}
