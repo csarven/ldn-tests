@@ -216,26 +216,32 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
     'testGetLDPContains': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-contains',
       'description': 'Lists notification URIs with <code>ldp:contains</code>.',
       'earl:mode': 'earl:automatic'
     },
     'testGetNotificationsLimited': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifiactions-limited',
       'description': 'Restricts list of notification URIs (eg. according to access control).',
       'earl:mode': 'earl:semiAuto'
     },
     'testGetNotificationsJSONLD': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-json-ld',
       'description': 'Notifications are available as JSON-LD.',
       'earl:mode': 'earl:automatic'
     },
     'testGetNotificationsRDFSource': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-rdf-source',
       'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.',
       'earl:mode': 'earl:automatic'
     },
     'testGetLDPContainer': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-container',
       'description': 'Inbox has type <code>ldp:Container</code>.',
       'earl:mode': 'earl:automatic'
     },
     'testGetLDPConstrainedBy': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-constrained-by',
       'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.',
       'earl:mode': 'earl:automatic'
     }
