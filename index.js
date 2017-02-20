@@ -76,20 +76,36 @@ Object.assign(vocab, ldnTestsVocab);
 
 var ldnTests = {
   'sender': {
-    'checkDiscoverInbox': {
-      'description': 'Inbox discovery.',
+    'checkLinkHeaderDiscoverInbox': {
+      'description': 'Inbox discovery (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostRequest': {
-      'description': 'Makes <code>POST</code> requests.',
+    'checkLinkHeaderPostRequest': {
+      'description': 'Makes <code>POST</code> requests (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostContentTypeJSONLD': {
-      'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code>.',
+    'checkLinkHeaderPostContentTypeJSONLD': {
+      'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'checkPostBodyJSONLD': {
-      'description': '<code>POST</code> payload is JSON-LD.',
+    'checkLinkHeaderPostBodyJSONLD': {
+      'description': '<code>POST</code> payload is JSON-LD (<code>Link</code> header).',
+      'earl:mode': 'earl:automatic'
+    },
+    'checkRDFBodyDiscoverInbox': {
+      'description': 'Inbox discovery (RDF body).',
+      'earl:mode': 'earl:automatic'
+    },
+    'checkRDFBodyPostRequest': {
+      'description': 'Makes <code>POST</code> requests (RDF body).',
+      'earl:mode': 'earl:automatic'
+    },
+    'checkRDFBodyPostContentTypeJSONLD': {
+      'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (RDF body).',
+      'earl:mode': 'earl:automatic'
+    },
+    'checkRDFBodyPostBodyJSONLD': {
+      'description': '<code>POST</code> payload is JSON-LD (RDF body).',
       'earl:mode': 'earl:automatic'
     }
   },
@@ -1370,36 +1386,7 @@ function getTarget(req, res, next){
   //XXX: We don't care about the error
   // if(error) {}
   var discoverInboxHTML = '';
-  var requestedTarget = req.requestedPath;
-  var reqresData = '';
 
-  if(req.originalUrl.startsWith('/target/') && req.params.id && req.params.id.length > 0 && !req.params.id.match(/\/?\.\.+\/?/g)){
-    requestedTarget = config.rootPath + '/inbox-sender/' + req.params.id;
-  }
-
-  var files = [requestedTarget, requestedTarget+'.json'];
-// console.log(files);
-  //XXX: This tries to open /discover-* even though they don't (ever?) exist
-
-  //XXX: This also works.
-  // let readFileContents = files.map((file) => {
-  //   return require('fs-promise').readFile(file, 'utf8')
-  //     .catch(err => {
-  //       return null
-  //     })
-  // })
-  let fileContents = files.map((file) => {
-    try {
-      return fs.readFileSync(file, 'utf8')
-    } catch (error) {
-      return null
-    }
-  });
-// console.log(fileContents);
-  var data = (fileContents[0]) ? fileContents[0] : undefined;
-  var metaData = (fileContents[1]) ? JSON.parse(fileContents[1]) : undefined;
-// console.log(data);
-// console.log(metaData);
   switch(req.originalUrl) {
     case '/discover-inbox-link-header':
       discoverInboxHTML = `<p>This target resource announces its Inbox in the HTTP headers.</p>`;
@@ -1409,41 +1396,96 @@ function getTarget(req, res, next){
       break;
     default:
       if(req.originalUrl.startsWith('/target/')){
+        var reqresData = '';
+        var requestedTarget = req.requestedPath;
+        if(req.params.id && req.params.id.length > 0 && !req.params.id.match(/\/?\.\.+\/?/g)){
+          requestedTarget = config.rootPath + '/inbox-sender/' + req.params.id;
+        }
+
+        var files = [requestedTarget+'.link-header', requestedTarget+'.link-header.json', requestedTarget+'.rdf-body', requestedTarget+'.rdf-body.json'];
+        // console.log(files);
+
+        //XXX: This also works.
+        // let readFileContents = files.map((file) => {
+        //   return require('fs-promise').readFile(file, 'utf8')
+        //     .catch(err => {
+        //       return null
+        //     })
+        // })
+        let fileContents = files.map((file) => {
+          try {
+            return fs.readFileSync(file, 'utf8')
+          } catch (error) {
+            return null
+          }
+        });
+      // console.log(fileContents);
+        var dataLinkHeader = (fileContents[0]) ? fileContents[0] : undefined;
+        var metaDataLinkHeader = (fileContents[1]) ? JSON.parse(fileContents[1]) : undefined;
+        var dataRDFBody = (fileContents[2]) ? fileContents[2] : undefined;
+        var metaDataRDFBody = (fileContents[3]) ? JSON.parse(fileContents[3]) : undefined;
+        // console.log(dataLinkHeader);
+        // console.log(metaDataLinkHeader);
+        // console.log(dataRDFBody);
+        // console.log(metaDataRDFBody);
+
         var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
         var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
+
         discoverInboxHTML += `<p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
         if(req.query && 'discovery' in req.query && req.query['discovery'] == 'rdf-body') {
           discoverInboxHTML += `
                           <p>This target resource announces its inbox here:</p>
-                          <p><code><a href="${inboxIRI}" rel="ldp:inbox">${inboxIRI}</a></code></p>`;
+                          <p><code><a href="${inboxIRI}&amp;discovery=rdf-body" rel="ldp:inbox">${inboxIRI}&amp;discovery=rdf-body</a></code></p>`;
         }
-        if(typeof data !== 'undefined' || typeof metaData !== 'undefined') {
+        if(typeof dataLinkHeader !== 'undefined' || typeof metaDataLinkHeader !== 'undefined' || typeof dataRDFBody !== 'undefined' || typeof metaDataRDFBody !== 'undefined') {
           var notificationIRI = inboxBaseIRI + req.params.id;
 
-// console.log(requestedTarget + '.json');
-// console.log(JSON.stringify(JSON.parse(metaData).req));
-
-          if (typeof metaData !== 'undefined'){
+          if (typeof metaDataLinkHeader !== 'undefined' || typeof metaDataRDFBody !== 'undefined'){
             var results= {};
-            results['checkDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-            results['checkPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-            results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
-            results['checkPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
+            if (typeof metaDataLinkHeader !== 'undefined'){
+              results['checkLinkHeaderDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['checkLinkHeaderPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['checkLinkHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
+              results['checkLinkHeaderPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
-            if(metaData.req.headers["content-type"] == 'application/ld+json') {
-              results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-            }
-            else {
-              results['checkPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaData.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
-            }
+              if(metaDataLinkHeader.req.headers["content-type"] == 'application/ld+json') {
+                results['checkLinkHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              }
+              else {
+                results['checkLinkHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataLinkHeader.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+              }
 
-            switch(parseInt(metaData.res.statusCode)){
-              case 201: case 202:
-                results['checkPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-                break;
-              case 400:
-                results['checkPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
-                break;
+              switch(parseInt(metaDataLinkHeader.res.statusCode)){
+                case 201: case 202:
+                  results['checkLinkHeaderPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                  break;
+                case 400:
+                  results['checkLinkHeaderPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
+                  break;
+              }
+            }
+            if (typeof metaDataRDFBody !== 'undefined'){
+              results['checkRDFBodyDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['checkRDFBodyPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['checkRDFBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
+              results['checkRDFBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
+
+              if(metaDataRDFBody.req.headers["content-type"] == 'application/ld+json') {
+                results['checkRDFBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              }
+              else {
+                results['checkRDFBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataRDFBody.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+              }
+
+              switch(parseInt(metaDataRDFBody.res.statusCode)){
+                case 201: case 202:
+                  results['checkRDFBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                  break;
+                case 400:
+                  results['checkRDFBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
+                  break;
+              }
             }
 
             var reportHTML = getTestReportHTML(results, 'sender');
@@ -1467,11 +1509,11 @@ ${testResponse(req, test, reportHTML)}
                     <section id="test-request-response-data">
                         <h2>Request and Response</h2>
                         <div>`;
-          if (typeof metaData !== 'undefined'){
-            var requestHeaders = [];
-            requestHeaders.push(metaData.req.method + ' ' + metaData.req.url + ' HTTP/' + metaData.req.httpVersion);
-            Object.keys(metaData.req.headers).forEach(function(i){
-              requestHeaders.push(i.replace(/\b\w/g, l => l.toUpperCase()) + ': ' + metaData.req.headers[i]);
+          var requestHeaders = [];
+          if (typeof metaDataLinkHeader !== 'undefined'){
+            requestHeaders.push(metaDataLinkHeader.req.method + ' ' + metaDataLinkHeader.req.url + ' HTTP/' + metaDataLinkHeader.req.httpVersion);
+            Object.keys(metaDataLinkHeader.req.headers).forEach(function(i){
+              requestHeaders.push(i.replace(/\b\w/g, l => l.toUpperCase()) + ': ' + metaDataLinkHeader.req.headers[i]);
             });
 
             reqresData += `
@@ -1480,13 +1522,35 @@ ${testResponse(req, test, reportHTML)}
                             <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
 
                             <dt>Response</dt>
-                            <dd><pre>${preSafe(JSON.stringify(metaData.res.headers)).slice(1, -1)}</pre></dd>
+                            <dd><pre>${preSafe(JSON.stringify(metaDataLinkHeader.res.headers)).slice(1, -1)}</pre></dd>
                           </dl>`;
           }
-          if (typeof data !== 'undefined'){
+          if (typeof dataLinkHeader !== 'undefined'){
             reqresData += `
                             <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
-                            <pre>${data}</pre>`;
+                            <pre>${dataLinkHeader}</pre>`;
+          }
+
+          if (typeof metaDataRDFBody !== 'undefined'){
+            requestHeaders = [];
+            requestHeaders.push(metaDataRDFBody.req.method + ' ' + metaDataRDFBody.req.url + ' HTTP/' + metaDataRDFBody.req.httpVersion);
+            Object.keys(metaDataRDFBody.req.headers).forEach(function(i){
+              requestHeaders.push(i.replace(/\b\w/g, l => l.toUpperCase()) + ': ' + metaDataRDFBody.req.headers[i]);
+            });
+
+            reqresData += `
+                          <dl>
+                            <dt>Request</dt>
+                            <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
+
+                            <dt>Response</dt>
+                            <dd><pre>${preSafe(JSON.stringify(metaDataRDFBody.res.headers)).slice(1, -1)}</pre></dd>
+                          </dl>`;
+          }
+          if (typeof dataRDFBody !== 'undefined'){
+            reqresData += `
+                            <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
+                            <pre>${dataRDFBody}</pre>`;
           }
           reqresData += `
                         </div>
@@ -1544,7 +1608,7 @@ ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? res
       linkRelations.push('<' + base + basePath + 'inbox-compacted/>; rel="http://www.w3.org/ns/ldp#inbox"');
     }
     if(req.originalUrl.startsWith('/target/') && req.query && 'discovery' in req.query && req.query['discovery'] == 'link-header'){
-      linkRelations.push('<' + inboxIRI + '>; rel="http://www.w3.org/ns/ldp#inbox"');
+      linkRelations.push('<' + inboxIRI + '&discovery=link-header>; rel="http://www.w3.org/ns/ldp#inbox"');
     }
     res.set('Link', linkRelations);
     res.set('Content-Type', contentType +';charset=utf-8');
