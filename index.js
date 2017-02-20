@@ -169,19 +169,23 @@ var ldnTests = {
     },
 
     'testOptionsResponse': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-response',
       'description': 'Accepts <code>OPTIONS</code> requests.',
       'earl:mode': 'earl:automatic'
     },
     'testOptionsAcceptPost': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post',
       'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
       'earl:mode': 'earl:automatic'
     },
     'testOptionsAcceptPostContainsJSONLD': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post-contains-json-ld',
       'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
       'earl:mode': 'earl:automatic'
     },
 
     'testPostResponse': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response',
       'description': 'Accepts <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
@@ -203,6 +207,7 @@ var ldnTests = {
     },
 
     'testGetResponse': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-response',
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
       'earl:mode': 'earl:automatic'
     },
