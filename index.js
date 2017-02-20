@@ -190,18 +190,22 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
     'testPostCreated': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-created',
       'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.',
       'earl:mode': 'earl:automatic'
     },
     'testPostLocation': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-location',
       'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
     'testPostLinkProfile': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-link-profile',
       'description': 'Succeeds when the content type includes a <code>profile</code> parameter.',
       'earl:mode': 'earl:automatic'
     },
     'testPostResponseConstraintsUnmet': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response-contraints-unmet',
       'description': 'Fails to process notifications if implementation-specific constraints are not met.',
       'earl:mode': 'earl:automatic'
     },
