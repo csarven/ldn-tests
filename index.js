@@ -76,53 +76,53 @@ Object.assign(vocab, ldnTestsVocab);
 
 var ldnTests = {
   'sender': {
-    'testLinkHeaderDiscoverInbox': {
+    'testSenderHeaderDiscovery': {
       'description': 'Inbox discovery (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'testLinkHeaderPostRequest': {
+    'testSenderHeaderPostRequest': {
       'description': 'Makes <code>POST</code> requests (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'testLinkHeaderPostContentTypeJSONLD': {
+    'testSenderHeaderPostContentTypeJSONLD': {
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'testLinkHeaderPostBodyJSONLD': {
+    'testSenderHeaderPostValidJSONLD': {
       'description': '<code>POST</code> payload is JSON-LD (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
-    'testRDFBodyDiscoverInbox': {
+    'testSenderBodyDiscovery': {
       'description': 'Inbox discovery (RDF body).',
       'earl:mode': 'earl:automatic'
     },
-    'testRDFBodyPostRequest': {
+    'testSenderBodyPostRequest': {
       'description': 'Makes <code>POST</code> requests (RDF body).',
       'earl:mode': 'earl:automatic'
     },
-    'testRDFBodyPostContentTypeJSONLD': {
+    'testSenderBodyPostContentTypeJSONLD': {
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (RDF body).',
       'earl:mode': 'earl:automatic'
     },
-    'testRDFBodyPostBodyJSONLD': {
+    'testSenderBodyPostBodyJSONLD': {
       'description': '<code>POST</code> payload is JSON-LD (RDF body).',
       'earl:mode': 'earl:automatic'
     }
   },
   'consumer': {
-    'testDiscoverInboxLinkHeader': {
-      'description': 'Inbox discovery via <code>Link</code> header.',
+    'testConsumerHeaderDiscovery': {
+      'description': 'Inbox discovery (<code>Link</code> header).',
       'earl:mode': 'earl:semiAuto'
     },
-    'testDiscoverInboxRDFBody': {
-      'description': 'Inbox discovery via RDF body.',
+    'testConsumerBodyDiscovery': {
+      'description': 'Inbox discovery (RDF body).',
       'earl:mode': 'earl:semiAuto'
     },
-    'testDiscoverNotificationJSONLDCompacted': {
+    'testListingJSONLDCompacted': {
       'description': 'Notification discovery from Inbox using JSON-LD compacted form.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testDiscoverNotificationJSONLDExpanded': {
+    'testListingJSONLDExpanded': {
       'description': 'Notification discovery from Inbox using JSON-LD expanded form.',
       'earl:mode': 'earl:semiAuto'
     },
@@ -186,9 +186,6 @@ var ldnTests = {
       'description': 'Succeeds when the content type includes a <code>profile</code> parameter.',
       'earl:mode': 'earl:automatic'
     },
-    // 'testPostResponseBody': {
-    //   'description': 'TODO: Read the body'... I don't remember what this was for and if it is already covered.
-    // },
     'testPostResponseConstraintsUnmet': {
       'description': 'Fails to process notifications if implementation-specific constraints are not met.',
       'earl:mode': 'earl:automatic'
@@ -224,7 +221,9 @@ var ldnTests = {
     }
   }
 }
-
+// Object.keys(ldnTests).forEach(function(i){
+//   console.log(Object.keys(ldnTests[i]));
+// });
 
 function testSender(req, res, next){
 // console.log(req.requestedPath);
@@ -1444,46 +1443,46 @@ function getTarget(req, res, next){
           if (typeof metaDataLinkHeader !== 'undefined' || typeof metaDataRDFBody !== 'undefined'){
             var results= {};
             if (typeof metaDataLinkHeader !== 'undefined'){
-              results['testLinkHeaderDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-              results['testLinkHeaderPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-              results['testLinkHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
-              results['testLinkHeaderPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
+              results['testSenderHeaderDiscovery'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['testSenderHeaderPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
+              results['testSenderHeaderPostValidJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
               if(metaDataLinkHeader.req.headers["content-type"] == 'application/ld+json') {
-                results['testLinkHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
               }
               else {
-                results['testLinkHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataLinkHeader.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataLinkHeader.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaDataLinkHeader.res.statusCode)){
                 case 201: case 202:
-                  results['testLinkHeaderPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                  results['testSenderHeaderPostValidJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
                   break;
                 case 400:
-                  results['testLinkHeaderPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
+                  results['testSenderHeaderPostValidJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
                   break;
               }
             }
             if (typeof metaDataRDFBody !== 'undefined'){
-              results['testRDFBodyDiscoverInbox'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-              results['testRDFBodyPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
-              results['testRDFBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
-              results['testRDFBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
+              results['testSenderBodyDiscovery'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['testSenderBodyPostRequest'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
+              results['testSenderBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
               if(metaDataRDFBody.req.headers["content-type"] == 'application/ld+json') {
-                results['testRDFBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
               }
               else {
-                results['testRDFBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataRDFBody.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataRDFBody.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaDataRDFBody.res.statusCode)){
                 case 201: case 202:
-                  results['testRDFBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+                  results['testSenderBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
                   break;
                 case 400:
-                  results['testRDFBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
+                  results['testSenderBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Send valid JSON-LD payload.' }
                   break;
               }
             }
@@ -1704,10 +1703,10 @@ function testConsumer(req, res, next){
     case 'POST':
       var testConsumerPromises = [];
       var initTest = {
-         '1': testDiscoverInboxLinkHeader
-        ,'2': testDiscoverInboxRDFBody
-        ,'3': testDiscoverNotificationJSONLDCompacted
-        ,'4': testDiscoverNotificationJSONLDExpanded
+         '1': testConsumerHeaderDiscovery
+        ,'2': testConsumerBodyDiscovery
+        ,'3': testListingJSONLDCompacted
+        ,'4': testListingJSONLDExpanded
         ,'5': testNotificationAnnounce
         ,'6': testNotificationChangelog
         ,'7': testNotificationCitation
@@ -1764,50 +1763,50 @@ function testConsumer(req, res, next){
 }
 
 
-function testDiscoverInboxLinkHeader(req){
+function testConsumerHeaderDiscovery(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['testDiscoverInboxLinkHeader'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer']['testConsumerHeaderDiscovery'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-discover-inbox-link-header'];
   if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim();
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
 
   if(value == inbox){
-    testResults['consumer']['testDiscoverInboxLinkHeader'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+    testResults['consumer']['testConsumerHeaderDiscovery'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
   }
   else {
-    testResults['consumer']['testDiscoverInboxLinkHeader'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'test the Inbox URL again. Make sure to only include the URL.' };
+    testResults['consumer']['testConsumerHeaderDiscovery'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'test the Inbox URL again. Make sure to only include the URL.' };
   }
   return Promise.resolve(testResults);
 }
 
-function testDiscoverInboxRDFBody(req){
+function testConsumerBodyDiscovery(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['testDiscoverInboxRDFBody'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer']['testConsumerBodyDiscovery'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-discover-inbox-rdf-body'];
   if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim();
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
 
   if(value.length > 0 && value == inbox){
-    testResults['consumer']['testDiscoverInboxRDFBody'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+    testResults['consumer']['testConsumerBodyDiscovery'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
   }
   else {
-    testResults['consumer']['testDiscoverInboxRDFBody'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'test the Inbox URL again. Make sure to only include the URL.' };
+    testResults['consumer']['testConsumerBodyDiscovery'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'test the Inbox URL again. Make sure to only include the URL.' };
   }
   return Promise.resolve(testResults);
 }
 
-function testDiscoverNotificationJSONLDCompacted(req){
+function testListingJSONLDCompacted(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['testDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-compacted'];
   if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
   var notifications = [inbox+'announce', inbox+'changelog', inbox+'citation'];
 
-  testResults['consumer']['testDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
+  testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
 
   var message, found = 0;
   if(value.length == 3){
@@ -1822,26 +1821,26 @@ function testDiscoverNotificationJSONLDCompacted(req){
     });
 
     if(check) {
-      testResults['consumer']['testDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
     }
     else {
-      testResults['consumer']['testDiscoverNotificationJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
+      testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
     }
   }
   return Promise.resolve(testResults);
 }
 
 
-function testDiscoverNotificationJSONLDExpanded(req){
+function testListingJSONLDExpanded(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['testDiscoverNotificationJSONLDExpanded'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-expanded'];
   if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
   var notifications = [inbox+'assessing', inbox+'comment', inbox+'rsvp'];
 
-  testResults['consumer']['testDiscoverNotificationJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
+  testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
 
   var message, found = 0;
   if(value.length == 3){
@@ -1856,10 +1855,10 @@ function testDiscoverNotificationJSONLDExpanded(req){
     });
 
     if(check) {
-      testResults['consumer']['testDiscoverNotificationJSONLDExpanded'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
     }
     else {
-      testResults['consumer']['testDiscoverNotificationJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
+      testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
     }
   }
   return Promise.resolve(testResults);
