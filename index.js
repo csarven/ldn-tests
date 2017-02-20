@@ -129,118 +129,118 @@ var ldnTests = {
       'description': 'Inbox discovery (RDF body).',
       'earl:mode': 'earl:semiAuto'
     },
-    'testListingJSONLDCompacted': {
+    'testConsumerListingJSONLDCompacted': {
       'description': 'Notification discovery from Inbox using JSON-LD compacted form.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testListingJSONLDExpanded': {
+    'testConsumerListingJSONLDExpanded': {
       'description': 'Notification discovery from Inbox using JSON-LD expanded form.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testNotificationAnnounce': {
+    'testConsumerNotificationAnnounce': {
       'description': 'Contents of the announce notifications.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testNotificationChangelog': {
+    'testConsumerNotificationChangelog': {
       'description': 'Contents of the changelog notifications.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testNotificationCitation': {
+    'testConsumerNotificationCitation': {
       'description': 'Contents of the citation notifications.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testNotificationAssessing': {
+    'testConsumerNotificationAssessing': {
       'description': 'Contents of the assessing notifications.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testNotificationComment': {
+    'testConsumerNotificationComment': {
       'description': 'Contents of the comment notifications.',
       'earl:mode': 'earl:semiAuto'
     },
-    'testNotificationRSVP': {
+    'testConsumerNotificationRSVP': {
       'description': 'Contents of the rsvp notifications.',
       'earl:mode': 'earl:semiAuto'
     }
   },
   'receiver': {
-    'testHeadResponse': {
+    'testReceiverHeadResponse': {
       'description': 'Accepts <code>HEAD</code> requests.',
       'earl:mode': 'earl:automatic'
     },
 
-    'testOptionsResponse': {
+    'testReceiverOptionsResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-response',
       'description': 'Accepts <code>OPTIONS</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'testOptionsAcceptPost': {
+    'testReceiverOptionsAcceptPost': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post',
       'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
       'earl:mode': 'earl:automatic'
     },
-    'testOptionsAcceptPostContainsJSONLD': {
+    'testReceiverOptionsAcceptPostContainsJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post-contains-json-ld',
       'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
       'earl:mode': 'earl:automatic'
     },
 
-    'testPostResponse': {
+    'testReceiverPostResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response',
       'description': 'Accepts <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'testPostCreated': {
+    'testReceiverPostCreated': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-created',
       'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'testPostLocation': {
+    'testReceiverPostLocation': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-location',
       'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'testPostLinkProfile': {
+    'testReceiverPostLinkProfile': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-link-profile',
       'description': 'Succeeds when the content type includes a <code>profile</code> parameter.',
       'earl:mode': 'earl:automatic'
     },
-    'testPostResponseConstraintsUnmet': {
+    'testReceiverPostResponseConstraintsUnmet': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response-contraints-unmet',
       'description': 'Fails to process notifications if implementation-specific constraints are not met.',
       'earl:mode': 'earl:automatic'
     },
 
-    'testGetResponse': {
+    'testReceiverGetResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-response',
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
       'earl:mode': 'earl:automatic'
     },
-    'testGetLDPContains': {
+    'testReceiverGetLDPContains': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-contains',
       'description': 'Lists notification URIs with <code>ldp:contains</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'testGetNotificationsLimited': {
+    'testReceiverGetNotificationsLimited': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifiactions-limited',
       'description': 'Restricts list of notification URIs (eg. according to access control).',
       'earl:mode': 'earl:semiAuto'
     },
-    'testGetNotificationsJSONLD': {
+    'testReceiverGetNotificationsJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-json-ld',
       'description': 'Notifications are available as JSON-LD.',
       'earl:mode': 'earl:automatic'
     },
-    'testGetNotificationsRDFSource': {
+    'testReceiverGetNotificationsRDFSource': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-rdf-source',
       'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.',
       'earl:mode': 'earl:automatic'
     },
-    'testGetLDPContainer': {
+    'testReceiverGetLDPContainer': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-container',
       'description': 'Inbox has type <code>ldp:Container</code>.',
       'earl:mode': 'earl:automatic'
     },
-    'testGetLDPConstrainedBy': {
+    'testReceiverGetLDPConstrainedBy': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-constrained-by',
       'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.',
       'earl:mode': 'earl:automatic'
@@ -370,7 +370,7 @@ function testReceiver(req, res, next){
 
     case 'POST':
       var testReceiverPromises = [];
-      var initTest = { '1': testOptionsResponse, '2': testHeadResponse, '3': testPostResponse, '4': testGetResponse };
+      var initTest = { '1': testReceiverOptionsResponse, '2': testReceiverHeadResponse, '3': testReceiverPostResponse, '4': testReceiverGetResponse };
 
       if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
         Object.keys(initTest).forEach(function(id) {
@@ -422,80 +422,80 @@ function testReceiver(req, res, next){
 }
 
 
-function testOptionsResponse(req){
+function testReceiverOptionsResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-// console.log('testOptions: ' + url);
+// console.log('testReceiverOptions: ' + url);
   return getResourceOptions(url, headers).then(
     function(response){
         var acceptPost = response.xhr.getResponseHeader('Accept-Post');
-        testResults['receiver']['testOptionsResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+        testResults['receiver']['testReceiverOptionsResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
         if(acceptPost){
-          testResults['receiver']['testOptionsAcceptPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['testReceiverOptionsAcceptPost'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
 
           var acceptPosts = acceptPost.split(',');
-          testResults['receiver']['testOptionsAcceptPostContainsJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['testReceiverOptionsAcceptPostContainsJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
           acceptPosts.forEach(function(i){
             var m = i.trim();
             if(m == 'application/ld+json' || m == '*/*'){
-              testResults['receiver']['testOptionsAcceptPostContainsJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+              testResults['receiver']['testReceiverOptionsAcceptPostContainsJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
             }
           })
         }
         else {
-          testResults['receiver']['testOptionsAcceptPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
+          testResults['receiver']['testReceiverOptionsAcceptPost'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Accept-Post: ' + acceptPost + '</code>' };
         }
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['receiver']['testOptionsResponse'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['testReceiverOptionsResponse'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
 
-function testHeadResponse(req){
+function testReceiverHeadResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-// console.log('testHeadResponse: ' + url);
+// console.log('testReceiverHeadResponse: ' + url);
   return getResourceHead(url, headers).then(
     function(response){
-      testResults['receiver']['testHeadResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['receiver']['testReceiverHeadResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
       return Promise.resolve(testResults);
     },
     function(reason){
-      testResults['receiver']['testHeadResponse'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
+      testResults['receiver']['testReceiverHeadResponse'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '<code>HTTP ' + reason.xhr.status + '</code>' };
       return Promise.resolve(testResults);
     });
 }
 
-function testGetResponse(req){
+function testReceiverGetResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   headers['Accept'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json';
   var url = req.body['test-receiver-url'];
-// console.log('testGetResponse: ' + url);
+// console.log('testReceiverGetResponse: ' + url);
   return getResource(url, headers).then(
     function(response){
 // console.log(response);
-      testResults['receiver']['testGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'test manually.' };
+      testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'test manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
 // console.log(contentType);
       if(typeof contentType == undefined){
-          testResults['receiver']['testGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+          testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
           return Promise.resolve(testResults);
       }
       else if(contentType.split(';')[0].trim() != headers['Accept']) {
-          testResults['receiver']['testGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
+          testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + contentType + '</code> returned. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.'};
           return Promise.resolve(testResults);
       }
       else {
-        testResults['receiver']['testGetResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+        testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
         var options = {
           'contentType': 'application/ld+json',
           'subjectURI': url
@@ -523,7 +523,7 @@ console.log(s.iri().toString());
                 }
               });
 
-              testResults['receiver']['testGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+              testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
             }
             else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
               resourceTypes.forEach(function(url){
@@ -532,10 +532,10 @@ console.log(s.iri().toString());
                 }
               });
 
-              testResults['receiver']['testGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in body: ' + rdftypes.join(', ') };
+              testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in body: ' + rdftypes.join(', ') };
             }
             else {
-              testResults['receiver']['testGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+              testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
             }
 
             if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
@@ -544,10 +544,10 @@ console.log(s.iri().toString());
                 constrainedBys.push('<a href="' + url + '">' + url + '</a>');
               });
 
-              testResults['receiver']['testGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found: ' + constrainedBys.join(', ') };
+              testResults['receiver']['testReceiverGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found: ' + constrainedBys.join(', ') };
             }
             else {
-              testResults['receiver']['testGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+              testResults['receiver']['testReceiverGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
             }
 
             var notifications = [];
@@ -557,7 +557,7 @@ console.log(s.iri().toString());
 
             if(notifications.length > 0) {
               var notificationsNoun = (notifications.length == 1) ? 'notification' : 'notifications';
-              testResults['receiver']['testGetLDPContains'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found ' + notifications.length + ' ' + notificationsNoun + '.' };
+              testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found ' + notifications.length + ' ' + notificationsNoun + '.' };
 
               var testAccepts = ['application/ld+json', '*/*', ''];
               var notificationResponses = [];
@@ -632,8 +632,8 @@ console.log(s.iri().toString());
                   notificationStateJSONLD = notificationStateJSONLD.join(', ');
                   notificationStateRDFSource = notificationStateRDFSource.join(', ');
 
-                  testResults['receiver']['testGetNotificationsJSONLD'] = { 'earl:outcome': codeJSONLD, 'earl:info': notificationStateJSONLD };
-                  testResults['receiver']['testGetNotificationsRDFSource'] = { 'earl:outcome': codeRDFSource, 'earl:info': notificationStateRDFSource };
+                  testResults['receiver']['testReceiverGetNotificationsJSONLD'] = { 'earl:outcome': codeJSONLD, 'earl:info': notificationStateJSONLD };
+                  testResults['receiver']['testReceiverGetNotificationsRDFSource'] = { 'earl:outcome': codeRDFSource, 'earl:info': notificationStateRDFSource };
 
                   return Promise.resolve(testResults);
                 })
@@ -643,54 +643,54 @@ console.log(s.iri().toString());
                 });
             }
             else {
-              testResults['receiver']['testGetLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+              testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
               return Promise.resolve(testResults);
             }
           },
           function(reason){
 console.log(reason);
-            testResults['receiver']['testGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
+            testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
             return Promise.resolve(testResults);
           });
       }
     },
     function(reason){
 // console.log(reason);
-      testResults['receiver']['testGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
+      testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
       return Promise.resolve(testResults);
     });
 }
 
 
 
-function testPostResponse(req){
+function testReceiverPostResponse(req){
   var testResults = { 'receiver': {} };
   var headers = {};
   var url = req.body['test-receiver-url'];
   headers['Content-Type'] = ('test-receiver-mimetype' in req.body) ? req.body['test-receiver-mimetype'] : 'application/ld+json; profile="http://example.org/profile"; charset=utf-8';
   headers['Slug'] = uuid.v1() + '.jsonld';
   var data = ('test-receiver-data' in req.body && req.body['test-receiver-data'].length > 0) ? req.body['test-receiver-data'] : '';
-// console.log('testGet: ' + url);
+// console.log('testReceiverGet: ' + url);
   return postResource(url, headers['Slug'], data, headers['Content-Type']).then(
     function(response){
 // console.log(response);
       // POST requests are supported, with and without profiles
       var status = '<code>HTTP ' + response.xhr.status + '</code>';
-      testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
-      testResults['receiver']['testPostLinkProfile'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
+      testResults['receiver']['testReceiverPostLinkProfile'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
 
       // If 201 or 202
       if(response.xhr.status == 201 || response.xhr.status == 202) {
         // If 'reject' was ticked, creating was wrong, fail
         if('test-receiver-reject' in req.body){
-          testResults['receiver']['testPostCreated'] = { 'earl:outcome' : 'earl:failed', 'earl:info' : 'Payload did not meet constraints, but the receiver indicated success (' + status + ')' };
-          testResults['receiver']['testPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:failed', 'earl:info': '' };
+          testResults['receiver']['testReceiverPostCreated'] = { 'earl:outcome' : 'earl:failed', 'earl:info' : 'Payload did not meet constraints, but the receiver indicated success (' + status + ')' };
+          testResults['receiver']['testReceiverPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:failed', 'earl:info': '' };
           return Promise.resolve(testResults);
 
         // Otherwise, pass
         }
         else{
-          testResults['receiver']['testPostCreated'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
+          testResults['receiver']['testReceiverPostCreated'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
 
           // If 201, check Location header
           if(response.xhr.status == 201){
@@ -710,24 +710,24 @@ function testPostResponse(req){
                 //Maybe use checkPostLocationRetrieveable
                 function(i){
 // console.log(i);
-                  testResults['receiver']['testPostLocation'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
+                  testResults['receiver']['testReceiverPostLocation'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found and can be retrieved.' };
                   return Promise.resolve(testResults);
                 },
                 function(j){
 // console.log(j);
-                  testResults['receiver']['testPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
+                  testResults['receiver']['testReceiverPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code>: <a href="' + url + '">' + url + '</a> found but can not be retrieved: <code>HTTP ' + j.xhr.status + '</code> <q>' + j.xhr.responseText + '</q>' };
                   return Promise.resolve(testResults);
                 });
             }
             else {
-              testResults['receiver']['testPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code> header not found.' };
+              testResults['receiver']['testReceiverPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code> header not found.' };
               return Promise.resolve(testResults);
             }
           }
         }
       }
       else {
-        testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
+        testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Response was <code>HTTP ' + response.xhr.status + '</code>. Should return <code>HTTP 201</code>.'};
         return Promise.resolve(testResults);
       }
     },
@@ -736,32 +736,32 @@ function testPostResponse(req){
       var status = '<code>HTTP ' + reason.xhr.status + '</code>';
       var responseText = (reason.xhr.responseText.length > 0 ) ? ', <q>' + reason.xhr.responseText + '</q>' : '';
 
-      testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText };
+      testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText };
       switch(reason.xhr.status){
         case 400:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Deliberately rejected (' + status + ')' };
-            testResults['receiver']['testPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Payload successfully filtered out (' + status + ')' };
+            testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Deliberately rejected (' + status + ')' };
+            testResults['receiver']['testReceiverPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Payload successfully filtered out (' + status + ')' };
           }
           //TODO: Maybe handle other formats here
           if(headers['Content-Type'] == 'application/ld+json'){ //TODO: && payload format is valid
-            testResults['receiver']['testPostCreated'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
+            testResults['receiver']['testReceiverPostCreated'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> accept notifications where the request body is JSON-LD, with the <code>Content-Type: application/ld+json</code>' };
           }
           break;
         case 405:
-          testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
+          testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<em class="rfc2119">MUST</em> support <code>POST</code> request on the Inbox URL.' };
           break;
         case 415:
           if('test-receiver-reject' in req.body) {
-            testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
+            testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> has been rejected.' };
           }
           else {
-            testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
+            testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + '. Request with <code>Content-Type: ' + headers['Content-Type'] + '</code> is not allowed, or the payload does not correspond to this content-type. Check the payload syntax is valid, and make sure that the receiver is not having trouble with the <code>profile</code> or <code>charset</code> parameter.</code>.' };
           }
-          testResults['receiver']['testPostLinkProfile'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
+          testResults['receiver']['testReceiverPostLinkProfile'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'The request was possibly rejected due to the <q>profile</q> Link Relation. If the mediatype is recognised, it may be better to accept the request by ignoring the profile parameter.' };
           break;
         default:
-          testResults['receiver']['testPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText};
+          testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': status + responseText};
           break;
       }
 
@@ -1731,14 +1731,14 @@ function testConsumer(req, res, next){
       var initTest = {
          '1': testConsumerHeaderDiscovery
         ,'2': testConsumerBodyDiscovery
-        ,'3': testListingJSONLDCompacted
-        ,'4': testListingJSONLDExpanded
-        ,'5': testNotificationAnnounce
-        ,'6': testNotificationChangelog
-        ,'7': testNotificationCitation
-        ,'8': testNotificationAssessing
-        ,'9': testNotificationComment
-        ,'10': testNotificationRSVP
+        ,'3': testConsumerListingJSONLDCompacted
+        ,'4': testConsumerListingJSONLDExpanded
+        ,'5': testConsumerNotificationAnnounce
+        ,'6': testConsumerNotificationChangelog
+        ,'7': testConsumerNotificationCitation
+        ,'8': testConsumerNotificationAssessing
+        ,'9': testConsumerNotificationComment
+        ,'10': testConsumerNotificationRSVP
       };
 
       Object.keys(initTest).forEach(function(id) {
@@ -1823,16 +1823,16 @@ function testConsumerBodyDiscovery(req){
   return Promise.resolve(testResults);
 }
 
-function testListingJSONLDCompacted(req){
+function testConsumerListingJSONLDCompacted(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer']['testConsumerListingJSONLDCompacted'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-compacted'];
   if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-compacted/';
   var notifications = [inbox+'announce', inbox+'changelog', inbox+'citation'];
 
-  testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
+  testResults['consumer']['testConsumerListingJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
 
   var message, found = 0;
   if(value.length == 3){
@@ -1847,26 +1847,26 @@ function testListingJSONLDCompacted(req){
     });
 
     if(check) {
-      testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['consumer']['testConsumerListingJSONLDCompacted'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
     }
     else {
-      testResults['consumer']['testListingJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
+      testResults['consumer']['testConsumerListingJSONLDCompacted'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
     }
   }
   return Promise.resolve(testResults);
 }
 
 
-function testListingJSONLDExpanded(req){
+function testConsumerListingJSONLDExpanded(req){
   var testResults = { 'consumer': {} };
-  testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
+  testResults['consumer']['testConsumerListingJSONLDExpanded'] = { 'earl:outcome': 'earl:untested', 'earl:info': 'No input was provided.' };
   var value = req.body['test-consumer-inbox-expanded'];
   if(typeof value === 'undefined' || value.trim().length == 0){ return Promise.resolve(testResults); }
   value = value.trim().split(' ');
   var inbox = getExternalBaseURL(req.getUrl()) + 'inbox-expanded/';
   var notifications = [inbox+'assessing', inbox+'comment', inbox+'rsvp'];
 
-  testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
+  testResults['consumer']['testConsumerListingJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Expecting ' + notifications.length + ' notifications. Make sure to separate by a space.' };
 
   var message, found = 0;
   if(value.length == 3){
@@ -1881,18 +1881,18 @@ function testListingJSONLDExpanded(req){
     });
 
     if(check) {
-      testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['consumer']['testConsumerListingJSONLDExpanded'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
     }
     else {
-      testResults['consumer']['testListingJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
+      testResults['consumer']['testConsumerListingJSONLDExpanded'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Notifications found:' + found + '/' + notifications.length + '. Make sure to separate by a space.' };
     }
   }
   return Promise.resolve(testResults);
 }
 
-function testNotificationAnnounce(req){
+function testConsumerNotificationAnnounce(req){
   var options = {
-    'test': 'testNotificationAnnounce',
+    'test': 'testConsumerNotificationAnnounce',
     'data': req.body['test-inbox-compacted-announce'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-compacted/announce',
     'property': vocab['rdftype']['@id'],
@@ -1901,9 +1901,9 @@ function testNotificationAnnounce(req){
   return testNotification(req, options);
 }
 
-function testNotificationChangelog(req){
+function testConsumerNotificationChangelog(req){
   var options = {
-    'test': 'testNotificationChangelog',
+    'test': 'testConsumerNotificationChangelog',
     'data': req.body['test-inbox-compacted-changelog'],
     'subject': 'http://example.org/activity/804c4e7efaa828e146b4ada1c805617ffbc79dc7',
     'property': vocab['rdftype']['@id'],
@@ -1912,9 +1912,9 @@ function testNotificationChangelog(req){
   return testNotification(req, options);
 }
 
-function testNotificationCitation(req){
+function testConsumerNotificationCitation(req){
   var options = {
-    'test': 'testNotificationCitation',
+    'test': 'testConsumerNotificationCitation',
     'data': req.body['test-inbox-compacted-citation'],
     'subject': 'http://example.net/note#foo',
     'property': 'http://schema.org/citation',
@@ -1923,9 +1923,9 @@ function testNotificationCitation(req){
   return testNotification(req, options);
 }
 
-function testNotificationAssessing(req){
+function testConsumerNotificationAssessing(req){
   var options = {
-    'test': 'testNotificationAssessing',
+    'test': 'testConsumerNotificationAssessing',
     'data': req.body['test-inbox-expanded-assessing'],
     'subject': 'http://example.net/note',
     'property': 'http://www.w3.org/ns/oa#motivatedBy',
@@ -1934,9 +1934,9 @@ function testNotificationAssessing(req){
   return testNotification(req, options);
 }
 
-function testNotificationComment(req){
+function testConsumerNotificationComment(req){
   var options = {
-    'test': 'testNotificationComment',
+    'test': 'testConsumerNotificationComment',
     'data': req.body['test-inbox-expanded-comment'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/comment',
     'property': 'http://rdfs.org/sioc/ns#reply_of',
@@ -1945,9 +1945,9 @@ function testNotificationComment(req){
   return testNotification(req, options);
 }
 
-function testNotificationRSVP(req){
+function testConsumerNotificationRSVP(req){
   var options = {
-    'test': 'testNotificationRSVP',
+    'test': 'testConsumerNotificationRSVP',
     'data': req.body['test-inbox-expanded-rsvp'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/rsvp',
     'property': 'http://schema.org/event',
