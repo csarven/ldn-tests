@@ -87,12 +87,12 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
     'testSenderHeaderPostContentTypeJSONLD': {
-      'uri': 'https://www/w3.org/TR/ldn/#test-sender-header-post-content-type-json-ld',
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-post-content-type-json-ld',
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderHeaderPostValidJSONLD': {
-      'uri': 'https://www/w3.org/TR/ldn/#test-sender-header-post-valid-json-ld',
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-post-valid-json-ld',
       'description': '<code>POST</code> payload is JSON-LD (<code>Link</code> header).',
       'earl:mode': 'earl:automatic'
     },
@@ -108,12 +108,12 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
     'testSenderBodyPostContentTypeJSONLD': {
-      'uri': 'https://www/w3.org/TR/ldn/#test-sender-body-post-content-type-json-ld',
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-post-content-type-json-ld',
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (RDF body).',
       'earl:mode': 'earl:automatic'
     },
     'testSenderBodyPostBodyJSONLD': {
-      'uri': 'https://www/w3.org/TR/ldn/#test-sender-body-post-valid-json-ld',
+      'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-post-valid-json-ld',
       'description': '<code>POST</code> payload is JSON-LD (RDF body).',
       'earl:mode': 'earl:automatic'
     }
