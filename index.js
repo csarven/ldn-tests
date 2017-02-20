@@ -69,7 +69,7 @@ var ldnTestsVocab = {
   "earlresult": { "@id": "http://www.w3.org/ns/earl#result", "@type": "@id" },
   "earltest": { "@id": "http://www.w3.org/ns/earl#test", "@type": "@id" },
   "qbObservation": { "@id": "http://purl.org/linked-data/cube#Observation", "@type": "@id" },
-  "doapProject": { "@id": "http://usefulinc.com/ns/doap#Project" },
+  "doapProject": { "@id": "http://usefulinc.com/ns/doap#Project", "@type": "@id" },
   "doapname": { "@id": "http://usefulinc.com/ns/doap#name" }
 }
 Object.assign(vocab, ldnTestsVocab);
