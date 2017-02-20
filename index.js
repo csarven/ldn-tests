@@ -130,10 +130,12 @@ var ldnTests = {
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerListingJSONLDCompacted': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-listing-json-ld-compacted',
       'description': 'Notification discovery from Inbox using JSON-LD compacted form.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerListingJSONLDExpanded': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-consumer-listing-json-ld-expanded',
       'description': 'Notification discovery from Inbox using JSON-LD expanded form.',
       'earl:mode': 'earl:semiAuto'
     },
