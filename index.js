@@ -997,7 +997,7 @@ function createTestReport(req, res, next){
 
   var dataset = `<dl>
     <dt>Identifier</dt>
-    <dd property="dcterms:identifier">${test['id']}</dd>
+    <dd property="dcterms:identifier" xml:lang="" lang="">${test['id']}</dd>
     <dt>Published</dt>
     <dd><time datetime="${dateTime}" datatype="xsd:dateTime" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
     <dt>Creator</dt>
