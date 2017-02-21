@@ -1357,7 +1357,7 @@ ${testDefinitions}
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>LDN Test Reports</title>
+        <title>LDN Test Reports and Summary</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
@@ -1365,7 +1365,7 @@ ${testDefinitions}
     <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
         <main>
             <article about="" typeof="schema:Article void:Dataset">
-                <h1 property="schema:name">LDN Test Reports</h1>
+                <h1 property="schema:name">LDN Test Reports and Summary</h1>
 
                 <dl id="document-license">
                     <dt>License</dt>
