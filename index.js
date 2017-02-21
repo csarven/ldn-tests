@@ -1301,12 +1301,16 @@ function getReportsHTML(req, res, next, reports){
       var tests = Object.keys(ldnTests[testTypeCode]);
       var testsCount = tests.length;
       var testTypeCapitalised = testTypeCode[0].toUpperCase() + testTypeCode.slice(1);
+      var testDefinitions = [];
       var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
       theadTRs += '<tr>';
       tests.forEach(function(test){
-        theadTRs += '<th><a href="' + ldnTests[testTypeCode][test]['uri'] + '">' + test + '</a></th>';
+        var notation = ldnTests[testTypeCode][test]['uri'].split('#test-' + testTypeCode + '-')[1].split('-').map(function(i){ return i[0]; }).join('').toUpperCase();
+        theadTRs += '<th><a href="#' + notation + '"><abbr title="' + test + '">' + notation + '</abbr></a></th>';
+        testDefinitions.push('<dt id="' + notation + '"><a href="' + ldnTests[testTypeCode][test]['uri'] + '"><abbr title="' + test + '">' + notation + '</abbr></a></dt><dd>' + ldnTests[testTypeCode][test]['description'] + '</dd>');
       });
       theadTRs += '</tr>';
+      testDefinitions = '<dl class="abbr">' + testDefinitions.join('') + '</dl>';
 
       var tbodyTRs = '';
       var reportCount = reports[testType].length;
@@ -1340,6 +1344,7 @@ ${tbodyTRs}
                                                       <dd>${reportCount}</dd>
                                                   </dl>
 ${getEarlOutcomeHTML()}
+${testDefinitions}
                                               </td>
                                           </tr>
                                       </tfoot>
