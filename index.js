@@ -1007,21 +1007,22 @@ function createTestReport(req, res, next){
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
     datasetSeeAlso.push('<meta resource="#' + i + '" />');
+    var testId = ldnTests[test['implementationType']][i]['uri'].split('#')[1];
 
     var earlInfo = '';
     if(test['results'][i]['earl:info'] != '') {
-      earlInfo = `<td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['earl:info']}</span></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['earl:info']}</span></td>`;
     }
     else {
-      earlInfo = `<td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
     }
 
     var earlMode = ldnTests[test['implementationType']][i]['earl:mode'];
     var earlModeText = earlMode.substr(earlMode.indexOf(':') + 1);
 
     observations.push(`
-<tr about="#${i}" typeof="qb:Observation earl:Assertion">
-    <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
+<tr about="#${testId}" typeof="qb:Observation earl:Assertion">
+    <td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
     <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" />${ldnTests[test['implementationType']][i]['description']} [<a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">source</a>]</td>
     <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
     ${earlInfo}
