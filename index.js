@@ -999,7 +999,7 @@ function createTestReport(req, res, next){
     <dt>Identifier</dt>
     <dd property="dcterms:identifier" xml:lang="" lang="">${test['id']}</dd>
     <dt>Published</dt>
-    <dd><time datetime="${dateTime}" datatype="xsd:dateTime" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
+    <dd><time content="${dateTime}" datatype="xsd:dateTime" datetime="${dateTime}" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
     <dt>Creator</dt>
     <dd><a href="${maintainer}" property="as:creator">${maintainer}</a></dd>${datasetNote}
 </dl>`;
