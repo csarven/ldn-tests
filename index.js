@@ -1066,10 +1066,10 @@ ${dataset}
     <caption>Report</caption>
     <thead>
         <tr>
-            <th title="Test criterion">Test</th>
-            <th title="Describes how a test was carried out">Mode</a></th>
-            <th title="Outcome of performing the test">Outcome</a></th>
-            <th title="Additional warnings or error messages in a human-readable form">Info</a></th>
+            <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
+            <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
+            <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
+            <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></a></th>
         </tr>
     </thead>
     <tfoot>
