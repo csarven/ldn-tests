@@ -171,11 +171,6 @@ var ldnTests = {
     }
   },
   'receiver': {
-    'testReceiverHeadResponse': {
-      'description': 'Accepts <code>HEAD</code> requests.',
-      'earl:mode': 'earl:automatic'
-    },
-
     'testReceiverOptionsResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-response',
       'description': 'Accepts <code>OPTIONS</code> requests.',
@@ -255,9 +250,15 @@ var ldnTests = {
     }
   }
 }
+// 'testReceiverHeadResponse': {
+//   'description': 'Accepts <code>HEAD</code> requests.',
+//   'earl:mode': 'earl:automatic'
+// },
+
 // Object.keys(ldnTests).forEach(function(i){
 //   console.log(Object.keys(ldnTests[i]));
 // });
+
 
 function testSender(req, res, next){
 // console.log(req.requestedPath);
@@ -378,7 +379,7 @@ function testReceiver(req, res, next){
 
     case 'POST':
       var testReceiverPromises = [];
-      var initTest = { '1': testReceiverOptionsResponse, '2': testReceiverHeadResponse, '3': testReceiverPostResponse, '4': testReceiverGetResponse };
+      var initTest = { '1': testReceiverOptionsResponse, '2': testReceiverPostResponse, '3': testReceiverGetResponse };
 
       if(req.body['test-receiver-url'] && (req.body['test-receiver-url'].toLowerCase().slice(0,7) == 'http://' || req.body['test-receiver-url'].toLowerCase().slice(0,8) == 'https://')) {
         Object.keys(initTest).forEach(function(id) {
