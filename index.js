@@ -1070,7 +1070,7 @@ ${dataset}
             <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
             <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
             <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
-            <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></a></th>
+            <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
         </tr>
     </thead>
     <tfoot>
