@@ -1020,12 +1020,12 @@ function createTestReport(req, res, next){
     var earlModeText = earlMode.substr(earlMode.indexOf(':') + 1);
 
     observations.push(`
-        <tr about="#${i}" typeof="qb:Observation earl:Assertion">
-            <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" /><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
-            <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
-            <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
-            ${earlInfo}
-        </tr>`);
+<tr about="#${i}" typeof="qb:Observation earl:Assertion">
+    <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
+    <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" /><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
+    <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
+    ${earlInfo}
+</tr>`);
   });
   observations = observations.join('');
 
@@ -1063,24 +1063,24 @@ ${dataset}
                   <section>
                       <h2>Test results</h2>
                       <div>
-<table>
-    <caption>Report</caption>
-    <thead>
-        <tr>
-            <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
-            <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
-            <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
-            <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr><td colspan="4">${getEarlOutcomeHTML()}</td></tr>
-        <tr><td about="" colspan="4" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
-    </tfoot>
-    <tbody>
+                          <table>
+                              <caption>Report</caption>
+                              <thead>
+                                  <tr>
+                                      <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
+                                      <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
+                                      <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
+                                      <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
+                                  </tr>
+                              </thead>
+                              <tfoot>
+                                  <tr><td colspan="4">${getEarlOutcomeHTML()}</td></tr>
+                                  <tr><td about="" colspan="4" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
+                              </tfoot>
+                              <tbody>
 ${observations}
-    </tbody>
-</table>
+                              </tbody>
+                          </table>
                       </div>
                   </section>
               </div>
