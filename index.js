@@ -2021,7 +2021,9 @@ function getTestConsumerHTML(req, results){
                     <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
                         <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>Run your consumer software against these tests, then submit your results in the form below. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
+                            <p>Due to the nature of consumers, gathering results for these tests is manual. The for below links to several <em>targets</em>. Set your consumer to run against each of these, inspect the results (either through your softwares UI, logs, or commandline interface), and input them into the form. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
+
+                            <p>If your consumer implementation is not able to process the particular vocabulary one of the test notifications, you can leave that untested. If your consumer cannot process <em>any</em> of them, open a <a href="http://github.com/csarven/ldn-tests/issues/">github issue</a> with a sample that you can process, and we'll add it.</p>
 <!--
                             <dl>
                                 <dt>Tests</dt>
@@ -2046,47 +2048,47 @@ function getTestConsumerHTML(req, results){
                                     <legend>Test Consumer</legend>
                                     <ul>
                                         <li>
-                                            <p>URL of the Inbox from <a href="discover-inbox-link-header">discover-inbox-link-header</a> (in header):</p>
+                                            <p>URL of the Inbox from <a href="discover-inbox-link-header">target A</a> (in header):</p>
                                             <label for="test-consumer-discover-inbox-link-header">URL</label>
                                             <input type="text" name="test-consumer-discover-inbox-link-header" value="" placeholder="Include only the URL" />
                                         </li>
                                         <li>
-                                            <p>URL of the Inbox from <a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a> (in RDF body):</p>
+                                            <p>URL of the Inbox from <a href="discover-inbox-rdf-body">target B</a> (in RDF body):</p>
                                             <label for="test-consumer-discover-inbox-rdf-body">URL</label>
                                             <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" placeholder="Include only the URL" />
                                         </li>
                                         <li>
-                                            <p>URLs of the notifications in <a href="discover-inbox-link-header">target</a>'s Inbox (JSON-LD compacted):</p>
+                                            <p>URLs of the notifications in <a href="discover-inbox-link-header">target A</a>'s Inbox (JSON-LD compacted):</p>
                                             <label for="test-consumer-inbox-compacted">URLs</label>
                                             <input type="text" name="test-consumer-inbox-compacted" value="" placeholder="Separated by a space" />
                                         </li>
                                         <li>
-                                            <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target</a>'s Inbox (JSON-LD expanded):</p>
+                                            <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target B</a>'s Inbox (JSON-LD expanded):</p>
                                             <label for="test-consumer-inbox-expanded">URLs</label>
                                             <input type="text" name="test-consumer-inbox-expanded" value="" placeholder="Separated by a space" />
                                         </li>
                                         <li>
-                                          <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
                                           <textarea name="test-inbox-compacted-announce" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="test-inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <label for="test-inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
                                           <textarea name="test-inbox-compacted-changelog" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="test-inbox-compacted-citation">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target</a>'s Inbox</label>
+                                          <label for="test-inbox-compacted-citation">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
                                           <textarea name="test-inbox-compacted-citation" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="test-inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <label for="test-inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
                                           <textarea name="test-inbox-expanded-assessing" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="test-inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <label for="test-inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
                                           <textarea name="test-inbox-expanded-comment" cols="80" rows="3"></textarea>
                                         </li>
                                         <li>
-                                          <label for="test-inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target</a>'s Inbox</label>
+                                          <label for="test-inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
                                           <textarea name="test-inbox-expanded-rsvp" cols="80" rows="3"></textarea>
                                         </li>
                                     </ul>
