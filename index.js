@@ -1053,7 +1053,7 @@ ${doap}
                   </section>
 
                   <section>
-                      <h2 rel="qb:structure" resource="#data-structure-definition">Dataset</h2>
+                      <h2 rel="qb:structure" resource="https://www.w3.org/TR/ldn/#data-structure-definition">Dataset</h2>
                       <div>
 ${dataset}
                       </div>
@@ -1064,13 +1064,12 @@ ${dataset}
                       <div>
 <table>
     <caption>Report</caption>
-    <thead about="#data-structure-definition" typeof="qb:DataStructureDefinition">
+    <thead>
         <tr>
-            <th rel="qb:component" resource="#component-dimension-subject" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:subject" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test subject">Subject</span></span></th>
-            <th rel="qb:component" resource="#component-dimension-test" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:test" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Test criterion">Test</span></span></th>
-            <th rel="qb:component" resource="#component-dimension-mode" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:dimension" resource="earl:mode" typeof="qb:DimensionProperty"><span property="skos:prefLabel" title="Describes how a test was carried out">Mode</span></span></th>
-            <th rel="qb:component" resource="#component-measure-outcome" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:measure" resource="earl:outcome" typeof="qb:MeasureProperty"><span property="skos:prefLabel" title="Outcome of performing the test">Outcome</span></span></th>
-            <th rel="qb:component" resource="#component-measure-info" typeof="qb:ComponentSpecification"><span rel="qb:componentProperty qb:measure" resource="earl:info" typeof="qb:MeasureProperty"><span property="skos:prefLabel" title="Additional warnings or error messages in a human-readable form">Info</span></span></th>
+            <th title="Test criterion">Test</th>
+            <th title="Describes how a test was carried out">Mode</a></th>
+            <th title="Outcome of performing the test">Outcome</a></th>
+            <th title="Additional warnings or error messages in a human-readable form">Info</a></th>
         </tr>
     </thead>
     <tfoot>
