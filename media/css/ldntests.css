@@ -442,7 +442,7 @@ So we don't have to keep this URL around
  */
 form p { margin:1em 0 0 0; }
 form p:first-child { margin-top:0; }
-fieldset + fieldset {
+fieldset + fieldset, form ul + p:before  {
 margin-top:2em;
 }
 
