@@ -2072,6 +2072,10 @@ function getTestConsumerHTML(req, results){
                                             <label for="test-consumer-inbox-expanded">URLs</label>
                                             <input type="text" name="test-consumer-inbox-expanded" value="" placeholder="Separated by a space" />
                                         </li>
+                                    </ul>
+
+                                    <p>For the folowing tests, enter the notifications the JSON-LD serialization:</p>
+                                    <ul>
                                         <li>
                                           <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
                                           <textarea name="test-inbox-compacted-announce" cols="80" rows="3"></textarea>
