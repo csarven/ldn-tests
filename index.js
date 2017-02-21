@@ -914,7 +914,7 @@ function getTestReceiverHTML(req, results){
 
                             <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 
-                            <form action="" class="form-tests" id="test-receiver" method="post">
+                            <form action="#test-response" class="form-tests" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
 
@@ -2045,8 +2045,8 @@ function getTestConsumerHTML(req, results){
                                 </dd>
                             </dl>
 -->
-                            <form action="" class="form-tests" id="test-consumer-report" method="post">
-                                <fieldset id="test-consumer">
+                            <form action="#test-response" class="form-tests" id="test-consumer" method="post">
+                                <fieldset>
                                     <legend>Test Consumer</legend>
                                     <ul>
                                         <li>
