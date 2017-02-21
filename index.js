@@ -1314,7 +1314,7 @@ function getReportsHTML(req, res, next, reports){
         tbodyTRs += '<tr>';
         tbodyTRs += '<td><a href="' + report['implementation'] + '">' + report['name'] + '</a> (<a about="" rel="void:subset" href="' + report['report'] + '">report</a>)</td>';
         tests.forEach(function(test){
-          var outcomeCode = report['tests']['https://www.w3.org/TR/ldn/#' + test];
+          var outcomeCode = report['tests'][ldnTests[testTypeCode][test]['uri']];
           tbodyTRs += '<td class="'+ outcomeCode +'">'+getEarlOutcomeCode(outcomeCode)+'</td>';
         });
         tbodyTRs += '</tr>';
