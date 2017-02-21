@@ -1022,7 +1022,7 @@ function createTestReport(req, res, next){
     observations.push(`
 <tr about="#${i}" typeof="qb:Observation earl:Assertion">
     <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
-    <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" /><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
+    <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" />${ldnTests[test['implementationType']][i]['description']} [<a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">source</a>]</td>
     <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
     ${earlInfo}
 </tr>`);
