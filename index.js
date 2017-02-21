@@ -1035,7 +1035,7 @@ function createTestReport(req, res, next){
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
       <meta charset="utf-8" />
-      <title>Implementation report and test results</title>
+      <title>${name} LDN implementation report and test results</title>
       <meta content="width=device-width, initial-scale=1" name="viewport" />
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
@@ -1043,7 +1043,7 @@ function createTestReport(req, res, next){
   <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
-              <h1 property="schema:name">Implementation report and test results</h1>
+              <h1 property="schema:name">${name} LDN implementation report and test results</h1>
 
               <div id="content">
                   <section>
