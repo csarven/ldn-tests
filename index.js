@@ -327,15 +327,15 @@ function getTestSenderHTML(req, results){
                     <section id="senders" inlist="" rel="schema:hasPart" resource="#senders">
                         <h2 property="schema:name">Sender</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
+                            <p>Run your sender software to <em>both</em> of these targets which advertise their inboxes through <code>Link</code> header and RDF body respectively:</p>
 
-                            <p>Run your sender software to both of these targets which advertise their inboxes through <code>Link</code> header and RDF body respectively:</p>
                             <ul>
                                 <li><code>${targetIRI}?discovery=link-header</code></li>
                                 <li><code>${targetIRI}?discovery=rdf-body</code></li>
                             </ul>
 
                             <p>To see the test results and to submit a report go to: <code><a href="${targetIRI}">${targetIRI}</a></code>.</p>
+                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
                         </div>
                     </section>
                 </div>
@@ -1459,19 +1459,21 @@ function getTarget(req, res, next){
         var metaDataLinkHeader = (fileContents[1]) ? JSON.parse(fileContents[1]) : undefined;
         var dataRDFBody = (fileContents[2]) ? fileContents[2] : undefined;
         var metaDataRDFBody = (fileContents[3]) ? JSON.parse(fileContents[3]) : undefined;
-        // console.log(dataLinkHeader);
-        // console.log(metaDataLinkHeader);
-        // console.log(dataRDFBody);
-        // console.log(metaDataRDFBody);
+        console.log(dataLinkHeader);
+        console.log(metaDataLinkHeader);
+        console.log(dataRDFBody);
+        console.log(metaDataRDFBody);
 
         var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
         var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
 
-        discoverInboxHTML += `<p>New notifications sent to this Inbox will overwrite previous notification.</p>`;
+        discoverInboxHTML += `<p>When you <em>send</em> a notification with this page as the target, the results will show up here. New notifications sent to here will overwrite previous notifications. Jump to <a href="#test-sender">view and send report</a>.</p>`;
         if(req.query && 'discovery' in req.query && req.query['discovery'] == 'rdf-body') {
           discoverInboxHTML += `
-                          <p>This target resource announces its inbox here:</p>
-                          <p><code><a href="${inboxIRI}&amp;discovery=rdf-body" rel="ldp:inbox">${inboxIRI}&amp;discovery=rdf-body</a></code></p>`;
+                          <p>This target resource announces its <a href="${inboxIRI}&amp;discovery=rdf-body" rel="ldp:inbox">inbox through RDFa in its body</a>.</p>`;
+        }else if(req.query && 'disovery' in req.query && req.query['discovery'] == 'link-header'){
+          discoverInboxHTML += `
+                          <p>This target resource announces its inbox in a <code>Link</code> header.</p>`;
         }
         if(typeof dataLinkHeader !== 'undefined' || typeof metaDataLinkHeader !== 'undefined' || typeof dataRDFBody !== 'undefined' || typeof metaDataRDFBody !== 'undefined') {
           var notificationIRI = inboxBaseIRI + req.params.id;
@@ -1542,7 +1544,7 @@ ${testResponse(req, test, reportHTML)}
           //TODO: relocate this
           reqresData = `
                     <section id="test-request-response-data">
-                        <h2>Request and Response</h2>
+                        <h2>Requests Received</h2>
                         <div>`;
           var requestHeaders = [];
           if (typeof metaDataLinkHeader !== 'undefined'){
@@ -1604,7 +1606,7 @@ ${testResponse(req, test, reportHTML)}
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>LDN Discovery Test</title>
+        <title>Sender Test Results</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
     </head>
@@ -1612,11 +1614,11 @@ ${testResponse(req, test, reportHTML)}
     <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
         <main>
             <article about="" typeof="schema:Article">
-                <h1 property="schema:name">LDN Discovery Test</h1>
+                <h1 property="schema:name">Sender Test Results</h1>
 
                 <div id="content">
                     <section>
-                        <h2>Discover Inbox</h2>
+                        <h2>Discovery and Sending</h2>
                         <div>
 ${discoverInboxHTML}
                         </div>
