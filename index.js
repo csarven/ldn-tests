@@ -914,7 +914,7 @@ function getTestReceiverHTML(req, results){
 
                             <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 
-                            <form action="" class="form-tests" id="test-receiver" method="post">
+                            <form action="#test-response" class="form-tests" id="test-receiver" method="post">
                                 <fieldset>
                                     <legend>Test Receiver</legend>
 
@@ -997,35 +997,36 @@ function createTestReport(req, res, next){
 
   var dataset = `<dl>
     <dt>Identifier</dt>
-    <dd property="dcterms:identifier">${test['id']}</dd>
+    <dd property="dcterms:identifier" xml:lang="" lang="">${test['id']}</dd>
     <dt>Published</dt>
-    <dd><time datetime="${dateTime}" datatype="xsd:dateTime" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
+    <dd><time content="${dateTime}" datatype="xsd:dateTime" datetime="${dateTime}" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
     <dt>Creator</dt>
     <dd><a href="${maintainer}" property="as:creator">${maintainer}</a></dd>${datasetNote}
 </dl>`;
 
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
-    datasetSeeAlso.push('<meta resource="#' + i + '" />');
+    var testId = ldnTests[test['implementationType']][i]['uri'].split('#')[1];
+    datasetSeeAlso.push('<meta resource="#' + testId + '" />');
 
     var earlInfo = '';
     if(test['results'][i]['earl:info'] != '') {
-      earlInfo = `<td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['earl:info']}</span></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info">${test['results'][i]['earl:info']}</span></td>`;
     }
     else {
-      earlInfo = `<td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
+      earlInfo = `<td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span datatype="rdf:HTML" property="earl:info"></span></td>`;
     }
 
     var earlMode = ldnTests[test['implementationType']][i]['earl:mode'];
     var earlModeText = earlMode.substr(earlMode.indexOf(':') + 1);
 
     observations.push(`
-        <tr about="#${i}" typeof="qb:Observation earl:Assertion">
-            <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" /><a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">${i}</a></td>
-            <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
-            <td property="earl:result" resource="#result-${i}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
-            ${earlInfo}
-        </tr>`);
+<tr about="#${testId}" typeof="qb:Observation earl:Assertion">
+    <td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
+    <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" />${ldnTests[test['implementationType']][i]['description']} [<a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">source</a>]</td>
+    <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
+    ${earlInfo}
+</tr>`);
   });
   observations = observations.join('');
 
@@ -1035,7 +1036,7 @@ function createTestReport(req, res, next){
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
       <meta charset="utf-8" />
-      <title>Implementation report and test results</title>
+      <title>${name} LDN implementation report and test results</title>
       <meta content="width=device-width, initial-scale=1" name="viewport" />
       <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
@@ -1043,7 +1044,7 @@ function createTestReport(req, res, next){
   <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
       <main>
           <article about="" typeof="schema:Article qb:DataSet as:Object">
-              <h1 property="schema:name">Implementation report and test results</h1>
+              <h1 property="schema:name">${name} LDN implementation report and test results</h1>
 
               <div id="content">
                   <section>
@@ -1063,24 +1064,24 @@ ${dataset}
                   <section>
                       <h2>Test results</h2>
                       <div>
-<table>
-    <caption>Report</caption>
-    <thead>
-        <tr>
-            <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
-            <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
-            <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
-            <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr><td colspan="4">${getEarlOutcomeHTML()}</td></tr>
-        <tr><td about="" colspan="4" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
-    </tfoot>
-    <tbody>
+                          <table>
+                              <caption>Report</caption>
+                              <thead>
+                                  <tr>
+                                      <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
+                                      <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
+                                      <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
+                                      <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
+                                  </tr>
+                              </thead>
+                              <tfoot>
+                                  <tr><td colspan="4">${getEarlOutcomeHTML()}</td></tr>
+                                  <tr><td about="" colspan="4" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
+                              </tfoot>
+                              <tbody>
 ${observations}
-    </tbody>
-</table>
+                              </tbody>
+                          </table>
                       </div>
                   </section>
               </div>
@@ -1486,11 +1487,12 @@ function getTarget(req, res, next){
               results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
               results['testSenderHeaderPostValidJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
-              if(metaDataLinkHeader.req.headers["content-type"] == 'application/ld+json') {
-                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              var cT = metaDataLinkHeader.req.headers["content-type"];
+              if(cT.split(';')[0].trim() == 'application/ld+json') {
+                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received.' }
               }
               else {
-                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataLinkHeader.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaDataLinkHeader.res.statusCode)){
@@ -1508,11 +1510,12 @@ function getTarget(req, res, next){
               results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
               results['testSenderBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
-              if(metaDataRDFBody.req.headers["content-type"] == 'application/ld+json') {
-                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              var cT = metaDataRDFBody.req.headers["content-type"];
+              if(cT.split(';')[0].trim() == 'application/ld+json') {
+                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received.' }
               }
               else {
-                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataRDFBody.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaDataRDFBody.res.statusCode)){
@@ -2045,8 +2048,8 @@ function getTestConsumerHTML(req, results){
                                 </dd>
                             </dl>
 -->
-                            <form action="" class="form-tests" id="test-consumer-report" method="post">
-                                <fieldset id="test-consumer">
+                            <form action="#test-response" class="form-tests" id="test-consumer" method="post">
+                                <fieldset>
                                     <legend>Test Consumer</legend>
                                     <ul>
                                         <li>
