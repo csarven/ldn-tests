@@ -2026,9 +2026,9 @@ function getTestConsumerHTML(req, results){
                     <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
                         <h2 property="schema:name">Consumer</h2>
                         <div datatype="rdf:HTML" property="schema:description">
-                            <p>Due to the nature of consumers, gathering results for these tests is manual. The for below links to several <em>targets</em>. Set your consumer to run against each of these, inspect the results (either through your softwares UI, logs, or commandline interface), and input them into the form. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
+                            <p>Due to the nature of consumers, gathering results for these tests is manual. The form below links to several <em>targets</em>. Set your consumer to run against each of these, inspect the results (either through your softwares UI, logs, or commandline interface), and input them into the form. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
 
-                            <p>If your consumer implementation is not able to process the particular vocabulary one of the test notifications, you can leave that untested. If your consumer cannot process <em>any</em> of them, open a <a href="http://github.com/csarven/ldn-tests/issues/">github issue</a> with a sample that you can process, and we'll add it.</p>
+                            <p>If your consumer implementation is not able to process the particular vocabulary one of the test notifications, you can leave that untested. If your consumer cannot process <em>any</em> of them, open a <a href="http://github.com/csarven/ldn-tests/issues/">GitHub issue</a> with a sample that you can process, and we'll add it.</p>
 <!--
                             <dl>
                                 <dt>Tests</dt>
