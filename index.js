@@ -1484,11 +1484,12 @@ function getTarget(req, res, next){
               results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
               results['testSenderHeaderPostValidJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
-              if(metaDataLinkHeader.req.headers["content-type"] == 'application/ld+json') {
-                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              var cT = metaDataLinkHeader.req.headers["content-type"];
+              if(cT.split(';')[0].trim() == 'application/ld+json') {
+                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received.' }
               }
               else {
-                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataLinkHeader.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['testSenderHeaderPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaDataLinkHeader.res.statusCode)){
@@ -1506,11 +1507,12 @@ function getTarget(req, res, next){
               results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' }
               results['testSenderBodyPostBodyJSONLD'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' }
 
-              if(metaDataRDFBody.req.headers["content-type"] == 'application/ld+json') {
-                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' }
+              var cT = metaDataRDFBody.req.headers["content-type"];
+              if(cT.split(';')[0].trim() == 'application/ld+json') {
+                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:passed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received.' }
               }
               else {
-                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + metaDataRDFBody.req.headers["content-type"] + '</code> received. Use <code>application/ld+json</code>.' }
+                results['testSenderBodyPostContentTypeJSONLD'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type: ' + cT + '</code> received. Use <code>application/ld+json</code>.' }
               }
 
               switch(parseInt(metaDataRDFBody.res.statusCode)){
