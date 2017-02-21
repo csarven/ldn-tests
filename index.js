@@ -1006,8 +1006,8 @@ function createTestReport(req, res, next){
 
   var datasetSeeAlso = [];
   Object.keys(test['results']).forEach(function(i){
-    datasetSeeAlso.push('<meta resource="#' + i + '" />');
     var testId = ldnTests[test['implementationType']][i]['uri'].split('#')[1];
+    datasetSeeAlso.push('<meta resource="#' + testId + '" />');
 
     var earlInfo = '';
     if(test['results'][i]['earl:info'] != '') {
