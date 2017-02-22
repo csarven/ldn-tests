@@ -2074,7 +2074,7 @@ function getTestConsumerHTML(req, results){
                                         </li>
                                     </ul>
 
-                                    <p>For the folowing tests, enter the notifications the JSON-LD serialization:</p>
+                                    <p>For the folowing tests, input the values using the JSON-LD serialization:</p>
                                     <ul>
                                         <li>
                                           <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
