@@ -490,7 +490,7 @@ function testReceiverGetResponse(req){
   return getResource(url, headers).then(
     function(response){
 // console.log(response);
-      testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'test manually.' };
+      testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Test manually.' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
