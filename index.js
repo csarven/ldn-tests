@@ -1308,7 +1308,7 @@ function getReportsHTML(req, res, next, reports){
       tests.forEach(function(test){
         var notation = ldnTests[testTypeCode][test]['uri'].split('#test-' + testTypeCode + '-')[1].split('-').map(function(i){ return i[0]; }).join('').toUpperCase();
         theadTRs += '<th><a href="#' + notation + '">' + notation + '</a></th>';
-        testDefinitions.push('<dt id="' + notation + '"><a href="' + ldnTests[testTypeCode][test]['uri'] + '">' + notation + '</a></dt><dd>' + ldnTests[testTypeCode][test]['description'] + '</dd>');
+        testDefinitions.push('<dt id="' + notation + '">' + notation + '</dt><dd>' + ldnTests[testTypeCode][test]['description'] + ' [<a href="' + ldnTests[testTypeCode][test]['uri'] + '">source</a>]</dd>');
       });
       theadTRs += '</tr>';
       testDefinitions = '<dl class="abbr">' + testDefinitions.join('') + '</dl>';
