@@ -815,7 +815,7 @@ function getTestReportHTML(test, implementation){
 
     testResult = getEarlOutcomeCode(test[id]['earl:outcome']);
 
-    s.push('<tr id="test-' + id + '"><td class="' + test[id]['earl:outcome'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['earl:info'] + '</td></tr>');
+    s.push('<tr><td class="' + test[id]['earl:outcome'] + '">' + testResult + '</td><td class="test-description">' + ldnTests[implementation][id]['description'] + '</td><td class="test-message">' + test[id]['earl:info'] + '</td></tr>');
   });
 
   return s.join("\n");
