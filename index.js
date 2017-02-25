@@ -827,7 +827,7 @@ function testResponse(req, test, reportHTML){
     <div id="test-response">
       <table id="test-report">
         <caption>Test report</caption>
-        <thead><tr><th>Result</th><th>Test</th><th>Notes</th></tr></thead>
+        <thead><tr><th>Result</th><th>Test</th><th>Info</th></tr></thead>
         <tfoot><tr><td colspan="4">
 ${getEarlOutcomeHTML()}
         </td></tr></tfoot>
