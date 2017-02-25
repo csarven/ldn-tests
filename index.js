@@ -513,7 +513,7 @@ function testReceiverGetResponse(req){
         return getGraphFromData(data, options).then(
           function(g) {
             var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
-console.log(s.iri().toString());
+// console.log(s.iri().toString());
 
             //These checks are extra, not required by the specification
             var types = s.rdftype;
@@ -657,7 +657,7 @@ console.log(s.iri().toString());
             }
           },
           function(reason){
-console.log(reason);
+// console.log(reason);
             testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
             return Promise.resolve(testResults);
           });
@@ -862,21 +862,6 @@ ${getEarlOutcomeHTML()}
         </fieldset>
       </form>
     </div>`;
-}
-
-function getSelectOptionsHTML(options, selectedOption) {
-  console.log(options);
-  console.log(selectedOption);
-  var s = '';
-  options.forEach(function(o){
-    var selected = '';
-    if(o == selectedOption) {
-      selected = ' selected="selected"';
-    }
-    s += '<option value="' + o + '"' + selected +'>' + o + '</option>\n\
-';
-  });
-  return s;
 }
 
 function getTestReceiverHTML(req, results){
@@ -1460,10 +1445,10 @@ function getTarget(req, res, next){
         var metaDataLinkHeader = (fileContents[1]) ? JSON.parse(fileContents[1]) : undefined;
         var dataRDFBody = (fileContents[2]) ? fileContents[2] : undefined;
         var metaDataRDFBody = (fileContents[3]) ? JSON.parse(fileContents[3]) : undefined;
-        console.log(dataLinkHeader);
-        console.log(metaDataLinkHeader);
-        console.log(dataRDFBody);
-        console.log(metaDataRDFBody);
+// console.log(dataLinkHeader);
+// console.log(metaDataLinkHeader);
+// console.log(dataRDFBody);
+// console.log(metaDataRDFBody);
 
         var inboxBaseIRI = req.getRootUrl() + '/inbox-sender/';
         var inboxIRI = inboxBaseIRI + '?id=' + req.params.id;
@@ -1477,8 +1462,6 @@ function getTarget(req, res, next){
                           <p>This target resource announces its inbox in a <code>Link</code> header.</p>`;
         }
         if(typeof dataLinkHeader !== 'undefined' || typeof metaDataLinkHeader !== 'undefined' || typeof dataRDFBody !== 'undefined' || typeof metaDataRDFBody !== 'undefined') {
-          var notificationIRI = inboxBaseIRI + req.params.id;
-
           if (typeof metaDataLinkHeader !== 'undefined' || typeof metaDataRDFBody !== 'undefined'){
             var results= {};
             if (typeof metaDataLinkHeader !== 'undefined'){
@@ -1562,12 +1545,12 @@ ${testResponse(req, test, reportHTML)}
                             <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
 
                             <dt>Response</dt>
-                            <dd><pre>${preSafe(JSON.stringify(metaDataLinkHeader.res.headers)).slice(1, -1)}</pre></dd>
+                            <dd><pre>${preSafe(JSON.stringify(metaDataLinkHeader.res.rawHeaders)).slice(1, -1)}</pre></dd>
                           </dl>`;
           }
           if (typeof dataLinkHeader !== 'undefined'){
             reqresData += `
-                            <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
+                            <p>Created <code><a href="${metaDataLinkHeader.res.headers.location}">${metaDataLinkHeader.res.headers.location}</a></code>:</p>
                             <pre>${dataLinkHeader}</pre>`;
           }
 
@@ -1584,12 +1567,12 @@ ${testResponse(req, test, reportHTML)}
                             <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
 
                             <dt>Response</dt>
-                            <dd><pre>${preSafe(JSON.stringify(metaDataRDFBody.res.headers)).slice(1, -1)}</pre></dd>
+                            <dd><pre>${preSafe(JSON.stringify(metaDataRDFBody.res.rawHeaders)).slice(1, -1)}</pre></dd>
                           </dl>`;
           }
           if (typeof dataRDFBody !== 'undefined'){
             reqresData += `
-                            <p>Created <code><a href="${notificationIRI}">${notificationIRI}</a></code>:</p>
+                            <p>Created <code><a href="${metaDataRDFBody.res.headers.location}">${metaDataRDFBody.res.headers.location}</a></code>:</p>
                             <pre>${dataRDFBody}</pre>`;
           }
           reqresData += `
