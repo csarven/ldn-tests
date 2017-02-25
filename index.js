@@ -141,32 +141,32 @@ var ldnTests = {
     },
     'testConsumerNotificationAnnounce': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-announce',
-      'description': 'Contents of the announce notifications.',
+      'description': 'Contents of the <samp>announce</samp> notification.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationChangelog': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-changelog',
-      'description': 'Contents of the changelog notifications.',
+      'description': 'Contents of the <samp>changelog</samp> notification.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationCitation': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-citation',
-      'description': 'Contents of the citation notifications.',
+      'description': 'Contents of the <samp>citation</samp> notification.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationAssessing': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-assessing',
-      'description': 'Contents of the assessing notifications.',
+      'description': 'Contents of the <samp>assessing</samp> notification.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationComment': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-comment',
-      'description': 'Contents of the comment notifications.',
+      'description': 'Contents of the <samp>comment</samp> notification.',
       'earl:mode': 'earl:semiAuto'
     },
     'testConsumerNotificationRSVP': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-rsvp',
-      'description': 'Contents of the rsvp notifications.',
+      'description': 'Contents of the <samp>rsvp</samp> notifications.',
       'earl:mode': 'earl:semiAuto'
     }
   },
