@@ -491,6 +491,7 @@ function testReceiverGetResponse(req){
     function(response){
 // console.log(response);
       testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Test manually.' };
+      testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
 
       var data = response.xhr.responseText;
       var contentType = response.xhr.getResponseHeader('Content-Type');
@@ -659,7 +660,6 @@ function testReceiverGetResponse(req){
           function(reason){
 // console.log(reason);
             testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
-            testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
             return Promise.resolve(testResults);
           });
       }
@@ -667,7 +667,6 @@ function testReceiverGetResponse(req){
     function(reason){
 // console.log(reason);
       testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ reason.xhr.status + '</code>, <code>Content-Type: ' + reason.xhr.getResponseHeader('Content-Type') + '</code>' };
-      testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
       return Promise.resolve(testResults);
     });
 }
