@@ -701,9 +701,9 @@ function testReceiverPostResponse(req){
         else{
           testResults['receiver']['testReceiverPostCreated'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
 
+          var location = response.xhr.getResponseHeader('Location');
           // If 201, check Location header
           if(response.xhr.status == 201){
-            var location = response.xhr.getResponseHeader('Location');
             if(location){
               var url = location;
               if(location.toLowerCase().slice(0,4) != 'http') {
@@ -732,6 +732,14 @@ function testReceiverPostResponse(req){
               testResults['receiver']['testReceiverPostLocation'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>Location</code> header not found.' };
               return Promise.resolve(testResults);
             }
+          }
+          else {
+            var url = '';
+            if(location){
+              url = '<code>Location</code>: <a href="' + url + '">' + url + '</a> found.';
+            }
+            testResults['receiver']['testReceiverPostLocation'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': url };
+            return Promise.resolve(testResults);
           }
         }
       }
