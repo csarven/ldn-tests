@@ -494,6 +494,13 @@ function testReceiverGetResponse(req){
       testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
 
       var data = response.xhr.responseText;
+      try {
+        JSON.parse(data);
+      }
+      catch(e){
+        testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ reason.xhr.status + '</code> received but it had an empty body (invalid JSON-LD). Consider returning <code>HTTP 200</code> with <code>{ "@id": "", "http://www.w3.org/ns/ldp#contains": [] }</code>, or an <code>HTTP 4xx</code> if that was the real intention, and check the checkbox for <q>Receiver should reject this notification</q> in the test form.' };
+        return Promise.resolve(testResults);
+      }
       var contentType = response.xhr.getResponseHeader('Content-Type');
 // console.log(contentType);
       if(typeof contentType == undefined){
