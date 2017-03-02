@@ -493,6 +493,34 @@ function testReceiverGetResponse(req){
       testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Test manually.' };
       testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
 
+      var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
+      var rdftypes = [];
+      var ldpContainerFound = false;
+
+      testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+      testResults['receiver']['testReceiverGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+
+      if('type' in linkHeaders && (linkHeaders['type'].indexOf(vocab.ldpcontainer["@id"]) || linkHeaders['type'].indexOf(vocab.ldpbasiccontainer["@id"]))){
+        ldpContainerFound = true;
+
+        linkHeaders['type'].forEach(function(url){
+          if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
+            rdftypes.push('<a href="' + url + '">' + url + '</a>');
+          }
+        });
+
+        testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+      }
+
+      if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
+        var constrainedBys = [];
+        linkHeaders[vocab['ldpconstrainedBy']['@id']].forEach(function(url){
+          constrainedBys.push('<a href="' + url + '">' + url + '</a>');
+        });
+
+        testResults['receiver']['testReceiverGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found: ' + constrainedBys.join(', ') };
+      }
+
       var data = response.xhr.responseText;
       try {
         JSON.parse(data);
@@ -529,47 +557,23 @@ function testReceiverGetResponse(req){
             types._array.forEach(function(type){
               resourceTypes.push(type);
             });
-            var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
-            var rdftypes = [];
-// console.log(linkHeaders);
 
-            if('type' in linkHeaders && (linkHeaders['type'].indexOf(vocab.ldpcontainer["@id"]) || linkHeaders['type'].indexOf(vocab.ldpbasiccontainer["@id"]))){
-              linkHeaders['type'].forEach(function(url){
-                if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
-                  rdftypes.push('<a href="' + url + '">' + url + '</a>');
-                }
-              });
+            if(!ldpContainerFound) {
+              rdfTypes = [];
+              if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
+                resourceTypes.forEach(function(url){
+                  if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
+                    rdftypes.push('<a href="' + url + '">' + url + '</a>');
+                  }
+                });
 
-              testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
-            }
-            else if(resourceTypes.indexOf(vocab.ldpcontainer["@id"]) > -1 || resourceTypes.indexOf(vocab.ldpbasiccontainer["@id"]) > -1) {
-              resourceTypes.forEach(function(url){
-                if(url == vocab.ldpcontainer["@id"] || url == vocab.ldpbasiccontainer["@id"]) {
-                  rdftypes.push('<a href="' + url + '">' + url + '</a>');
-                }
-              });
-
-              testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in body: ' + rdftypes.join(', ') };
-            }
-            else {
-              testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
-            }
-
-            if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
-              var constrainedBys = [];
-              linkHeaders[vocab['ldpconstrainedBy']['@id']].forEach(function(url){
-                constrainedBys.push('<a href="' + url + '">' + url + '</a>');
-              });
-
-              testResults['receiver']['testReceiverGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found: ' + constrainedBys.join(', ') };
-            }
-            else {
-              testResults['receiver']['testReceiverGetLDPConstrainedBy'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Not found.' };
+                testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in body: ' + rdftypes.join(', ') };
+              }
             }
 
             var notifications = [];
             s.ldpcontains.forEach(function(resource) {
-                notifications.push(resource.toString());
+              notifications.push(resource.toString());
             });
 
             if(notifications.length > 0) {
@@ -695,6 +699,7 @@ function testReceiverPostResponse(req){
       var status = '<code>HTTP ' + response.xhr.status + '</code>';
       testResults['receiver']['testReceiverPostResponse'] = { 'earl:outcome': 'earl:passed', 'earl:info': status };
       testResults['receiver']['testReceiverPostLinkProfile'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      testResults['receiver']['testReceiverPostResponseConstraintsUnmet'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
 
       // If 201 or 202
       if(response.xhr.status == 201 || response.xhr.status == 202) {
@@ -826,7 +831,7 @@ function getTestReportHTML(test, implementation){
     var testResult = '';
 
     if(typeof test[id] == 'undefined'){
-      test[id] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
+      test[id] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
     }
 
     testResult = getEarlOutcomeCode(test[id]['earl:outcome']);
