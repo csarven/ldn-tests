@@ -664,7 +664,7 @@ function testReceiverGetResponse(req){
                 });
             }
             else {
-              testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet.' };
+              testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Did not find <code>ldp:contains</code>. It may because there are no notifications yet. If the <code>POST</code> test succeeded, rerun the test.' };
               return Promise.resolve(testResults);
             }
           },
