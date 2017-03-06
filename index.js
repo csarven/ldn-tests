@@ -1137,7 +1137,7 @@ function reportTest(req, res, next){
         var responseBody = '';
         switch(response.xhr.status){
           case 201:
-            responseBody = '<p>Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a></p>';
+            responseBody = '<p>Okieli dokieli, report submitted: <a href="' + location + '">' + location + '</a>. Thank you for your contribution. See also the <a href="summary">summary</a> for all implementation reports.</p>';
             break;
           case 202:
             responseBody = '<p>' + response.xhr.responseText + '</p><p><code>HTTP 202</code>: This is probably because the request content length was greater than <code>maxPayloadSize</code> in <a href="https://github.com/csarven/mayktso">mayktso</a>.</p>';
