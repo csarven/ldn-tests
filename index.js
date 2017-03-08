@@ -545,7 +545,8 @@ function testReceiverGetResponse(req){
           'contentType': 'application/ld+json',
           'subjectURI': url
         }
-
+// console.log(data);
+// console.log(options);
         return getGraphFromData(data, options).then(
           function(g) {
             var s = SimpleRDF(vocab, options['subjectURI'], g, RDFstore).child(options['subjectURI']);
@@ -664,7 +665,7 @@ function testReceiverGetResponse(req){
                 });
             }
             else {
-              testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may be because there are no notifications (yet or available?)' };
+              testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Did not find <code>ldp:contains</code>. It may be because there are no notifications (yet or available?). Doublecheck: <samp>inboxURL ldp:contains notificationURL</samp> exists' };
               return Promise.resolve(testResults);
             }
           },
