@@ -509,7 +509,7 @@ function testReceiverGetResponse(req){
           }
         });
 
-        testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
+        testResults['receiver']['testReceiverGetLDPContainer'] = { 'earl:outcome': 'earl:passed', 'earl:info': 'Found in <code>Link</code> header: ' + rdftypes.join(', ') };
       }
 
       if (vocab['ldpconstrainedBy']['@id'] in linkHeaders && linkHeaders[vocab['ldpconstrainedBy']['@id']].length > 0) {
