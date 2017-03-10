@@ -1453,13 +1453,13 @@ function getTarget(req, res, next){
         // console.log(files);
 
         //XXX: This also works.
-        // let readFileContents = files.map((file) => {
+        // var readFileContents = files.map((file) => {
         //   return require('fs-promise').readFile(file, 'utf8')
         //     .catch(err => {
         //       return null
         //     })
         // })
-        let fileContents = files.map((file) => {
+        var fileContents = files.map((file) => {
           try {
             return fs.readFileSync(file, 'utf8')
           } catch (error) {
