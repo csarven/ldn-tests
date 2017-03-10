@@ -529,7 +529,7 @@ function testReceiverGetResponse(req){
         testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': '<code>HTTP '+ response.xhr.status + '</code> received but it had an empty body (invalid JSON-LD). Consider returning <code>HTTP 200</code> with <code>{ "@id": "", "http://www.w3.org/ns/ldp#contains": [] }</code>, or an <code>HTTP 4xx</code> if that was the real intention, and check the checkbox for <q>Receiver should reject this notification</q> in the test form.' };
         return Promise.resolve(testResults);
       }
-      var contentType = response.xhr.getResponseHeader('Content-Type');
+      var contentType = response.xhr.getResponseHeader('Content-Type') || undefined;
 // console.log(contentType);
       if(typeof contentType == undefined){
           testResults['receiver']['testReceiverGetResponse'] = { 'earl:outcome': 'earl:failed', 'earl:info': 'No <code>Content-Type</code>. Inbox can not be parsed as <code>' + headers['Accept'] + '</code>.' };
@@ -597,7 +597,11 @@ function testReceiverGetResponse(req){
 
                       if (this.status === 200) {
                         var data = this.responseText;
-                        var cT = this.getResponseHeader('Content-Type');
+                        var cT = this.getResponseHeader('Content-Type') || undefined;
+
+                        if(typeof cT === 'undefined') {
+                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type</code> is missing or empty.' });
+                        }
                         var contentType = cT.split(';')[0].trim();
 
                         if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
