@@ -4,14 +4,14 @@
 * Latest Published: https://www.w3.org/TR/ldn/
 * Editor's Draft: https://linkedresearch.org/ldn/
 
-The test suite is in progress at: https://linkedresearch.org/ldn/tests/
+The test suite can also be used at https://linkedresearch.org/ldn/tests/
 
 Stay tuned.. or if you are a legendary Web developer, dive into:
 
 ## Setup
 ```bash
 $ git clone https://github.com/csarven/ldn-tests tests
-$ cd tests && mkdir inbox && mkdir reports && mkdir queue
+$ cd tests
 $ npm install
 $ node index.js
 ```
