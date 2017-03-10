@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify --standalone ldn-tests index.js > build.js",
-    "minify": "browserify --standalone ldn-tests index.js | uglifyjs -c > build.min.js"
+    "minify": "browserify --standalone ldn-tests index.js | uglifyjs -c > build.min.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
