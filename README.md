@@ -16,8 +16,16 @@ $ npm install
 $ node index.js
 ```
 
-That will start a maytkso server on http://localhost:3000/ by default. That will
+or use the Docker container:
+```bash
+$ docker run -it -p 3000:3000 csarven/ldn-tests
+```
+
+That will start a (maytkso) server on http://localhost:3000/ by default. That will
 be the landing page pointing at sender, receiver, and consumer tests.
+
+Reports will go into http://localhost:3000/reports/ and summary of all reports
+are accessible from http://localhost:3000/summary
 
 See [mayktso](https://github.com/csarven/mayktso) for more details on the config
 . If you want to use your own config, copy the default and update:
