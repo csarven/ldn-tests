@@ -594,33 +594,38 @@ function testReceiverGetResponse(req){
                     if(this.readyState == this.DONE) {
                       var anchor = '<a href="' + url + '">' + url + '</a>';
 
-                      if (this.status === 200) {
-                        var data = this.responseText;
-                        var cT = this.getResponseHeader('Content-Type') || undefined;
+                      switch(this.status){
+                        default:
+                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': anchor + ': HTTP status ' + this.status });
+                          break;
+                        case 401: case 403:
+                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:untested', 'earl:info': anchor + ': HTTP status ' + this.status });
+                          break;
+                        case 200:
+                          var data = this.responseText;
+                          var cT = this.getResponseHeader('Content-Type') || undefined;
 
-                        if(typeof cT === 'undefined') {
-                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type</code> is missing or empty.' });
-                        }
-                        var contentType = cT.split(';')[0].trim();
+                          if(typeof cT === 'undefined') {
+                            resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type</code> is missing or empty.' });
+                          }
+                          var contentType = cT.split(';')[0].trim();
 
-                        if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
-                          resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
-                        }
-                        else {
-                          var options = { 'subjectURI': '_:ldn' }
-                          var codeAccept = (acceptValue == '') ? 'No <code>Accept</code>' : '<code>Accept: ' + acceptValue + '</code>';
-                          serializeData(data, contentType, 'application/ld+json', options).then(
-                            function(i){
-                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:passed', 'earl:info': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
-                            },
-                            function(reason){
-                              resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
-                            }
-                          );
-                        }
-                      }
-                      else {
-                        resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': anchor + ': HTTP status ' + this.status });
+                          if(acceptValue == 'application/ld+json' && contentType != 'application/ld+json') {
+                            resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': anchor + ': <code>Accept: ' + acceptValue + '</code> != <code>Content-Type: ' + cT + '</code>' });
+                          }
+                          else {
+                            var options = { 'subjectURI': '_:ldn' }
+                            var codeAccept = (acceptValue == '') ? 'No <code>Accept</code>' : '<code>Accept: ' + acceptValue + '</code>';
+                            serializeData(data, contentType, 'application/ld+json', options).then(
+                              function(i){
+                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:passed', 'earl:info': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can</em> be serialized as JSON-LD' });
+                              },
+                              function(reason){
+                                resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': anchor + ': ' + codeAccept + ' => <code>Content-Type: ' + cT + '</code> <em>can not</em> be serialized as JSON-LD' });
+                              }
+                            );
+                          }
+                          break;
                       }
                     }
                   };
