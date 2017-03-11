@@ -60,6 +60,7 @@ var getExternalBaseURL = mayktso.getExternalBaseURL;
 var XMLHttpRequest = mayktso.XMLHttpRequest;
 var discoverInbox = mayktso.discoverInbox;
 var getInboxNotifications = mayktso.getInboxNotifications;
+var resStatus = mayktso.resStatus;
 
 var ldnTestsVocab = {
   "earlAssertion": { "@id": "http://www.w3.org/ns/earl#Assertion", "@type": "@id" },
@@ -267,8 +268,7 @@ function testSender(req, res, next){
   switch(req.method){
     case 'GET':
       if(!req.requestedType){
-        res.status(406);
-        res.end();
+        resStatus(res, 406);
         return next();
       }
 
@@ -353,8 +353,7 @@ function testReceiver(req, res, next){
   switch(req.method){
     case 'GET':
       if(!req.accepts(['text/html', 'application/xhtml+xml', '*/*'])) {
-        res.status(406);
-        res.end();
+        resStatus(res, 406);
         return next();
       }
 
@@ -1177,8 +1176,7 @@ function showSummary(req, res, next){
     //TODO: This only responds to text/html. Maybe include RDFa? Anything new/interesting for the report?
     case 'GET':
       if(!req.accepts(['text/html', '*/*'])) {
-        res.status(406);
-        res.end();
+        resStatus(res, 406);
         return next();
       }
 
@@ -1429,8 +1427,7 @@ function getTarget(req, res, next){
       break;
   }
   if(!req.requestedType){
-    res.status(406);
-    res.end();
+    resStatus(res, 406);
     return next();
   }
 
@@ -1730,8 +1727,7 @@ function testConsumer(req, res, next){
   switch(req.method){
     case 'GET':
       if(!req.accepts(['text/html', 'application/xhtml+xml', '*/*'])) {
-        res.status(406);
-        res.end();
+        resStatus(res, 406);
         return next();
       }
 
