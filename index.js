@@ -603,10 +603,11 @@ function testReceiverGetResponse(req){
                           break;
                         case 200:
                           var data = this.responseText;
-                          var cT = this.getResponseHeader('Content-Type') || undefined;
+                          var cT = this.getResponseHeader('Content-Type');
 
-                          if(typeof cT === 'undefined') {
+                          if(typeof cT === 'undefined' || !cT) {
                             resolve({ 'url': url, 'Accept': acceptValue, 'Content-Type': cT, 'earl:outcome': 'earl:failed', 'earl:info': '<code>Content-Type</code> is missing or empty.' });
+                            return;
                           }
                           var contentType = cT.split(';')[0].trim();
 
