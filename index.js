@@ -225,7 +225,7 @@ var ldnTests = {
       'earl:mode': 'earl:automatic'
     },
     'testReceiverGetNotificationsLimited': {
-      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifiactions-limited',
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-limited',
       'description': 'Restricts list of notification URIs (eg. according to access control).',
       'earl:mode': 'earl:semiAuto'
     },
@@ -489,8 +489,12 @@ function testReceiverGetResponse(req){
   return getResource(url, headers).then(
     function(response){
 // console.log(response);
-      testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:cantTell', 'earl:info': 'Test manually.' };
+      testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:inapplicable', 'earl:info': '' };
       testResults['receiver']['testReceiverGetLDPContains'] = { 'earl:outcome': 'earl:untested', 'earl:info': '' };
+
+      if('test-receiver-get-notifications-limited' in req.body){
+        testResults['receiver']['testReceiverGetNotificationsLimited'] = { 'earl:outcome': 'earl:passed', 'earl:info': '' };
+      }
 
       var linkHeaders = parseLinkHeader(response.xhr.getResponseHeader('Link'));
       var rdftypes = [];
@@ -950,6 +954,8 @@ function getTestReceiverHTML(req, results){
                                         <li>
                                             <input type="checkbox" name="test-receiver-reject" checkbox="checkbox" />
                                             <label for="test-receiver-reject">Receiver should reject this notification</label>
+                                            <input type="checkbox" name="test-receiver-get-notifications-limited" checkbox="checkbox" />
+                                            <label for="test-receiver-get-notifications-limited">Receiver may restrict list of notifications</label>
                                         </li>
                                     </ul>
 
