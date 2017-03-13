@@ -1393,9 +1393,35 @@ ${testDefinitions}
             <article about="" typeof="schema:Article void:Dataset">
                 <h1 property="schema:name">LDN Test Reports and Summary</h1>
 
+                <dl id="document-test-suite">
+                    <dt>Test suite</dt>
+                    <dd><a href="https://linkedresearch.org/ldn/tests/">https://linkedresearch.org/ldn/tests/</a></dd>
+                </dl>
+
                 <dl id="document-license">
                     <dt>License</dt>
                     <dd><a href="https://creativecommons.org/licenses/by/4.0/" rel="schema:license" title="Creative Commons Attribution 4.0 Unported">CC BY 4.0</a></dd>
+                </dl>
+
+                <dl id="document-published">
+                    <dt>Published</dt>
+                    <dd><time datatype="xsd:dateTime" datetime="2016-09-18T00:00:00Z" property="schema:dateModified">2016-09-18</time></dd>
+                </dl>
+
+                <dl id="document-modified">
+                    <dt>Modified</dt>
+                    <dd><time datatype="xsd:dateTime" datetime="2017-03-13T00:00:00Z" property="schema:dateModified">2017-03-13</time></dd>
+                </dl>
+
+                <dl id="document-repository">
+                    <dt>Repository</dt>
+                    <dd><a href="https://github.com/w3c/ldn">GitHub</a></dd>
+                    <dd><a href="https://github.com/w3c/ldn/issues">Issues</a></dd>
+                </dl>
+
+                <dl id="document-status">
+                    <dt>Status</dt>
+                    <dd><a href="https://www.w3.org/TR/ldn/">Linekd Data Notifications</a> is a W3C Candidate Recommendation proposed by the <a href="http://www.w3.org/Social/WG">W3C Social Web Working Group</a></dd>
                 </dl>
 
                 <div id="content">
