@@ -737,7 +737,7 @@ function testReceiverPostResponse(req){
                 //TODO: baseURL for response.xhr.getResponseHeader('Location') .. check response.responseURL?
                 url = response.xhr._url.href + location;
                 if(location[0] == '/'){
-                  var port = (response.xhr._url.port) ? response.xhr._url.port : '';
+                  var port = (response.xhr._url.port) ? ':' + response.xhr._url.port : '';
                   url = response.xhr._url.protocol + '//' + response.xhr._url.hostname + port + location;
                 }
               }
