@@ -462,7 +462,7 @@ width:auto;
 margin-left:16.5%;
 }
 .form-tests label[for="test-receiver-reject"],
-.form-tests input[name="test-receiver-get-notifications-limited"] {
+.form-tests label[for="test-receiver-get-notifications-limited"] {
 width:65%;
 text-align:left;
 vertical-align: middle;
