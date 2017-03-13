@@ -456,11 +456,13 @@ width: 18%;
 text-align: right;
 padding: 0.25em;
 }
-input[name="test-receiver-reject"] {
+input[name="test-receiver-reject"],
+input[name="test-receiver-get-notifications-limited"] {
 width:auto;
 margin-left:16.5%;
 }
-.form-tests label[for="test-receiver-reject"] {
+.form-tests label[for="test-receiver-reject"],
+.form-tests input[name="test-receiver-get-notifications-limited"] {
 width:65%;
 text-align:left;
 vertical-align: middle;
