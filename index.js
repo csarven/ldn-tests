@@ -851,6 +851,28 @@ function testReceiverPostResponse(req){
     });
 }
 
+function getRequirementLevelCode(level) {
+  var s = level;
+  switch(level) {
+    default: s = outcome; break;
+    case 'MUST': s = '!'; break;
+    case 'SHOULD': s = '^'; break;
+    case 'MAY': s = '~'; break;
+  }
+  return s;
+}
+
+function getRequirementLevelURL(level) {
+  var s = level;
+  switch(level) {
+    default: s = outcome; break;
+    case 'MUST': s = 'https://tools.ietf.org/html/rfc2119#section-1'; break;
+    case 'SHOULD': s = 'https://tools.ietf.org/html/rfc2119#section-3'; break;
+    case 'MAY': s = 'https://tools.ietf.org/html/rfc2119#section-5'; break;
+  }
+  return s;
+}
+
 function getEarlOutcomeCode(outcome){
   var s = outcome;
   switch(outcome) {
@@ -1362,12 +1384,21 @@ function getReportsHTML(req, res, next, reports){
       var testsCount = tests.length;
       var testTypeCapitalised = testTypeCode[0].toUpperCase() + testTypeCode.slice(1);
       var testDefinitions = [];
+      var testRequirementLevels = ['MUST', 'SHOULD', 'MAY'];
+      var testRequirementLevelsHTML = '';
+      testRequirementLevels.forEach(function(level){
+        testRequirementLevelsHTML += '<dt id="' + testTypeCode + '-' + level + '">' + getRequirementLevelCode(level) + '</dt><dd><a class="rfc2119" href="' + getRequirementLevelURL(level) + '">' + level + '</a></dd>';
+      });
+      var testRequirementDefinitions = '<dl>' + testRequirementLevelsHTML + '</dl>';
+
       var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
       theadTRs += '<tr>';
       tests.forEach(function(test){
         var notation = ldnTests[testTypeCode][test]['uri'].split('#test-' + testTypeCode + '-')[1].split('-').map(function(i){ return i[0]; }).join('').toUpperCase();
         notation = (test == 'testReceiverGetLDPContainer') ? 'GLCR' : notation;
-        theadTRs += '<th><a href="#' + notation + '">' + notation + '</a></th>';
+        var requirementLevel = ldnTests[testTypeCode][test]['requirement'];
+        theadTRs += '<th><a href="#' + notation + '">' + notation + '</a><sup class="rfc2119"><a href="#' + testTypeCode + '-' + requirementLevel + '">' + getRequirementLevelCode(requirementLevel) + '</a></sup></th>';
+
         testDefinitions.push('<dt id="' + notation + '">' + notation + '</dt><dd>' + ldnTests[testTypeCode][test]['description'] + ' [<a href="' + ldnTests[testTypeCode][test]['uri'] + '">source</a>]</dd>');
       });
       theadTRs += '</tr>';
@@ -1406,6 +1437,7 @@ ${tbodyTRs}
                                                   </dl>
 ${getEarlOutcomeHTML()}
 ${testDefinitions}
+${testRequirementDefinitions}
                                               </td>
                                           </tr>
                                       </tfoot>
