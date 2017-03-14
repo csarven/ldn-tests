@@ -824,7 +824,7 @@ function getEarlOutcomeCode(outcome){
     case 'earl:failed': s = '✗'; break;
     case 'earl:cantTell': s = '?'; break;
     case 'earl:inapplicable': s = '⌙'; break;
-    case 'earl:untested': s = '🞆'; break;
+    case 'earl:untested': s = '○'; break;
   }
   return s;
 }
