@@ -200,14 +200,14 @@ var ldnTests = {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post',
       'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
       'earl:mode': 'earl:automatic',
-      'requirement': 'SHOULD',
+      'requirement': 'MAY'
       'dependency': 'testReceiverOptionsResponse'
     },
     'testReceiverOptionsAcceptPostContainsJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post-contains-json-ld',
       'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
       'earl:mode': 'earl:automatic',
-      'requirement': 'SHOULD',
+      'requirement': 'MAY'
       'dependency': 'testReceiverOptionsResponse'
     },
 
