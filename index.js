@@ -80,174 +80,209 @@ var ldnTests = {
     'testSenderHeaderDiscovery': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-discovery',
       'description': 'Inbox discovery (<code>Link</code> header).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testSenderHeaderPostRequest': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-post-request',
       'description': 'Makes <code>POST</code> requests (<code>Link</code> header).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testSenderHeaderPostContentTypeJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-post-content-type-json-ld',
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (<code>Link</code> header).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testSenderHeaderPostValidJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-header-post-valid-json-ld',
       'description': '<code>POST</code> payload is JSON-LD (<code>Link</code> header).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
 
     'testSenderBodyDiscovery': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-discovery',
       'description': 'Inbox discovery (RDF body).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testSenderBodyPostRequest': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-post-request',
       'description': 'Makes <code>POST</code> requests (RDF body).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testSenderBodyPostContentTypeJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-post-content-type-json-ld',
       'description': '<code>POST</code> includes <code>Content-Type: application/ld+json</code> (RDF body).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testSenderBodyPostBodyJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-sender-body-post-valid-json-ld',
       'description': '<code>POST</code> payload is JSON-LD (RDF body).',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     }
   },
   'consumer': {
     'testConsumerHeaderDiscovery': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-header-discovery',
       'description': 'Inbox discovery (<code>Link</code> header).',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MUST'
     },
     'testConsumerBodyDiscovery': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-body-discovery',
       'description': 'Inbox discovery (RDF body).',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MUST'
     },
     'testConsumerListingJSONLDCompacted': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-listing-json-ld-compacted',
       'description': 'Notification discovery from Inbox using JSON-LD compacted form.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MUST'
     },
     'testConsumerListingJSONLDExpanded': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-listing-json-ld-expanded',
       'description': 'Notification discovery from Inbox using JSON-LD expanded form.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MUST'
     },
     'testConsumerNotificationAnnounce': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-announce',
       'description': 'Contents of the <samp>announce</samp> notification.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testConsumerNotificationChangelog': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-changelog',
       'description': 'Contents of the <samp>changelog</samp> notification.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testConsumerNotificationCitation': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-citation',
       'description': 'Contents of the <samp>citation</samp> notification.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testConsumerNotificationAssessing': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-assessing',
       'description': 'Contents of the <samp>assessing</samp> notification.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testConsumerNotificationComment': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-comment',
       'description': 'Contents of the <samp>comment</samp> notification.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testConsumerNotificationRSVP': {
       'uri': 'https://www.w3.org/TR/ldn/#test-consumer-notification-rsvp',
       'description': 'Contents of the <samp>rsvp</samp> notifications.',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     }
   },
   'receiver': {
     'testReceiverOptionsResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-response',
       'description': 'Accepts <code>OPTIONS</code> requests.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MAY'
     },
     'testReceiverOptionsAcceptPost': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post',
       'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'SHOULD',
+      'dependency': 'testReceiverOptionsResponse'
     },
     'testReceiverOptionsAcceptPostContainsJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post-contains-json-ld',
       'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'SHOULD',
+      'dependency': 'testReceiverOptionsResponse'
     },
 
     'testReceiverPostResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response',
       'description': 'Accepts <code>POST</code> requests.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverPostCreated': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-created',
       'description': 'Responds to <code>POST</code> requests with <code>Content-Type: application/ld+json</code> with status code <code>201 Created</code> or <code>202 Accepted</code>.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverPostLocation': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-location',
       'description': 'Returns a <code>Location</code> header in response to successful <code>POST</code> requests.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverPostLinkProfile': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-link-profile',
       'description': 'Succeeds when the content type includes a <code>profile</code> parameter.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverPostResponseConstraintsUnmet': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response-contraints-unmet',
       'description': 'Fails to process notifications if implementation-specific constraints are not met.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'SHOULD'
     },
 
     'testReceiverGetResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-response',
       'description': 'Returns JSON-LD on <code>GET</code> requests.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverGetLDPContains': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-contains',
       'description': 'Lists notification URIs with <code>ldp:contains</code>.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverGetNotificationsLimited': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-limited',
       'description': 'Restricts list of notification URIs (eg. according to access control).',
-      'earl:mode': 'earl:semiAuto'
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testReceiverGetNotificationsJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-json-ld',
       'description': 'Notifications are available as JSON-LD.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverGetNotificationsRDFSource': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-rdf-source',
       'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MUST'
     },
     'testReceiverGetLDPContainer': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-container',
       'description': 'Inbox has type <code>ldp:Container</code>.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MAY'
     },
     'testReceiverGetLDPConstrainedBy': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-constrained-by',
       'description': 'Advertises constraints with <code>ldp:constrainedBy</code>.',
-      'earl:mode': 'earl:automatic'
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MAY'
     }
   }
 }
