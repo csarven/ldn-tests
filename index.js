@@ -190,26 +190,6 @@ var ldnTests = {
     }
   },
   'receiver': {
-    'testReceiverOptionsResponse': {
-      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-response',
-      'description': 'Accepts <code>OPTIONS</code> requests.',
-      'earl:mode': 'earl:automatic',
-      'requirement': 'MAY'
-    },
-    'testReceiverOptionsAcceptPost': {
-      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post',
-      'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
-      'earl:mode': 'earl:automatic',
-      'requirement': 'MAY',
-      'dependency': 'testReceiverOptionsResponse'
-    },
-    'testReceiverOptionsAcceptPostContainsJSONLD': {
-      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post-contains-json-ld',
-      'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
-      'earl:mode': 'earl:automatic',
-      'requirement': 'MAY',
-      'dependency': 'testReceiverOptionsResponse'
-    },
 
     'testReceiverPostResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response',
@@ -235,12 +215,6 @@ var ldnTests = {
       'earl:mode': 'earl:automatic',
       'requirement': 'MUST'
     },
-    'testReceiverPostResponseConstraintsUnmet': {
-      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response-contraints-unmet',
-      'description': 'Fails to process notifications if implementation-specific constraints are not met.',
-      'earl:mode': 'earl:automatic',
-      'requirement': 'SHOULD'
-    },
 
     'testReceiverGetResponse': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-response',
@@ -254,12 +228,6 @@ var ldnTests = {
       'earl:mode': 'earl:automatic',
       'requirement': 'MUST'
     },
-    'testReceiverGetNotificationsLimited': {
-      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-limited',
-      'description': 'Restricts list of notification URIs (eg. according to access control).',
-      'earl:mode': 'earl:semiAuto',
-      'requirement': 'MAY'
-    },
     'testReceiverGetNotificationsJSONLD': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-json-ld',
       'description': 'Notifications are available as JSON-LD.',
@@ -271,6 +239,38 @@ var ldnTests = {
       'description': 'When requested with no <code>Accept</code> header or <code>*/*</code>, notifications are still returned as RDF.',
       'earl:mode': 'earl:automatic',
       'requirement': 'MUST'
+    },
+    'testReceiverOptionsResponse': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-response',
+      'description': 'Accepts <code>OPTIONS</code> requests.',
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MAY'
+    },
+    'testReceiverOptionsAcceptPost': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post',
+      'description': 'Advertises acceptable content types with <code>Accept-Post</code> in response to <code>OPTIONS</code> request.',
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MAY',
+      'dependency': 'testReceiverOptionsResponse'
+    },
+    'testReceiverOptionsAcceptPostContainsJSONLD': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-options-accept-post-contains-json-ld',
+      'description': '<code>Accept-Post</code> includes <code>application/ld+json</code>.',
+      'earl:mode': 'earl:automatic',
+      'requirement': 'MAY',
+      'dependency': 'testReceiverOptionsResponse'
+    },
+    'testReceiverPostResponseConstraintsUnmet': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-post-response-contraints-unmet',
+      'description': 'Fails to process notifications if implementation-specific constraints are not met.',
+      'earl:mode': 'earl:automatic',
+      'requirement': 'SHOULD'
+    },
+    'testReceiverGetNotificationsLimited': {
+      'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-notifications-limited',
+      'description': 'Restricts list of notification URIs (eg. according to access control).',
+      'earl:mode': 'earl:semiAuto',
+      'requirement': 'MAY'
     },
     'testReceiverGetLDPContainer': {
       'uri': 'https://www.w3.org/TR/ldn/#test-receiver-get-ldp-container',
@@ -1386,22 +1386,40 @@ function getReportsHTML(req, res, next, reports){
       var testDefinitions = [];
       var testRequirementLevels = ['MUST', 'SHOULD', 'MAY'];
       var testRequirementLevelsHTML = '';
+      var testRequirementLevelsCount = {};
       testRequirementLevels.forEach(function(level){
-        testRequirementLevelsHTML += '<dt id="' + testTypeCode + '-' + level + '">' + getRequirementLevelCode(level) + '</dt><dd><a class="rfc2119" href="' + getRequirementLevelURL(level) + '">' + level + '</a></dd>';
+        // testRequirementLevelsHTML += '<dt id="' + testTypeCode + '-' + level + '">' + getRequirementLevelCode(level) + '</dt><dd><a class="rfc2119" href="' + getRequirementLevelURL(level) + '">' + level + '</a></dd>';
+        // testRequirementLevelsHTML += '<dt id="' + testTypeCode + '-' + level + '"></dt><dd><a class="rfc2119" href="' + getRequirementLevelURL(level) + '">' + level + '</a></dd>';
+        testRequirementLevelsCount[level] = 0;
       });
-      var testRequirementDefinitions = '<dl>' + testRequirementLevelsHTML + '</dl>';
+      // var testRequirementDefinitions = '<dl>' + testRequirementLevelsHTML + '</dl>';
 
-      var theadTRs = '<tr><th rowspan="2">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
-      theadTRs += '<tr>';
+      var theadTRs = '<tr><th rowspan="3">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
+      var testsTR = '<tr>';
       tests.forEach(function(test){
         var notation = ldnTests[testTypeCode][test]['uri'].split('#test-' + testTypeCode + '-')[1].split('-').map(function(i){ return i[0]; }).join('').toUpperCase();
         notation = (test == 'testReceiverGetLDPContainer') ? 'GLCR' : notation;
         var requirementLevel = ldnTests[testTypeCode][test]['requirement'];
-        theadTRs += '<th><a href="#' + notation + '">' + notation + '</a><sup class="rfc2119"><a href="#' + testTypeCode + '-' + requirementLevel + '">' + getRequirementLevelCode(requirementLevel) + '</a></sup></th>';
+        testRequirementLevelsCount[requirementLevel] = testRequirementLevelsCount[requirementLevel] + 1;
+        // testsTR += '<th><a href="#' + notation + '">' + notation + '</a><sup class="rfc2119"><a href="#' + testTypeCode + '-' + requirementLevel + '">' + getRequirementLevelCode(requirementLevel) + '</a></sup></th>';
+        testsTR += '<th><a href="#' + notation + '">' + notation + '</a></th>';
 
         testDefinitions.push('<dt id="' + notation + '">' + notation + '</dt><dd>' + ldnTests[testTypeCode][test]['description'] + ' [<a href="' + ldnTests[testTypeCode][test]['uri'] + '">source</a>]</dd>');
       });
-      theadTRs += '</tr>';
+      testsTR += '</tr>';
+
+      var requiredTestsCount = testRequirementLevelsCount['MUST'];
+      var optionalTestsCount = testRequirementLevelsCount['SHOULD'] + testRequirementLevelsCount['MAY'];
+      var testColsTR = '<tr colspan="15">';
+      if(requiredTestsCount > 0){
+       testColsTR += '<th colspan="' + requiredTestsCount + '">Requried for interop</th>';
+      }
+      if(optionalTestsCount > 0){
+        testColsTR += '<th colspan="' + optionalTestsCount + '">Optional</th>';
+      }
+      testColsTR += '</tr>';
+      theadTRs += testColsTR + testsTR;
+
       testDefinitions = '<dl class="abbr">' + testDefinitions.join('') + '</dl>';
 
       var tbodyTRs = '';
@@ -1437,7 +1455,6 @@ ${tbodyTRs}
                                                   </dl>
 ${getEarlOutcomeHTML()}
 ${testDefinitions}
-${testRequirementDefinitions}
                                               </td>
                                           </tr>
                                       </tfoot>
