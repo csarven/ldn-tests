@@ -224,7 +224,6 @@ margin-top:1em;
 font-size:1em;
 }
 
-
 a { color: #009000; }
 ul { padding: 0; margin-bottom:1em; }
 nav ul,
@@ -345,7 +344,6 @@ font-weight:bold;
   margin:1em 0;
 }
 
-
 ul#program-committee {
 column-count: 2;
 -moz-column-count: 2;
@@ -399,7 +397,7 @@ overflow:auto;
   article > article,
   section {
     width: 50%;
-    margin: 2em auto;
+    margin: 3em auto;
     padding: 0;
   }
   dl[id^="document-"], #authors {
