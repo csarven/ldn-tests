@@ -1505,7 +1505,7 @@ ${testDefinitions}
 
                 <dl id="document-status">
                     <dt>Status</dt>
-                    <dd><a href="https://www.w3.org/TR/ldn/">Linekd Data Notifications</a> is a W3C Candidate Recommendation proposed by the <a href="http://www.w3.org/Social/WG">W3C Social Web Working Group</a></dd>
+                    <dd><a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a> is a W3C Recommendation</dd>
                 </dl>
 
                 <div id="content">
