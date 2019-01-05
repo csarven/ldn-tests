@@ -1411,7 +1411,7 @@ function getReportsHTML(req, res, next, reports){
       var optionalTestsCount = testRequirementLevelsCount['SHOULD'] + testRequirementLevelsCount['MAY'];
       var testColsTR = '<tr colspan="15">';
       if(requiredTestsCount > 0){
-       testColsTR += '<th colspan="' + requiredTestsCount + '">Requried for interop</th>';
+       testColsTR += '<th colspan="' + requiredTestsCount + '">Required for interop</th>';
       }
       if(optionalTestsCount > 0){
         testColsTR += '<th colspan="' + optionalTestsCount + '">Optional</th>';
