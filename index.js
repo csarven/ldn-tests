@@ -1434,32 +1434,32 @@ function getReportsHTML(req, res, next, reports){
       });
 
       testsSummary += `
-            <section id="ldn-report-${testTypeCode}" rel="schema:hasPart" resource="#ldn-report-${testTypeCode}">
-              <h2 property="schema:name">${testTypeCapitalised} reports</h2>
-              <div datatype="rdf:HTML" property="schema:description">
-                <table id="ldn-test-${testTypeCode}-summary">
-                  <caption>${testTypeCapitalised} tests summary</caption>
-                  <thead>
+          <section id="ldn-report-${testTypeCode}" rel="schema:hasPart" resource="#ldn-report-${testTypeCode}">
+            <h2 property="schema:name">${testTypeCapitalised} reports</h2>
+            <div datatype="rdf:HTML" property="schema:description">
+              <table id="ldn-test-${testTypeCode}-summary">
+                <caption>${testTypeCapitalised} tests summary</caption>
+                <thead>
 ${theadTRs}
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
 ${tbodyTRs}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="${testsCount + 1}">
-                        <dl>
-                          <dt>Number of implementation reports</dt>
-                          <dd>${reportCount}</dd>
-                        </dl>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="${testsCount + 1}">
+                      <dl>
+                        <dt>Number of implementation reports</dt>
+                        <dd>${reportCount}</dd>
+                      </dl>
 ${getEarlOutcomeHTML()}
 ${testDefinitions}
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </section>`;
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </section>`;
     });
 
     return `<!DOCTYPE html>
