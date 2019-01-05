@@ -346,37 +346,37 @@ function getTestSenderHTML(req, results){
 
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <title>LDN Tests for Senders</title>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>LDN Tests for Senders</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+  </head>
 
-    <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
-        <main>
-            <article about="" typeof="schema:Article">
-                <h1 property="schema:name">LDN Tests for Senders</h1>
+  <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <main>
+      <article about="" typeof="schema:Article">
+        <h1 property="schema:name">LDN Tests for Senders</h1>
 
-                <div id="content">
-                    <section id="senders" inlist="" rel="schema:hasPart" resource="#senders">
-                        <h2 property="schema:name">Sender</h2>
-                        <div datatype="rdf:HTML" property="schema:description">
-                            <p>Run your sender software to <em>both</em> of these targets which advertise their inboxes through <code>Link</code> header and RDF body respectively:</p>
+        <div id="content">
+          <section id="senders" inlist="" rel="schema:hasPart" resource="#senders">
+            <h2 property="schema:name">Sender</h2>
+            <div datatype="rdf:HTML" property="schema:description">
+              <p>Run your sender software to <em>both</em> of these targets which advertise their inboxes through <code>Link</code> header and RDF body respectively:</p>
 
-                            <ul>
-                                <li><code>${targetIRI}?discovery=link-header</code></li>
-                                <li><code>${targetIRI}?discovery=rdf-body</code></li>
-                            </ul>
+              <ul>
+                <li><code>${targetIRI}?discovery=link-header</code></li>
+                <li><code>${targetIRI}?discovery=rdf-body</code></li>
+              </ul>
 
-                            <p>To see the test results and to submit a report go to: <code><a href="${targetIRI}">${targetIRI}</a></code>.</p>
-                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
-                        </div>
-                    </section>
-                </div>
-            </article>
-        </main>
-    </body>
+              <p>To see the test results and to submit a report go to: <code><a href="${targetIRI}">${targetIRI}</a></code>.</p>
+              <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
+  </body>
 </html>
 `;
 }
@@ -889,11 +889,11 @@ function getEarlOutcomeCode(outcome){
 function getEarlOutcomeHTML(){
 return `
 <dl>
-    <dt class="earl:passed"><abbr title="Passed">${getEarlOutcomeCode('earl:passed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#passed">Passed</a></dd>
-    <dt class="earl:failed"><abbr title="Failed">${getEarlOutcomeCode('earl:failed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#failed">Failed</a></dd>
-    <dt class="earl:cantTell"><abbr title="Cannot tell">${getEarlOutcomeCode('earl:cantTell')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#cantTell">Cannot tell</a></dd>
-    <dt class="earl:inapplicable"><abbr title="Inapplicable">${getEarlOutcomeCode('earl:inapplicable')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#inapplicable">Inapplicable</a></dd>
-    <dt class="earl:untested"><abbr title="Untested">${getEarlOutcomeCode('earl:untested')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#untested">Untested</a></dd>
+  <dt class="earl:passed"><abbr title="Passed">${getEarlOutcomeCode('earl:passed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#passed">Passed</a></dd>
+  <dt class="earl:failed"><abbr title="Failed">${getEarlOutcomeCode('earl:failed')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#failed">Failed</a></dd>
+  <dt class="earl:cantTell"><abbr title="Cannot tell">${getEarlOutcomeCode('earl:cantTell')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#cantTell">Cannot tell</a></dd>
+  <dt class="earl:inapplicable"><abbr title="Inapplicable">${getEarlOutcomeCode('earl:inapplicable')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#inapplicable">Inapplicable</a></dd>
+  <dt class="earl:untested"><abbr title="Untested">${getEarlOutcomeCode('earl:untested')}</abbr></dt><dd><a href="https://www.w3.org/TR/EARL10-Schema/#untested">Untested</a></dd>
 </dl>`;
 }
 
@@ -970,69 +970,69 @@ function getTestReceiverHTML(req, results){
   });
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <title>LDN Tests for Receivers</title>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>LDN Tests for Receivers</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+  </head>
 
-    <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
-        <main>
-            <article about="" typeof="schema:Article">
-                <h1 property="schema:name">LDN Tests for Receivers</h1>
+  <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <main>
+      <article about="" typeof="schema:Article">
+        <h1 property="schema:name">LDN Tests for Receivers</h1>
 
-                <div id="content">
-                    <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
-                        <h2 property="schema:name">Receiver</h2>
-                        <div datatype="rdf:HTML" property="schema:description">
-                            <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them.</p>
+        <div id="content">
+          <section id="receiver" inlist="" rel="schema:hasPart" resource="#receiver">
+            <h2 property="schema:name">Receiver</h2>
+            <div datatype="rdf:HTML" property="schema:description">
+              <p>This form is to test implementations of LDN receivers. Input the URL of an Inbox, and when you submit, it fires off several HTTP requests with the various combinations of parameters and headers that you are required to support in order for senders to create new notifications and consumers to retreive them.</p>
 
-                            <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
+              <p>We provide a default notification payload, but if you have a specilised implementation you may want to modify this to your needs.</p>
 
-                            <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
+              <p>If your receiver is setup to reject certain payloads (LDN suggests you implement some kinds of constraints or filtering), you can input one such payload and check the <q>Receiver should reject this notification</q> box. If your receiver rejects the POST requests, you will <em>pass</em> the relevant tests.</p>
 
-                            <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
+              <p>Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a>.</p>
 
-                            <form action="#test-response" class="form-tests" id="test-receiver" method="post">
-                                <fieldset>
-                                    <legend>Test Receiver</legend>
+              <form action="#test-response" class="form-tests" id="test-receiver" method="post">
+                <fieldset>
+                  <legend>Test Receiver</legend>
 
-                                    <ul>
-                                         <li>
-                                            <label for="test-receiver-url">URL</label>
-                                            <input type="text" name="test-receiver-url" placeholder="http://example.org/inbox/" value="" />
-                                        </li>
+                  <ul>
+                     <li>
+                      <label for="test-receiver-url">URL</label>
+                      <input type="text" name="test-receiver-url" placeholder="http://example.org/inbox/" value="" />
+                    </li>
 
-                                        <li>
-                                            <label for="test-receiver-data">Data</label>
-                                            <textarea name="test-receiver-data" cols="80" rows="3" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" name="test-receiver-reject" checkbox="checkbox" />
-                                            <label for="test-receiver-reject">Receiver should reject this notification</label>
-                                            <input type="checkbox" name="test-receiver-get-notifications-limited" checkbox="checkbox" />
-                                            <label for="test-receiver-get-notifications-limited">Receiver may restrict list of notifications</label>
-                                        </li>
-                                    </ul>
+                    <li>
+                      <label for="test-receiver-data">Data</label>
+                      <textarea name="test-receiver-data" cols="80" rows="3" placeholder="Enter data">{ "@id": "http://example.net/note#foo", "http://schema.org/citation": { "@id": "http://example.org/article#results" } }</textarea>
+                    </li>
+                    <li>
+                      <input type="checkbox" name="test-receiver-reject" checkbox="checkbox" />
+                      <label for="test-receiver-reject">Receiver should reject this notification</label>
+                      <input type="checkbox" name="test-receiver-get-notifications-limited" checkbox="checkbox" />
+                      <label for="test-receiver-get-notifications-limited">Receiver may restrict list of notifications</label>
+                    </li>
+                  </ul>
 
-                                    <input type="hidden" name="test-implementation" value="receiver" />
-                                    <input type="submit" value="Submit" />
-                                </fieldset>
-                            </form>
+                  <input type="hidden" name="test-implementation" value="receiver" />
+                  <input type="submit" value="Submit" />
+                </fieldset>
+              </form>
 ${(typeof results !== 'undefined' && 'test-receiver-report-html' in results) ? results['test-receiver-report-html'] : ''}
-                        </div>
-                    </section>
-                    <section id="tests" inlist="" rel="schema:hasPart" resource="#tests">
-                      <h2 property="schema:name">For reference, the tests that will run are:</h2>
-                      <ul>
+            </div>
+          </section>
+          <section id="tests" inlist="" rel="schema:hasPart" resource="#tests">
+            <h2 property="schema:name">For reference, the tests that will run are:</h2>
+            <ul>
 ${testsList}
-                      </ul>
-                    </section>
-                </div>
-            </article>
-        </main>
-    </body>
+            </ul>
+          </section>
+        </div>
+      </article>
+    </main>
+  </body>
 </html>
 `;
 }
@@ -1060,30 +1060,30 @@ function createTestReport(req, res, next){
   test['id'] = uuid.v1();
 
   var doap = `<dl about="${implementation}" typeof="doap:Project ldn:${test['implementationType']}">
-    <dt>Project</dt>
-    <dd property="doap:name"><a href="${implementation}">${name}</a></dd>
-    <dt>Implementation type</dt>
-    <dd><a href="https://www.w3.org/TR/ldn/#${test['implementationType']}">${test['implementationType']}</a></dd>
-    <dt>Maintainer</dt>
-    <dd><a href="${maintainer}" property="doap:maintainer">${maintainer}</a></dd>
+  <dt>Project</dt>
+  <dd property="doap:name"><a href="${implementation}">${name}</a></dd>
+  <dt>Implementation type</dt>
+  <dd><a href="https://www.w3.org/TR/ldn/#${test['implementationType']}">${test['implementationType']}</a></dd>
+  <dt>Maintainer</dt>
+  <dd><a href="${maintainer}" property="doap:maintainer">${maintainer}</a></dd>
 </dl>`;
 
 
   var datasetNote = '';
   if(req.body['note'] && req.body['note'].trim().length > 0){
     datasetNote = `
-    <dt>Note</dt>
-    <dd datatype="rdf:HTML" property="as:summary">${req.body['note'].trim()}</dd>`;
+  <dt>Note</dt>
+  <dd datatype="rdf:HTML" property="as:summary">${req.body['note'].trim()}</dd>`;
   }
 
 
   var dataset = `<dl>
-    <dt>Identifier</dt>
-    <dd property="dcterms:identifier" xml:lang="" lang="">${test['id']}</dd>
-    <dt>Published</dt>
-    <dd><time content="${dateTime}" datatype="xsd:dateTime" datetime="${dateTime}" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
-    <dt>Creator</dt>
-    <dd><a href="${maintainer}" property="as:creator">${maintainer}</a></dd>${datasetNote}
+  <dt>Identifier</dt>
+  <dd property="dcterms:identifier" xml:lang="" lang="">${test['id']}</dd>
+  <dt>Published</dt>
+  <dd><time content="${dateTime}" datatype="xsd:dateTime" datetime="${dateTime}" property="as:published">${dateTime.slice(0, dateTime.indexOf("T"))}</time></dd>
+  <dt>Creator</dt>
+  <dd><a href="${maintainer}" property="as:creator">${maintainer}</a></dd>${datasetNote}
 </dl>`;
 
   var datasetSeeAlso = [];
@@ -1104,10 +1104,10 @@ function createTestReport(req, res, next){
 
     observations.push(`
 <tr id="${testId}" about="#${testId}" typeof="qb:Observation earl:Assertion">
-    <td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
-    <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" />${ldnTests[test['implementationType']][i]['description']} [<a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">source</a>]</td>
-    <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
-    ${earlInfo}
+  <td property="earl:result" resource="#result-${testId}" typeof="earl:TestResult"><span property="earl:outcome" resource="${test['results'][i]['earl:outcome']}">${getEarlOutcomeCode(test['results'][i]['earl:outcome'])}</span></td>
+  <td><meta property="qb:dataSet" resource="" /><meta property="earl:subject" resource="${implementation}" />${ldnTests[test['implementationType']][i]['description']} [<a property="earl:test" href="${ldnTests[test['implementationType']][i]['uri']}">source</a>]</td>
+  <td property="earl:mode" resource="${earlMode}"><a href="https://www.w3.org/TR/EARL10-Schema/#${earlModeText}">${earlModeText}</a></td>
+  ${earlInfo}
 </tr>`);
   });
   observations = observations.join('');
@@ -1117,58 +1117,57 @@ function createTestReport(req, res, next){
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
-      <meta charset="utf-8" />
-      <title>${name} LDN implementation report and test results</title>
-      <meta content="width=device-width, initial-scale=1" name="viewport" />
-      <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>${name} LDN implementation report and test results</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
   </head>
 
   <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
-      <main>
-          <article about="" typeof="schema:Article qb:DataSet as:Object">
-              <h1 property="schema:name">${name} LDN implementation report and test results</h1>
-
-              <div id="content">
-                  <section>
-                      <h2>Description of a project</h2>
-                      <div>
+    <main>
+      <article about="" typeof="schema:Article qb:DataSet as:Object">
+        <h1 property="schema:name">${name} LDN implementation report and test results</h1>
+          <div id="content">
+            <section>
+              <h2>Description of a project</h2>
+              <div>
 ${doap}
-                      </div>
-                  </section>
-
-                  <section>
-                      <h2 rel="qb:structure" resource="https://www.w3.org/TR/ldn/#data-structure-definition">Dataset</h2>
-                      <div>
-${dataset}
-                      </div>
-                  </section>
-
-                  <section>
-                      <h2>Test results</h2>
-                      <div>
-                          <table>
-                              <caption>Report</caption>
-                              <thead>
-                                  <tr>
-                                      <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
-                                      <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
-                                      <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
-                                      <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
-                                  </tr>
-                              </thead>
-                              <tfoot>
-                                  <tr><td colspan="4">${getEarlOutcomeHTML()}</td></tr>
-                                  <tr><td about="" colspan="4" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
-                              </tfoot>
-                              <tbody>
-${observations}
-                              </tbody>
-                          </table>
-                      </div>
-                  </section>
               </div>
-          </article>
-      </main>
+            </section>
+
+            <section>
+              <h2 rel="qb:structure" resource="https://www.w3.org/TR/ldn/#data-structure-definition">Dataset</h2>
+              <div>
+${dataset}
+              </div>
+            </section>
+
+            <section>
+              <h2>Test results</h2>
+              <div>
+                <table>
+                  <caption>Report</caption>
+                  <thead>
+                    <tr>
+                      <th title="Outcome of performing the test"><a href="https://www.w3.org/TR/EARL10-Schema/#outcome">Outcome</a></th>
+                      <th title="Test criterion"><a href="https://www.w3.org/TR/EARL10-Schema/#test">Test</a></th>
+                      <th title="Describes how a test was carried out"><a href="https://www.w3.org/TR/EARL10-Schema/#mode">Mode</a></th>
+                      <th title="Additional warnings or error messages in a human-readable form"><a href="https://www.w3.org/TR/EARL10-Schema/#info">Info</a></th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr><td colspan="4">${getEarlOutcomeHTML()}</td></tr>
+                    <tr><td about="" colspan="4" rel="rdfs:seeAlso">${datasetSeeAlso}</td></tr>
+                  </tfoot>
+                <tbody>
+${observations}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
   </body>
 </html>
 `;
@@ -1435,97 +1434,97 @@ function getReportsHTML(req, res, next, reports){
       });
 
       testsSummary += `
-                          <section id="ldn-report-${testTypeCode}" rel="schema:hasPart" resource="#ldn-report-${testTypeCode}">
-                              <h2 property="schema:name">${testTypeCapitalised} reports</h2>
-                              <div datatype="rdf:HTML" property="schema:description">
-                                  <table id="ldn-test-${testTypeCode}-summary">
-                                      <caption>${testTypeCapitalised} tests summary</caption>
-                                      <thead>
+              <section id="ldn-report-${testTypeCode}" rel="schema:hasPart" resource="#ldn-report-${testTypeCode}">
+                <h2 property="schema:name">${testTypeCapitalised} reports</h2>
+                <div datatype="rdf:HTML" property="schema:description">
+                  <table id="ldn-test-${testTypeCode}-summary">
+                    <caption>${testTypeCapitalised} tests summary</caption>
+                    <thead>
 ${theadTRs}
-                                      </thead>
-                                      <tbody>
+                    </thead>
+                    <tbody>
 ${tbodyTRs}
-                                      </tbody>
-                                      <tfoot>
-                                          <tr>
-                                              <td colspan="${testsCount + 1}">
-                                                  <dl>
-                                                      <dt>Number of implementation reports</dt>
-                                                      <dd>${reportCount}</dd>
-                                                  </dl>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="${testsCount + 1}">
+                          <dl>
+                            <dt>Number of implementation reports</dt>
+                            <dd>${reportCount}</dd>
+                          </dl>
 ${getEarlOutcomeHTML()}
 ${testDefinitions}
-                                              </td>
-                                          </tr>
-                                      </tfoot>
-                                  </table>
-                              </div>
-                          </section>`;
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </section>`;
     });
 
     return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <title>LDN Test Reports and Summary</title>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>LDN Test Reports and Summary</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+  </head>
 
-    <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
-        <main>
-            <article about="" typeof="schema:Article void:Dataset">
-                <h1 property="schema:name">LDN Test Reports and Summary</h1>
+  <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <main>
+      <article about="" typeof="schema:Article void:Dataset">
+        <h1 property="schema:name">LDN Test Reports and Summary</h1>
 
-                <dl id="document-test-suite">
-                    <dt>Test suite</dt>
-                    <dd><a href="https://linkedresearch.org/ldn/tests/">https://linkedresearch.org/ldn/tests/</a></dd>
-                </dl>
+        <dl id="document-test-suite">
+          <dt>Test suite</dt>
+          <dd><a href="https://linkedresearch.org/ldn/tests/">https://linkedresearch.org/ldn/tests/</a></dd>
+        </dl>
 
-                <dl id="document-license">
-                    <dt>License</dt>
-                    <dd><a href="https://creativecommons.org/licenses/by/4.0/" rel="schema:license" title="Creative Commons Attribution 4.0 Unported">CC BY 4.0</a></dd>
-                </dl>
+        <dl id="document-license">
+          <dt>License</dt>
+          <dd><a href="https://creativecommons.org/licenses/by/4.0/" rel="schema:license" title="Creative Commons Attribution 4.0 Unported">CC BY 4.0</a></dd>
+        </dl>
 
-                <dl id="document-published">
-                    <dt>Published</dt>
-                    <dd><time datatype="xsd:dateTime" datetime="2016-09-18T00:00:00Z" property="schema:dateModified">2016-09-18</time></dd>
-                </dl>
+        <dl id="document-published">
+          <dt>Published</dt>
+          <dd><time datatype="xsd:dateTime" datetime="2016-09-18T00:00:00Z" property="schema:datePublished">2016-09-18</time></dd>
+        </dl>
 
-                <dl id="document-modified">
-                    <dt>Modified</dt>
-                    <dd><time datatype="xsd:dateTime" datetime="2017-03-13T00:00:00Z" property="schema:dateModified">2017-03-13</time></dd>
-                </dl>
+        <dl id="document-modified">
+          <dt>Modified</dt>
+          <dd><time datatype="xsd:dateTime" datetime="2018-01-05T00:00:00Z" property="schema:dateModified">2018-01-05</time></dd>
+        </dl>
 
-                <dl id="document-repository">
-                    <dt>Repository</dt>
-                    <dd><a href="https://github.com/w3c/ldn">GitHub</a></dd>
-                    <dd><a href="https://github.com/w3c/ldn/issues">Issues</a></dd>
-                </dl>
+        <dl id="document-repository">
+          <dt>Repository</dt>
+          <dd><a href="https://github.com/w3c/ldn">GitHub</a></dd>
+          <dd><a href="https://github.com/w3c/ldn/issues">Issues</a></dd>
+        </dl>
 
-                <dl id="document-status">
-                    <dt>Status</dt>
-                    <dd><a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a> is a W3C Recommendation</dd>
-                </dl>
+        <dl id="document-status">
+          <dt>Status</dt>
+          <dd><a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a> is a W3C Recommendation</dd>
+        </dl>
 
-                <div id="content">
-                    <section id="keywords">
-                        <h2>Keywords</h2>
-                        <div>
-                            <ul rel="schema:about">
-                                <li><a href="https://en.wikipedia.org/wiki/Communications_protocol" resource="http://dbpedia.org/resource/Communications_protocol">Communications protocol</a></li>
-                                <li><a href="https://en.wikipedia.org/wiki/Decentralization" resource="http://dbpedia.org/resource/Decentralization">Decentralisation</a></li>
-                                <li><a href="https://en.wikipedia.org/wiki/Linked_data" resource="http://dbpedia.org/resource/Linked_data">Linked Data</a></li>
-                                <li><a href="https://en.wikipedia.org/wiki/Social_web" resource="http://dbpedia.org/resource/Social_web">Social web</a></li>
-                            </ul>
-                        </div>
-                    </section>
+        <div id="content">
+          <section id="keywords">
+            <h2>Keywords</h2>
+            <div>
+              <ul rel="schema:about">
+                <li><a href="https://en.wikipedia.org/wiki/Communications_protocol" resource="http://dbpedia.org/resource/Communications_protocol">Communications protocol</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Decentralization" resource="http://dbpedia.org/resource/Decentralization">Decentralisation</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Linked_data" resource="http://dbpedia.org/resource/Linked_data">Linked Data</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Social_web" resource="http://dbpedia.org/resource/Social_web">Social web</a></li>
+              </ul>
+            </div>
+          </section>
 
 ${testsSummary}
-                </div>
-            </article>
-        </main>
-    </body>
+        </div>
+      </article>
+    </main>
+  </body>
 </html>
 `;
 }
@@ -1678,9 +1677,9 @@ ${testResponse(req, test, reportHTML)}
 // console.log(test);
           //TODO: relocate this
           reqresData = `
-                    <section id="test-request-response-data">
-                        <h2>Requests Received</h2>
-                        <div>`;
+                <section id="test-request-response-data">
+                    <h2>Requests Received</h2>
+                    <div>`;
           var requestHeaders = [];
           if (typeof metaDataLinkHeader !== 'undefined'){
             requestHeaders.push(metaDataLinkHeader.req.method + ' ' + metaDataLinkHeader.req.url + ' HTTP/' + metaDataLinkHeader.req.httpVersion);
@@ -1689,18 +1688,18 @@ ${testResponse(req, test, reportHTML)}
             });
 
             reqresData += `
-                          <dl>
-                            <dt>Request</dt>
-                            <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
+                      <dl>
+                        <dt>Request</dt>
+                        <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
 
-                            <dt>Response</dt>
-                            <dd><pre>${preSafe(JSON.stringify(metaDataLinkHeader.res.rawHeaders)).slice(1, -1)}</pre></dd>
-                          </dl>`;
+                        <dt>Response</dt>
+                        <dd><pre>${preSafe(JSON.stringify(metaDataLinkHeader.res.rawHeaders)).slice(1, -1)}</pre></dd>
+                      </dl>`;
           }
           if (typeof dataLinkHeader !== 'undefined'){
             reqresData += `
-                            <p>Created <code><a href="${metaDataLinkHeader.res.headers.location}">${metaDataLinkHeader.res.headers.location}</a></code>:</p>
-                            <pre>${dataLinkHeader}</pre>`;
+                      <p>Created <code><a href="${metaDataLinkHeader.res.headers.location}">${metaDataLinkHeader.res.headers.location}</a></code>:</p>
+                      <pre>${dataLinkHeader}</pre>`;
           }
 
           if (typeof metaDataRDFBody !== 'undefined'){
@@ -1711,22 +1710,22 @@ ${testResponse(req, test, reportHTML)}
             });
 
             reqresData += `
-                          <dl>
-                            <dt>Request</dt>
-                            <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
+                    <dl>
+                      <dt>Request</dt>
+                      <dd><pre>${preSafe(requestHeaders.join("\n"))}</pre></dd>
 
-                            <dt>Response</dt>
-                            <dd><pre>${preSafe(JSON.stringify(metaDataRDFBody.res.rawHeaders)).slice(1, -1)}</pre></dd>
-                          </dl>`;
+                      <dt>Response</dt>
+                      <dd><pre>${preSafe(JSON.stringify(metaDataRDFBody.res.rawHeaders)).slice(1, -1)}</pre></dd>
+                    </dl>`;
           }
           if (typeof dataRDFBody !== 'undefined'){
             reqresData += `
-                            <p>Created <code><a href="${metaDataRDFBody.res.headers.location}">${metaDataRDFBody.res.headers.location}</a></code>:</p>
-                            <pre>${dataRDFBody}</pre>`;
+                    <p>Created <code><a href="${metaDataRDFBody.res.headers.location}">${metaDataRDFBody.res.headers.location}</a></code>:</p>
+                    <pre>${dataRDFBody}</pre>`;
           }
           reqresData += `
-                        </div>
-                    </section>`;
+                  </div>
+                </section>`;
         }
       }
       break;
@@ -1739,31 +1738,31 @@ ${testResponse(req, test, reportHTML)}
 
   var outputData = `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <title>Sender Test Results</title>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sender Test Results</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+  </head>
 
-    <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
-        <main>
-            <article about="" typeof="schema:Article">
-                <h1 property="schema:name">Sender Test Results</h1>
+  <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <main>
+      <article about="" typeof="schema:Article">
+        <h1 property="schema:name">Sender Test Results</h1>
 
-                <div id="content">
-                    <section>
-                        <h2>Discovery and Sending</h2>
-                        <div>
+        <div id="content">
+          <section>
+            <h2>Discovery and Sending</h2>
+            <div>
 ${discoverInboxHTML}
-                        </div>
-                    </section>
+            </div>
+          </section>
 ${(typeof reqresData !== 'undefined' && reqresData.length > 0) ? reqresData : ''}
 ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? results['test-sender-report-html'] : ''}
-                </div>
-            </article>
-        </main>
-    </body>
+        </div>
+      </article>
+    </main>
+  </body>
 </html>
 `;
 
@@ -2141,108 +2140,108 @@ function testNotification(req, options){
 function getTestConsumerHTML(req, results){
   return `<!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <title>LDN Tests for Consumers</title>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>LDN Tests for Consumers</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="${req.getRootUrl()}/media/css/ldntests.css" media="all" rel="stylesheet" />
+  </head>
 
-    <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
-        <main>
-            <article about="" typeof="schema:Article">
-                <h1 property="schema:name">LDN Tests for Consumers</h1>
+  <body about="" prefix="${prefixesRDFa}" typeof="schema:CreativeWork sioc:Post prov:Entity">
+    <main>
+      <article about="" typeof="schema:Article">
+        <h1 property="schema:name">LDN Tests for Consumers</h1>
 
-                <div id="content">
-                    <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
-                        <h2 property="schema:name">Consumer</h2>
-                        <div datatype="rdf:HTML" property="schema:description">
-                            <p>Due to the nature of consumers, gathering results for these tests is manual. The form below links to several <em>targets</em>. Set your consumer to run against each of these, inspect the results (either through your softwares UI, logs, or commandline interface), and input them into the form. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
+        <div id="content">
+          <section id="consumer" inlist="" rel="schema:hasPart" resource="#consumer">
+            <h2 property="schema:name">Consumer</h2>
+            <div datatype="rdf:HTML" property="schema:description">
+              <p>Due to the nature of consumers, gathering results for these tests is manual. The form below links to several <em>targets</em>. Set your consumer to run against each of these, inspect the results (either through your softwares UI, logs, or commandline interface), and input them into the form. You will have a chance to review before submitting a report for your implementation. Reports will be submitted to an <a about="" rel="ldp:inbox" href="reports/">inbox</a> and can be retrieved.</p>
 
-                            <p>If your consumer implementation is not able to process the particular vocabulary one of the test notifications, you can leave that untested. If your consumer cannot process <em>any</em> of them, open a <a href="http://github.com/csarven/ldn-tests/issues/">GitHub issue</a> with a sample that you can process, and we'll add it.</p>
+              <p>If your consumer implementation is not able to process the particular vocabulary one of the test notifications, you can leave that untested. If your consumer cannot process <em>any</em> of them, open a <a href="http://github.com/csarven/ldn-tests/issues/">GitHub issue</a> with a sample that you can process, and we'll add it.</p>
 <!--
-                            <dl>
-                                <dt>Tests</dt>
-                                <dd>
-                                    <ul>
-                                      <li><a href="discover-inbox-link-header">discover-inbox-link-header</a></li>
-                                      <li><a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a></li>
-                                      <li><a href="inbox-compacted/">inbox-compacted/</a></li>
-                                      <li><a href="inbox-expanded/">inbox-expanded/</a></li>
-                                      <li><a href="inbox-compacted/announce">inbox-announce/</a></li>
-                                      <li><a href="inbox-compacted/changelog">inbox-changelog/</a></li>
-                                      <li><a href="inbox-compacted/citation">inbox-citation/</a></li>
-                                      <li><a href="inbox-expanded/assessing">inbox-expanded/assessing</a></li>
-                                      <li><a href="inbox-expanded/comment">inbox-expanded/comment</a></li>
-                                      <li><a href="inbox-expanded/rsvp">inbox-expanded/rsvp</a></li>
-                                    </ul>
-                                </dd>
-                            </dl>
+              <dl>
+                <dt>Tests</dt>
+                <dd>
+                  <ul>
+                    <li><a href="discover-inbox-link-header">discover-inbox-link-header</a></li>
+                    <li><a href="discover-inbox-rdf-body">discover-inbox-rdf-body</a></li>
+                    <li><a href="inbox-compacted/">inbox-compacted/</a></li>
+                    <li><a href="inbox-expanded/">inbox-expanded/</a></li>
+                    <li><a href="inbox-compacted/announce">inbox-announce/</a></li>
+                    <li><a href="inbox-compacted/changelog">inbox-changelog/</a></li>
+                    <li><a href="inbox-compacted/citation">inbox-citation/</a></li>
+                    <li><a href="inbox-expanded/assessing">inbox-expanded/assessing</a></li>
+                    <li><a href="inbox-expanded/comment">inbox-expanded/comment</a></li>
+                    <li><a href="inbox-expanded/rsvp">inbox-expanded/rsvp</a></li>
+                  </ul>
+                </dd>
+              </dl>
 -->
-                            <form action="#test-response" class="form-tests" id="test-consumer" method="post">
-                                <fieldset>
-                                    <legend>Test Consumer</legend>
-                                    <ul>
-                                        <li>
-                                            <p>URL of the Inbox from <a href="discover-inbox-link-header">target A</a> (in header):</p>
-                                            <label for="test-consumer-discover-inbox-link-header">URL</label>
-                                            <input type="text" name="test-consumer-discover-inbox-link-header" value="" placeholder="Include only the URL" />
-                                        </li>
-                                        <li>
-                                            <p>URL of the Inbox from <a href="discover-inbox-rdf-body">target B</a> (in RDF body):</p>
-                                            <label for="test-consumer-discover-inbox-rdf-body">URL</label>
-                                            <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" placeholder="Include only the URL" />
-                                        </li>
-                                        <li>
-                                            <p>URLs of the notifications in <a href="discover-inbox-link-header">target A</a>'s Inbox (JSON-LD compacted):</p>
-                                            <label for="test-consumer-inbox-compacted">URLs</label>
-                                            <input type="text" name="test-consumer-inbox-compacted" value="" placeholder="Separated by a space" />
-                                        </li>
-                                        <li>
-                                            <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target B</a>'s Inbox (JSON-LD expanded):</p>
-                                            <label for="test-consumer-inbox-expanded">URLs</label>
-                                            <input type="text" name="test-consumer-inbox-expanded" value="" placeholder="Separated by a space" />
-                                        </li>
-                                    </ul>
+              <form action="#test-response" class="form-tests" id="test-consumer" method="post">
+                <fieldset>
+                  <legend>Test Consumer</legend>
+                  <ul>
+                    <li>
+                      <p>URL of the Inbox from <a href="discover-inbox-link-header">target A</a> (in header):</p>
+                      <label for="test-consumer-discover-inbox-link-header">URL</label>
+                      <input type="text" name="test-consumer-discover-inbox-link-header" value="" placeholder="Include only the URL" />
+                    </li>
+                    <li>
+                      <p>URL of the Inbox from <a href="discover-inbox-rdf-body">target B</a> (in RDF body):</p>
+                      <label for="test-consumer-discover-inbox-rdf-body">URL</label>
+                      <input type="text" name="test-consumer-discover-inbox-rdf-body" value="" placeholder="Include only the URL" />
+                    </li>
+                    <li>
+                      <p>URLs of the notifications in <a href="discover-inbox-link-header">target A</a>'s Inbox (JSON-LD compacted):</p>
+                      <label for="test-consumer-inbox-compacted">URLs</label>
+                      <input type="text" name="test-consumer-inbox-compacted" value="" placeholder="Separated by a space" />
+                    </li>
+                    <li>
+                      <p>URLs of the notifications in <a href="discover-inbox-rdf-body">target B</a>'s Inbox (JSON-LD expanded):</p>
+                      <label for="test-consumer-inbox-expanded">URLs</label>
+                      <input type="text" name="test-consumer-inbox-expanded" value="" placeholder="Separated by a space" />
+                    </li>
+                  </ul>
 
-                                    <p>For the folowing tests, input the values using the JSON-LD serialization:</p>
-                                    <ul>
-                                        <li>
-                                          <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
-                                          <textarea name="test-inbox-compacted-announce" cols="80" rows="3"></textarea>
-                                        </li>
-                                        <li>
-                                          <label for="test-inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
-                                          <textarea name="test-inbox-compacted-changelog" cols="80" rows="3"></textarea>
-                                        </li>
-                                        <li>
-                                          <label for="test-inbox-compacted-citation">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
-                                          <textarea name="test-inbox-compacted-citation" cols="80" rows="3"></textarea>
-                                        </li>
-                                        <li>
-                                          <label for="test-inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
-                                          <textarea name="test-inbox-expanded-assessing" cols="80" rows="3"></textarea>
-                                        </li>
-                                        <li>
-                                          <label for="test-inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
-                                          <textarea name="test-inbox-expanded-comment" cols="80" rows="3"></textarea>
-                                        </li>
-                                        <li>
-                                          <label for="test-inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
-                                          <textarea name="test-inbox-expanded-rsvp" cols="80" rows="3"></textarea>
-                                        </li>
-                                    </ul>
-                                    <input type="hidden" name="test-implementation" value="consumer" />
-                                    <input type="submit" value="Submit" />
-                                </fieldset>
-                            </form>
+                  <p>For the folowing tests, input the values using the JSON-LD serialization:</p>
+                  <ul>
+                    <li>
+                      <label for="test-inbox-compacted-announce">Contents of the <samp>announce</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
+                      <textarea name="test-inbox-compacted-announce" cols="80" rows="3"></textarea>
+                    </li>
+                    <li>
+                      <label for="test-inbox-compacted-changelog">Contents of the <samp>changelog</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
+                      <textarea name="test-inbox-compacted-changelog" cols="80" rows="3"></textarea>
+                    </li>
+                    <li>
+                      <label for="test-inbox-compacted-citation">Contents of the <samp>citation</samp> notification discovered from <a href="discover-inbox-link-header">target A</a>'s Inbox</label>
+                      <textarea name="test-inbox-compacted-citation" cols="80" rows="3"></textarea>
+                    </li>
+                    <li>
+                      <label for="test-inbox-expanded-assessing">Contents of the <samp>assessing</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
+                      <textarea name="test-inbox-expanded-assessing" cols="80" rows="3"></textarea>
+                    </li>
+                    <li>
+                      <label for="test-inbox-expanded-comment">Contents of the <samp>comment</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
+                      <textarea name="test-inbox-expanded-comment" cols="80" rows="3"></textarea>
+                    </li>
+                    <li>
+                      <label for="test-inbox-expanded-rsvp">Contents of the <samp>rsvp</samp> notification discovered from <a href="discover-inbox-rdf-body">target B</a>'s Inbox</label>
+                      <textarea name="test-inbox-expanded-rsvp" cols="80" rows="3"></textarea>
+                    </li>
+                  </ul>
+                  <input type="hidden" name="test-implementation" value="consumer" />
+                  <input type="submit" value="Submit" />
+                </fieldset>
+              </form>
 ${(typeof results !== 'undefined' && 'test-consumer-report-html' in results) ? results['test-consumer-report-html'] : ''}
-                        </div>
-                    </section>
-                </div>
-            </article>
-        </main>
-    </body>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
+  </body>
 </html>
 `;
 
