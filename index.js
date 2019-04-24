@@ -1395,9 +1395,23 @@ function getReportsHTML(req, res, next, reports){
 
       var theadTRs = '<tr><th rowspan="3">Implementations</th><th colspan="' + testsCount + '">' + testTypeCapitalised + ' tests</th></tr>';
       var testsTR = '<tr>';
+      var testMapNotation = {
+        'testReceiverGetLDPContainer': 'GLCR',
+        'testConsumerHeaderDiscovery': 'HDC',
+        'testConsumerBodyDiscovery': 'BDC',
+        'testConsumerNotificationChangelog': 'NCG',
+        'testConsumerNotificationCitation': 'NCN',
+        'testConsumerNotificationAssessing': 'NAG',
+        'testConsumerNotificationComment': 'NCT',
+        'testConsumerNotificationAnnounce': 'NAE',
+        'testSenderHeaderDiscovery': 'HDS',
+        'testSenderBodyDiscovery': 'BDS'
+      };
       tests.forEach(function(test){
         var notation = ldnTests[testTypeCode][test]['uri'].split('#test-' + testTypeCode + '-')[1].split('-').map(function(i){ return i[0]; }).join('').toUpperCase();
-        notation = (test == 'testReceiverGetLDPContainer') ? 'GLCR' : notation;
+        notation = testMapNotation[test] || notation;
+        // notation = testTypeCode[0].toUpperCase() + notation;
+        // notation = test;
         var requirementLevel = ldnTests[testTypeCode][test]['requirement'];
         testRequirementLevelsCount[requirementLevel] = testRequirementLevelsCount[requirementLevel] + 1;
         // testsTR += '<th><a href="#' + notation + '">' + notation + '</a><sup class="rfc2119"><a href="#' + testTypeCode + '-' + requirementLevel + '">' + getRequirementLevelCode(requirementLevel) + '</a></sup></th>';
