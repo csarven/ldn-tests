@@ -1,5 +1,5 @@
 {
-  "@context": "http://schema.org/",
+  "@context": "https://schema.org/docs/jsonldcontext.jsonld",
   "@id": "http://example.net/note#foo",
   "citation": { "@id": "http://example.org/article#results" }
 }
