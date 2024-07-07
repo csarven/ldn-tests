@@ -1046,15 +1046,24 @@ function createTestReport(req, res, next){
 
   var implementation = '';
   var maintainer = '';
-  if(req.body['implementation'] && req.body['implementation'].length > 0 && req.body['implementation'].startsWith('http') && req.body['maintainer'] && req.body['maintainer'].length > 0 && req.body['maintainer'].startsWith('http')) {
-    implementation = req.body['implementation'].trim();
-    maintainer = req.body['maintainer'].trim();
-    name = req.body['name'].trim();
+  if(req.body['implementation'] && req.body['implementation'].length > 0 && req.body['maintainer'] && req.body['maintainer'].length > 0) {
+    if (req.body['implementation'].startsWith('http') && req.body['maintainer'].startsWith('http')) {
+      implementation = req.body['implementation'].trim();
+      maintainer = req.body['maintainer'].trim();
+      name = req.body['name'].trim();
+    }
+    else {
+      res.status(400);
+      res.send('Please submit the implementation report with URIs of the implementation and maintainer.');
+      res.end();
+      return;
+    }
   }
   else {
     res.status(400);
+    res.send('Please submit the implementation report with URIs of the implementation and maintainer.');
     res.end();
-    return next();
+    return;
   }
 
   test['id'] = uuid.v1();
@@ -1178,9 +1187,14 @@ ${observations}
 function reportTest(req, res, next){
   if(req.method == 'POST') {
 // console.log(req.body['test-report-value']);
+    var test;
+    var data;
     if(req.body['test-report-value'] && req.body['test-report-value'].length > 0) {
-      var test = JSON.parse(atob(req.body['test-report-value']));
-      var data = createTestReport(req, res, next);
+      test = JSON.parse(atob(req.body['test-report-value']));
+      data = createTestReport(req, res, next);
+      if (!data) {
+        return;
+      }
     }
     else {
       //TODO error
