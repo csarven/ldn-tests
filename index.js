@@ -304,7 +304,6 @@ function testSender(req, res, next){
     case 'GET':
       if(!req.requestedType){
         resStatus(res, 406);
-        return next();
       }
 
       var data = getTestSenderHTML(req);
@@ -323,7 +322,7 @@ function testSender(req, res, next){
       res.set('Allow', 'GET, POST');
       res.status(200);
       res.send(data);
-      return next();
+      res.end();
       break;
 
     case 'POST':
@@ -334,9 +333,10 @@ function testSender(req, res, next){
       res.status(405);
       res.set('Allow', 'GET, POST');
       res.end();
-      return next();
       break;
   }
+
+  return;
 }
 
 
@@ -389,7 +389,6 @@ function testReceiver(req, res, next){
     case 'GET':
       if(!req.accepts(['text/html', 'application/xhtml+xml', '*/*'])) {
         resStatus(res, 406);
-        return next();
       }
 
       var data = getTestReceiverHTML(req);
@@ -408,7 +407,7 @@ function testReceiver(req, res, next){
       res.set('Allow', 'GET, POST');
       res.status(200);
       res.send(data);
-      return next();
+      res.end();
       break;
 
     case 'POST':
@@ -444,13 +443,11 @@ function testReceiver(req, res, next){
             res.status(200);
             res.send(data);
             res.end();
-            return next();
           })
           .catch((e) => {
             console.log('--- catch ---');
             console.log(e);
             res.end();
-            return next();
           });
       }
       break;
@@ -459,9 +456,10 @@ function testReceiver(req, res, next){
       res.status(405);
       res.set('Allow', 'GET, POST');
       res.end();
-      return next();
       break;
   }
+
+  return;
 }
 
 
@@ -1234,21 +1232,21 @@ function reportTest(req, res, next){
         res.status(200);
         res.send(responseBody);
         res.end();
-        return next();
+        return;
       },
       function(reason){
         res.set('Content-Type', 'text/html;charset=utf-8');
         res.status(reason.xhr.status);
         res.send('Well, something went wrong: ' + reason.xhr.responseText);
         res.end();
-        return next();
+        return;
       }
     );
   }
   else {
     res.status(405);
     res.end();
-    return next();
+    return;
   }
 }
 
@@ -1259,7 +1257,7 @@ function showSummary(req, res, next){
     case 'GET':
       if(!req.accepts(['text/html', '*/*'])) {
         resStatus(res, 406);
-        return next();
+        return;
       }
 
       //XXX: Currently unused.
@@ -1358,7 +1356,7 @@ function showSummary(req, res, next){
           if (req.headers['if-none-match'] && (req.headers['if-none-match'] == etag(data))) {
             res.status(304);
             res.end();
-            return next();
+            return;
           }
 
           res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type", <http://www.w3.org/ns/ldp#RDFSource>; rel="type"');
@@ -1370,12 +1368,12 @@ function showSummary(req, res, next){
           res.status(200);
           res.send(data);
           res.end();
-          return next();
+          return;
         },
         function(reason){
           res.status(500);
           res.end();
-          return next();
+          return;
         }
       );
       break;
@@ -1384,7 +1382,7 @@ function showSummary(req, res, next){
       res.status(405);
       res.set('Allow', 'GET');
       res.end();
-      return next();
+      return;
       break;
   }
 }
@@ -1572,12 +1570,12 @@ function getTarget(req, res, next){
       res.status(405);
       res.set('Allow', 'GET, HEAD, OPTIONS');
       res.end();
-      return next();
+      return;
       break;
   }
   if(!req.requestedType){
     resStatus(res, 406);
-    return next();
+    return;
   }
 
   //XXX: We don't care about the error
@@ -1857,12 +1855,12 @@ ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? res
         }
 
         res.end();
-        return next();
+        return;
       },
       function(reason){
         res.status(500);
         res.end();
-        return next();
+        return;
       }
     );
   }
@@ -1877,7 +1875,7 @@ function testConsumer(req, res, next){
     case 'GET':
       if(!req.accepts(['text/html', 'application/xhtml+xml', '*/*'])) {
         resStatus(res, 406);
-        return next();
+        return;
       }
 
       var data = getTestConsumerHTML(req);
@@ -1942,13 +1940,13 @@ function testConsumer(req, res, next){
           res.status(200);
           res.send(data);
           res.end();
-          return next();
+          return;
         })
         .catch((e) => {
           console.log('--- catch ---');
           console.log(e);
           res.end();
-          return next();
+          return;
         });
       break;
 
@@ -1956,7 +1954,7 @@ function testConsumer(req, res, next){
       res.status(405);
       res.set('Allow', 'GET, POST');
       res.end();
-      return next();
+      return;
       break;
   }
 }
