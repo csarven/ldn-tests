@@ -1633,7 +1633,7 @@ function getTarget(req, res, next){
         if(req.query && 'discovery' in req.query && req.query['discovery'] == 'rdf-body') {
           discoverInboxHTML += `
                           <p>This target resource announces its <a href="${inboxIRI}&amp;discovery=rdf-body" rel="ldp:inbox">inbox through RDFa in its body</a>.</p>`;
-        }else if(req.query && 'disovery' in req.query && req.query['discovery'] == 'link-header'){
+        }else if(req.query && 'discovery' in req.query && req.query['discovery'] == 'link-header'){
           discoverInboxHTML += `
                           <p>This target resource announces its inbox in a <code>Link</code> header.</p>`;
         }
