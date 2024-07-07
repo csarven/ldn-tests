@@ -2110,7 +2110,7 @@ function testConsumerNotificationComment(req){
     'test': 'testConsumerNotificationComment',
     'data': req.body['test-inbox-expanded-comment'],
     'subject': getExternalBaseURL(req.getUrl()) + 'inbox-expanded/comment',
-    'property': 'https://www.w3.org/ns/activitystreams#inReplyTo',
+    'property': 'http://rdfs.org/sioc/ns#reply_of',
     'object': 'http://example.org/article'
   };
   return testNotification(req, options);
