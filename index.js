@@ -1823,7 +1823,7 @@ ${(typeof results !== 'undefined' && 'test-sender-report-html' in results) ? res
     return next();
   }
   else {
-    var options = { 'subjectURI': base };
+    var options = { 'subjectURI': req.getUrl() };
     serializeData(outputData, fromContentType, toContentType, options).then(
       function(transformedData){
         switch(toContentType) {
